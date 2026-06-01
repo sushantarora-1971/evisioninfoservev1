@@ -1,0 +1,276 @@
+/* ============================================================
+   EVISION TECHNOSERVE — Design System Tokens
+   colors_and_type.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* NOTE: Bebas Neue + Oswald substituted for Evision's actual condensed display font.
+   DM Sans substituted for body. Replace with licensed originals if available. */
+
+:root {
+
+  /* ── BASE COLOR PALETTE ─────────────────────────────────── */
+  --color-navy-900:   #060F1E;   /* deepest bg */
+  --color-navy-800:   #0B1930;   /* primary dark bg */
+  --color-navy-700:   #0D2347;   /* secondary dark bg */
+  --color-navy-600:   #12306A;   /* card/panel borders on dark */
+  --color-navy-400:   #1A4A90;   /* muted accent */
+
+  --color-blue-500:   #1A5FC8;   /* electric blue accent */
+  --color-blue-400:   #3B7DE8;   /* lighter blue, links */
+  --color-blue-300:   #6FA3F5;   /* subtle blue on dark */
+
+  --color-gold-500:   #F5C400;   /* primary brand accent / highlight */
+  --color-gold-400:   #FFD84D;   /* lighter gold */
+  --color-gold-600:   #C89D00;   /* darker gold, pressed state */
+
+  --color-orange-500: #FF6A00;   /* CTA / urgency */
+  --color-orange-400: #FF8C38;   /* hover state */
+  --color-orange-600: #CC5500;   /* pressed state */
+
+  --color-red-500:    #E53935;   /* alert / "NOT HIRED" / danger */
+  --color-red-400:    #EF5350;
+  --color-red-100:    #FFEBEE;   /* light red bg tint */
+
+  --color-white:      #FFFFFF;
+  --color-gray-50:    #F5F7FA;
+  --color-gray-100:   #E8ECF4;
+  --color-gray-200:   #D4D9E8;
+  --color-gray-400:   #8A93B0;
+  --color-gray-600:   #4F5A78;
+  --color-gray-800:   #1E2540;
+
+  --color-green-500:  #22C55E;   /* success / checkmarks */
+  --color-green-100:  #DCFCE7;
+
+  /* ── SEMANTIC COLOR TOKENS ──────────────────────────────── */
+
+  /* Backgrounds */
+  --bg-dark:          var(--color-navy-800);
+  --bg-dark-secondary:var(--color-navy-700);
+  --bg-light:         var(--color-white);
+  --bg-subtle:        var(--color-gray-50);
+  --bg-callout-gold:  var(--color-gold-500);
+  --bg-callout-navy:  var(--color-navy-700);
+
+  /* Foregrounds */
+  --fg-on-dark:       var(--color-white);
+  --fg-on-light:      #0B1930;
+  --fg-muted-dark:    var(--color-gray-200);
+  --fg-muted-light:   var(--color-gray-600);
+  --fg-accent:        var(--color-gold-500);
+  --fg-link:          var(--color-blue-400);
+  --fg-danger:        var(--color-red-500);
+
+  /* Borders */
+  --border-dark:      var(--color-navy-600);
+  --border-gold:      var(--color-gold-500);
+  --border-light:     var(--color-gray-200);
+
+  /* Buttons */
+  --btn-primary-bg:         var(--color-orange-500);
+  --btn-primary-bg-hover:   var(--color-orange-400);
+  --btn-primary-bg-press:   var(--color-orange-600);
+  --btn-primary-fg:         var(--color-white);
+
+  --btn-secondary-bg:       var(--color-gold-500);
+  --btn-secondary-bg-hover: var(--color-gold-400);
+  --btn-secondary-fg:       var(--color-navy-800);
+
+  --btn-ghost-border:       var(--color-white);
+  --btn-ghost-fg:           var(--color-white);
+  --btn-ghost-bg-hover:     rgba(255,255,255,0.12);
+
+  /* ── TYPOGRAPHY SCALE ───────────────────────────────────── */
+
+  /* Font Families */
+  --font-display:     'Bebas Neue', 'Impact', sans-serif;
+  --font-headline:    'Oswald', 'Arial Narrow', sans-serif;
+  --font-body:        'DM Sans', 'Segoe UI', sans-serif;
+  --font-mono:        'JetBrains Mono', 'Courier New', monospace;
+
+  /* Font Sizes */
+  --text-xs:    11px;
+  --text-sm:    13px;
+  --text-base:  15px;
+  --text-md:    17px;
+  --text-lg:    20px;
+  --text-xl:    24px;
+  --text-2xl:   30px;
+  --text-3xl:   38px;
+  --text-4xl:   48px;
+  --text-5xl:   64px;
+  --text-hero:  80px;
+
+  /* Font Weights */
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
+
+  /* Line Heights */
+  --leading-tight:  1.1;
+  --leading-snug:   1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.7;
+
+  /* Letter Spacing */
+  --tracking-tight:  -0.02em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.1em;
+  --tracking-widest:  0.15em;
+
+  /* ── SEMANTIC TYPE ROLES ────────────────────────────────── */
+
+  /* Hero headline — full-bleed email banner, social graphics */
+  --type-hero-font:        var(--font-display);
+  --type-hero-size:        var(--text-hero);
+  --type-hero-weight:      var(--weight-bold);
+  --type-hero-leading:     var(--leading-tight);
+  --type-hero-tracking:    var(--tracking-normal);
+  --type-hero-transform:   uppercase;
+
+  /* h1 — section headers, email subject lines */
+  --type-h1-font:          var(--font-headline);
+  --type-h1-size:          var(--text-4xl);
+  --type-h1-weight:        var(--weight-bold);
+  --type-h1-leading:       var(--leading-tight);
+  --type-h1-tracking:      var(--tracking-tight);
+  --type-h1-transform:     uppercase;
+
+  /* h2 — course names, section titles */
+  --type-h2-font:          var(--font-headline);
+  --type-h2-size:          var(--text-3xl);
+  --type-h2-weight:        var(--weight-bold);
+  --type-h2-leading:       var(--leading-snug);
+  --type-h2-transform:     none;
+
+  /* h3 — card titles, feature names */
+  --type-h3-font:          var(--font-headline);
+  --type-h3-size:          var(--text-xl);
+  --type-h3-weight:        var(--weight-semi);
+  --type-h3-leading:       var(--leading-snug);
+
+  /* h4 — labels, subtitles */
+  --type-h4-font:          var(--font-body);
+  --type-h4-size:          var(--text-lg);
+  --type-h4-weight:        var(--weight-semi);
+  --type-h4-leading:       var(--leading-normal);
+
+  /* p / body */
+  --type-p-font:           var(--font-body);
+  --type-p-size:           var(--text-base);
+  --type-p-weight:         var(--weight-regular);
+  --type-p-leading:        var(--leading-relaxed);
+
+  /* small / caption */
+  --type-small-font:       var(--font-body);
+  --type-small-size:       var(--text-sm);
+  --type-small-weight:     var(--weight-regular);
+  --type-small-leading:    var(--leading-normal);
+
+  /* label / tag */
+  --type-label-font:       var(--font-body);
+  --type-label-size:       var(--text-xs);
+  --type-label-weight:     var(--weight-semi);
+  --type-label-tracking:   var(--tracking-wider);
+  --type-label-transform:  uppercase;
+
+  /* code */
+  --type-code-font:        var(--font-mono);
+  --type-code-size:        var(--text-sm);
+  --type-code-weight:      var(--weight-regular);
+
+  /* ── SPACING SCALE ──────────────────────────────────────── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+
+  /* ── BORDER RADIUS ──────────────────────────────────────── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-pill: 999px;
+
+  /* ── SHADOWS ────────────────────────────────────────────── */
+  --shadow-sm:  0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md:  0 2px 12px rgba(0,0,0,0.12);
+  --shadow-lg:  0 4px 24px rgba(0,0,0,0.18);
+  --shadow-card:0 2px 16px rgba(11,25,48,0.10);
+  --shadow-glow-gold: 0 0 20px rgba(245,196,0,0.35);
+
+  /* ── EMAIL-SPECIFIC ─────────────────────────────────────── */
+  --email-max-width:    600px;
+  --email-padding-x:    28px;
+  --email-section-py:   40px;
+  --email-border-radius:var(--radius-lg);
+}
+
+/* ── UTILITY CLASSES ──────────────────────────────────────── */
+
+.evision-hero {
+  font-family: var(--type-hero-font);
+  font-size: var(--type-hero-size);
+  font-weight: var(--type-hero-weight);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-normal);
+}
+
+.evision-h1 {
+  font-family: var(--type-h1-font);
+  font-size: var(--type-h1-size);
+  font-weight: var(--type-h1-weight);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-tight);
+}
+
+.evision-h2 {
+  font-family: var(--type-h2-font);
+  font-size: var(--type-h2-size);
+  font-weight: var(--type-h2-weight);
+  line-height: var(--leading-snug);
+}
+
+.evision-h3 {
+  font-family: var(--type-h3-font);
+  font-size: var(--type-h3-size);
+  font-weight: var(--type-h3-weight);
+  line-height: var(--leading-snug);
+}
+
+.evision-body {
+  font-family: var(--type-p-font);
+  font-size: var(--type-p-size);
+  font-weight: var(--type-p-weight);
+  line-height: var(--leading-relaxed);
+}
+
+.evision-label {
+  font-family: var(--type-label-font);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.evision-accent { color: var(--color-gold-500); }
+.evision-danger { color: var(--color-red-500); }
+.evision-muted  { color: var(--fg-muted-dark); }
+
+.bg-dark    { background: var(--bg-dark); }
+.bg-navy    { background: var(--bg-dark-secondary); }
+.bg-gold    { background: var(--color-gold-500); color: var(--color-navy-800); }
+.bg-orange  { background: var(--color-orange-500); color: #fff; }

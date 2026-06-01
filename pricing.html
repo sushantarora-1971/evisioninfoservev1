@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing &amp; Packages | Evision Infoserve Digital Marketing</title>
+<meta name="description" content="Transparent digital marketing packages from Evision Infoserve. SEO, AI-search, social and PPC retainers with clear deliverables. Starter, Growth &amp; Scale plans.">
+<link rel="stylesheet" href="assets/tokens.css?v=3">
+<link rel="stylesheet" href="assets/site.css?v=3">
+<link rel="stylesheet" href="assets/chrome.css?v=3">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .pricing-hero { background: linear-gradient(180deg, var(--bg-subtle), #fff); text-align: center; padding: 56px 0 8px; }
+  .pricing-hero h1 { font-size: clamp(34px,5vw,56px); color: var(--color-navy-800); letter-spacing:-0.015em; line-height: 1.04; margin: 16px 0 16px; }
+  .pricing-hero .lead { margin: 0 auto; }
+  .bill { display: inline-flex; align-items: center; gap: 14px; margin-top: 30px; }
+  .bill span { font-size: 14.5px; font-weight: 600; color: var(--fg-muted-light); }
+  .bill span.on { color: var(--color-navy-800); }
+  .switch { position: relative; width: 54px; height: 30px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider-tog { position: absolute; inset: 0; background: var(--color-navy-800); border-radius: 999px; cursor: pointer; transition: .2s; }
+  .slider-tog::before { content:""; position: absolute; height: 22px; width: 22px; left: 4px; top: 4px; background: #fff; border-radius: 50%; transition: .2s; }
+  .switch input:checked + .slider-tog { background: var(--color-blue-500); }
+  .switch input:checked + .slider-tog::before { transform: translateX(24px); }
+  #billSave { opacity: 0; transition: opacity .2s; font-size: 12px; font-weight: 700; color: #15803D; background: var(--color-green-100); padding: 4px 10px; border-radius: 999px; }
+  .price-cta { margin-top: auto; }
+  .price-card .desc { font-size: 14px; color: var(--fg-muted-light); line-height: 1.5; }
+  .price-best { color: var(--fg-muted-light); font-size: 13px; }
+
+  /* comparison */
+  .cmp { width: 100%; border-collapse: collapse; margin-top: 12px; background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; }
+  .cmp th, .cmp td { padding: 16px 18px; text-align: left; font-size: 14.5px; border-bottom: 1px solid var(--border-light); }
+  .cmp thead th { background: var(--color-navy-800); color: #fff; font-family: var(--font-headline); font-weight: 600; font-size: 15px; }
+  .cmp thead th:first-child { font-family: var(--font-body); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-blue-300); font-weight: 700; }
+  .cmp td:not(:first-child), .cmp th:not(:first-child) { text-align: center; }
+  .cmp tbody tr:nth-child(even) { background: var(--bg-subtle); }
+  .cmp .cat td { background: var(--color-navy-900); color: var(--color-gold-500); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .cmp .yes { color: var(--color-green-500); }
+  .cmp .no { color: var(--color-gray-200); }
+  .cmp .ic { width: 19px; height: 19px; }
+  .cmp .feat { font-weight: 500; color: var(--color-navy-800); }
+  .cmp-wrap { overflow-x: auto; }
+  .cmp td:first-child, .cmp th:first-child { min-width: 220px; }
+
+  .addons { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 36px; }
+  @media (max-width: 900px){ .addons { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px){ .addons { grid-template-columns: 1fr; } }
+  .addon { padding: 22px; }
+  .addon h3 { font-size: 17px; color: var(--color-navy-800); margin-bottom: 4px; }
+  .addon .ap { font-family: var(--font-headline); font-weight: 700; font-size: 22px; color: var(--color-blue-500); }
+  .addon p { font-size: 13px; color: var(--fg-muted-light); margin-top: 6px; line-height: 1.5; }
+</style>
+</head>
+<body data-page="pricing">
+
+<!-- ░░ HERO ░░ -->
+<section class="pricing-hero" data-screen-label="Pricing hero">
+  <div class="container">
+    <span class="eyebrow" style="justify-content:center"><span class="chip-mono" style="border:none;background:none;padding:0;color:var(--color-blue-500)">Offer + Product schema</span></span>
+    <h1>Transparent pricing,<br>built for ROI</h1>
+    <p class="lead">No lock-ins, no vanity metrics. Every plan ships clear deliverables across SEO, AI-search, social and content — reported weekly.</p>
+    <div class="bill">
+      <span class="on" id="lblMonthly">Monthly</span>
+      <label class="switch"><input type="checkbox" id="billToggle"><span class="slider-tog"></span></label>
+      <span id="lblAnnual">Annual</span>
+      <span id="billSave">Save 2 months</span>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ PRICING CARDS ░░ -->
+<section class="section" style="padding-top:40px">
+  <div class="container">
+    <div class="price-grid reveal">
+      <!-- Starter -->
+      <div class="price-card">
+        <div><div class="price-name">Starter</div><div class="desc">For small businesses getting serious about search.</div></div>
+        <div><span class="price-amt">₹<span data-monthly="14,999" data-annual="12,499">14,999</span></span><br><small class="bill-period" style="color:var(--fg-muted-light);font-size:14px">/month</small></div>
+        <ul class="price-feats">
+          <li><i data-lucide="check" class="ic"></i>Up to 10 keywords optimised</li>
+          <li><i data-lucide="check" class="ic"></i>Technical SEO + Core Web Vitals</li>
+          <li><i data-lucide="check" class="ic"></i>2 blog articles / month</li>
+          <li><i data-lucide="check" class="ic"></i>Basic schema (Org + LocalBusiness)</li>
+          <li><i data-lucide="check" class="ic"></i>Monthly performance report</li>
+          <li class="off"><i data-lucide="minus" class="ic"></i>AI-visibility monitoring</li>
+        </ul>
+        <a href="contact.html" class="btn btn-ghost-light btn-block price-cta">Choose Starter</a>
+      </div>
+      <!-- Growth -->
+      <div class="price-card featured">
+        <div><div class="price-name">Growth</div><div class="desc">Our most popular plan — full SEO + AI-search engine.</div></div>
+        <div><span class="price-amt">₹<span data-monthly="34,999" data-annual="29,166">34,999</span></span><br><small class="bill-period" style="color:var(--fg-muted-light);font-size:14px">/month</small></div>
+        <ul class="price-feats">
+          <li><i data-lucide="check" class="ic"></i>Up to 35 keywords + topic clusters</li>
+          <li><i data-lucide="check" class="ic"></i>Everything in Starter, plus:</li>
+          <li><i data-lucide="check" class="ic"></i>Full JSON-LD schema + llms.txt</li>
+          <li><i data-lucide="check" class="ic"></i>6 articles + answer blocks / month</li>
+          <li><i data-lucide="check" class="ic"></i>AEO &amp; GEO optimisation</li>
+          <li><i data-lucide="check" class="ic"></i>AI-visibility monitoring dashboard</li>
+        </ul>
+        <a href="contact.html" class="btn btn-primary btn-block price-cta">Choose Growth</a>
+      </div>
+      <!-- Scale -->
+      <div class="price-card">
+        <div><div class="price-name">Scale</div><div class="desc">For brands competing nationally across every channel.</div></div>
+        <div><span class="price-amt">Custom</span><br><small class="price-best">Tailored to your goals</small></div>
+        <ul class="price-feats">
+          <li><i data-lucide="check" class="ic"></i>Unlimited keywords &amp; silos</li>
+          <li><i data-lucide="check" class="ic"></i>Everything in Growth, plus:</li>
+          <li><i data-lucide="check" class="ic"></i>PPC + paid social management</li>
+          <li><i data-lucide="check" class="ic"></i>Dedicated strategist + ORM</li>
+          <li><i data-lucide="check" class="ic"></i>Marketing automation &amp; CRO</li>
+          <li><i data-lucide="check" class="ic"></i>Weekly reporting + quarterly reviews</li>
+        </ul>
+        <a href="contact.html" class="btn btn-navy btn-block price-cta">Request a Quote</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:22px;color:var(--fg-muted-light);font-size:14px">All plans include onboarding, a dedicated point of contact and a 30-day no-questions exit. GST applicable.</p>
+  </div>
+</section>
+
+<!-- ░░ COMPARISON ░░ -->
+<section class="section section-subtle" style="padding-top:24px">
+  <div class="container">
+    <div class="sec-head reveal" style="text-align:center;margin:0 auto 32px">
+      <span class="eyebrow" style="justify-content:center">Compare plans</span>
+      <h2 class="h-lg" style="color:var(--color-navy-800)">Exactly what's in each plan</h2>
+    </div>
+    <div class="cmp-wrap reveal">
+      <table class="cmp">
+        <thead><tr><th>Feature</th><th>Starter</th><th>Growth</th><th>Scale</th></tr></thead>
+        <tbody>
+          <tr class="cat"><td colspan="4">SEO &amp; Technical</td></tr>
+          <tr><td class="feat">Keywords optimised</td><td>10</td><td>35</td><td>Unlimited</td></tr>
+          <tr><td class="feat">Technical SEO + Core Web Vitals</td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr><td class="feat">Full JSON-LD schema suite</td><td>Basic</td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr class="cat"><td colspan="4">AI Search (AEO · GEO · LLMO)</td></tr>
+          <tr><td class="feat">Answer blocks + FAQ schema</td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr><td class="feat">llms.txt + AI crawler rules</td><td><i data-lucide="x" class="ic no"></i></td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr><td class="feat">AI-visibility monitoring</td><td><i data-lucide="x" class="ic no"></i></td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr class="cat"><td colspan="4">Content &amp; Channels</td></tr>
+          <tr><td class="feat">Articles per month</td><td>2</td><td>6</td><td>12+</td></tr>
+          <tr><td class="feat">PPC &amp; paid social</td><td><i data-lucide="x" class="ic no"></i></td><td>Add-on</td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr><td class="feat">ORM &amp; reputation</td><td><i data-lucide="x" class="ic no"></i></td><td>Add-on</td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr class="cat"><td colspan="4">Reporting &amp; Support</td></tr>
+          <tr><td class="feat">Reporting cadence</td><td>Monthly</td><td>Bi-weekly</td><td>Weekly</td></tr>
+          <tr><td class="feat">Dedicated strategist</td><td><i data-lucide="x" class="ic no"></i></td><td><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ ADD-ONS ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal"><span class="eyebrow">À la carte</span><h2 class="h-lg" style="color:var(--color-navy-800)">Add-ons &amp; one-time projects</h2></div>
+    <div class="addons reveal">
+      <div class="card addon"><h3>SEO Audit</h3><div class="ap">₹9,999</div><p>40-point technical + content + AI-visibility deep dive.</p></div>
+      <div class="card addon"><h3>Website Build</h3><div class="ap">From ₹49,999</div><p>SEO-ready template build with schema baked in.</p></div>
+      <div class="card addon"><h3>PPC Management</h3><div class="ap">12% of spend</div><p>Google, Meta &amp; LinkedIn campaign management.</p></div>
+      <div class="card addon"><h3>GEO Sprint</h3><div class="ap">₹24,999</div><p>One-month push to earn AI Overview &amp; Perplexity citations.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ RFQ BAND ░░ -->
+<section class="section-sm section-navy">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+    <div>
+      <span class="eyebrow on-dark">Need something custom?</span>
+      <h2 class="h-md" style="color:#fff;margin-top:12px;max-width:24ch">Tell us your goals and get a tailored quote in 24 hours</h2>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="contact.html" class="btn btn-secondary btn-lg">Request a Quote</a>
+      <a href="https://wa.me/919811722064" class="btn btn-outline-white btn-lg"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ FAQ ░░ -->
+<section class="section section-subtle">
+  <div class="container container-narrow">
+    <div class="sec-head reveal" style="text-align:center;margin:0 auto"><span class="eyebrow gold" style="justify-content:center">Pricing FAQ</span><h2 class="h-lg" style="color:var(--color-navy-800)">Good to know</h2></div>
+    <div class="faq reveal" style="margin-top:34px">
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q1</span>Are there any lock-in contracts?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">No. All retainers are month-to-month with a 30-day notice period. Annual plans simply give you two months free in exchange for committing up front.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q2</span>What's not included in the retainer?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Ad spend is billed separately and paid directly to the platforms. One-time builds, ORM and PPC management are add-ons on Starter and Growth, and bundled into Scale.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q3</span>Can I switch plans later?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Anytime. Most clients start on Growth and move to Scale as their channels expand. Upgrades take effect the following billing cycle.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q4</span>Do you offer GST invoices?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Yes — all invoices are GST-compliant and issued monthly. We're an ISO 9001-certified registered company.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<script src="assets/site.js?v=3"></script>
+<script src="assets/chrome.js?v=3"></script>
+<script>
+  // billing labels emphasis
+  (function(){
+    var t=document.getElementById('billToggle');
+    if(!t) return;
+    t.addEventListener('change',function(){
+      document.getElementById('lblMonthly').classList.toggle('on',!t.checked);
+      document.getElementById('lblAnnual').classList.toggle('on',t.checked);
+    });
+  })();
+</script>
+</body>
+</html>

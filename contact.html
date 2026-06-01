@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact &amp; Request a Quote | Evision Infoserve</title>
+<meta name="description" content="Request a free quote or SEO audit from Evision Infoserve, Greater Noida. Call +91 98117 22064, WhatsApp us, or fill the RFQ form for a tailored proposal in 24 hours.">
+<link rel="stylesheet" href="assets/tokens.css?v=3">
+<link rel="stylesheet" href="assets/site.css?v=3">
+<link rel="stylesheet" href="assets/chrome.css?v=3">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .contact-hero { background: var(--bg-dark); color: #fff; position: relative; overflow: hidden; padding: 44px 0 120px; }
+  .contact-hero::before { content:""; position:absolute; inset:0;
+    background: radial-gradient(620px 360px at 85% 0%, rgba(26,95,200,.4), transparent 62%); }
+  .contact-hero-inner { position: relative; max-width: 640px; }
+  .contact-hero h1 { font-size: clamp(34px,5vw,54px); letter-spacing:-0.015em; margin: 16px 0 16px; line-height: 1.04; }
+
+  .contact-layout { display: grid; grid-template-columns: 1.25fr .75fr; gap: 28px; margin-top: -84px; position: relative; z-index: 5; align-items: start; }
+  @media (max-width: 940px){ .contact-layout { grid-template-columns: 1fr; } }
+
+  .rfq-card { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 34px; }
+  .rfq-card h2 { font-size: 24px; color: var(--color-navy-800); margin-bottom: 6px; }
+  .rfq-card .sub { font-size: 14.5px; color: var(--fg-muted-light); margin-bottom: 24px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-grid .full { grid-column: 1/-1; }
+  @media (max-width: 540px){ .form-grid { grid-template-columns: 1fr; } }
+  .rfq-success { display: none; text-align: center; padding: 30px 10px; }
+  .rfq-success .ok { width: 64px; height: 64px; border-radius: 50%; background: var(--color-green-100); color: var(--color-green-500); display: grid; place-items: center; margin: 0 auto 18px; }
+  .rfq-success .ok .ic { width: 32px; height: 32px; }
+  .rfq-success h3 { font-size: 24px; color: var(--color-navy-800); margin-bottom: 10px; }
+  .rfq-success p { color: var(--fg-muted-light); max-width: 40ch; margin: 0 auto; }
+
+  .contact-side { display: flex; flex-direction: column; gap: 18px; }
+  .info-card { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 22px; }
+  .info-row { display: flex; gap: 13px; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .ico { width: 40px; height: 40px; border-radius: 11px; background: rgba(26,95,200,.1); color: var(--color-blue-500); display: grid; place-items: center; flex: none; }
+  .info-row .ico .ic { width: 19px; height: 19px; }
+  .info-row .k { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--color-gray-400); }
+  .info-row .v { font-size: 15px; color: var(--color-navy-800); font-weight: 500; line-height: 1.4; }
+  .info-row .v a:hover { color: var(--color-blue-500); }
+
+  /* stylized map */
+  .map-card { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-light); position: relative; height: 220px; background:
+    linear-gradient(135deg,#e9eef7,#dde6f3);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(11,25,48,.05) 0 1px, transparent 1px 40px),
+      repeating-linear-gradient(90deg, rgba(11,25,48,.05) 0 1px, transparent 1px 40px),
+      linear-gradient(135deg,#e9eef7,#dde6f3); }
+  .map-road { position: absolute; background: #fff; box-shadow: 0 0 0 1px rgba(11,25,48,.06); }
+  .map-road.r1 { top: 60%; left: -5%; width: 110%; height: 14px; transform: rotate(-7deg); }
+  .map-road.r2 { top: -5%; left: 38%; width: 16px; height: 120%; transform: rotate(9deg); }
+  .map-road.r3 { top: 20%; left: -5%; width: 70%; height: 9px; transform: rotate(6deg); background:#fbe7a6; }
+  .map-pin { position: absolute; top: 44%; left: 46%; transform: translate(-50%,-100%); color: var(--color-orange-500); filter: drop-shadow(0 6px 8px rgba(0,0,0,.25)); z-index:2; }
+  .map-pin .ic { width: 40px; height: 40px; }
+  .map-label { position: absolute; bottom: 14px; left: 14px; right: 14px; background: rgba(255,255,255,.95); backdrop-filter: blur(6px); border-radius: var(--radius-md); padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; box-shadow: var(--shadow-sm); }
+  .map-label b { font-size: 14px; color: var(--color-navy-800); }
+  .map-label span { font-size: 12px; color: var(--fg-muted-light); display: block; }
+
+  .resp-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #15803D; background: var(--color-green-100); padding: 7px 13px; border-radius: 999px; margin-bottom: 18px; }
+  .resp-badge::before { content:""; width: 8px; height: 8px; border-radius: 50%; background: var(--color-green-500); }
+</style>
+</head>
+<body data-page="contact">
+
+<!-- ░░ HERO ░░ -->
+<section class="contact-hero" data-screen-label="Contact hero">
+  <div class="container contact-hero-inner">
+    <nav class="crumb"><a href="index.html">Home</a><span class="sep">/</span><span style="color:var(--color-gold-500)">Contact</span></nav>
+    <span class="eyebrow on-dark" style="margin-top:16px">Let's talk</span>
+    <h1>Request a free quote or SEO audit</h1>
+    <p class="lead">Tell us where you want to rank — and where you want to be cited. A strategist replies within 24 hours with a tailored plan.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="contact-layout">
+      <!-- FORM -->
+      <div class="rfq-card">
+        <form data-validate data-api="/api/enquiry" data-success="rfqSuccess" id="rfqForm" novalidate>
+          <span class="resp-badge">Avg. response time: under 2 hours</span>
+          <h2>Project &amp; quote request</h2>
+          <p class="sub">The more you share, the sharper our proposal. Fields marked <span style="color:var(--color-orange-500)">*</span> are required.</p>
+          <input type="hidden" name="type" value="quote">
+          <div class="form-grid">
+            <div class="field"><label>Full name <span class="req">*</span></label><input type="text" name="name" required placeholder="Your name"><span class="err-msg">Please enter your name.</span></div>
+            <div class="field"><label>Work email <span class="req">*</span></label><input type="email" name="email" required placeholder="you@company.com"><span class="err-msg">Enter a valid email.</span></div>
+            <div class="field"><label>Phone / WhatsApp <span class="req">*</span></label><input type="tel" name="phone" required placeholder="+91 ..."><span class="err-msg">Enter a valid phone number.</span></div>
+            <div class="field"><label>Company</label><input type="text" name="company" placeholder="Company name"></div>
+            <div class="field full"><label>Website URL</label><input type="text" name="website" placeholder="https://yourwebsite.com"></div>
+            <div class="field"><label>Service interested in <span class="req">*</span></label>
+              <select name="service" required><option value="">Select a service…</option><option>SEO &amp; AI Search</option><option>Social Media (SMO)</option><option>PPC &amp; Paid Ads</option><option>Content Marketing</option><option>ORM &amp; Reputation</option><option>AI Digital Marketing</option><option>Full-funnel / Not sure</option></select><span class="err-msg">Please choose a service.</span></div>
+            <div class="field"><label>Monthly budget</label>
+              <select name="budget"><option value="">Select range…</option><option>₹10k – ₹25k</option><option>₹25k – ₹50k</option><option>₹50k – ₹1L</option><option>₹1L+</option></select></div>
+            <div class="field full"><label>Tell us about your goals <span class="req">*</span></label><textarea name="message" required placeholder="What are you trying to achieve? Current challenges, target keywords, competitors…"></textarea><span class="err-msg">A few words help us help you.</span></div>
+          </div>
+          <label class="consent-line"><input type="checkbox" name="marketing" value="1"><span>Keep me posted with SEO tips, offers &amp; updates by email. You can unsubscribe anytime.</span></label>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top:16px"><i data-lucide="send" class="ic"></i>Send Request</button>
+          <p style="font-size:12.5px;color:var(--fg-muted-light);text-align:center;margin-top:12px">By submitting you agree to be contacted about your enquiry. We never share your data.</p>
+        </form>
+        <div class="rfq-success" id="rfqSuccess">
+          <div class="ok"><i data-lucide="check" class="ic"></i></div>
+          <h3>Request received! 🎉</h3>
+          <p>Thanks for reaching out. A strategist from Evision Infoserve will email you a tailored proposal within 24 hours. Need a faster reply? Message us on WhatsApp.</p>
+          <a href="https://wa.me/919811722064" class="btn btn-secondary" style="margin-top:20px"><i data-lucide="message-circle" class="ic"></i>Chat on WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- SIDE -->
+      <div class="contact-side">
+        <div class="info-card">
+          <div class="info-row"><div class="ico"><i data-lucide="phone" class="ic"></i></div><div><div class="k">Call us</div><div class="v"><a href="tel:+919811722064">+91 98117 22064</a></div></div></div>
+          <div class="info-row"><div class="ico"><i data-lucide="mail" class="ic"></i></div><div><div class="k">Email</div><div class="v"><a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a></div></div></div>
+          <div class="info-row"><div class="ico"><i data-lucide="map-pin" class="ic"></i></div><div><div class="k">Office</div><div class="v">Gaur City Mall, Greater Noida West,<br>Uttar Pradesh 201009</div></div></div>
+          <div class="info-row"><div class="ico"><i data-lucide="clock" class="ic"></i></div><div><div class="k">Hours</div><div class="v">Mon–Sat · 10:00 – 19:00 IST</div></div></div>
+        </div>
+
+        <div class="map-card">
+          <div class="map-road r1"></div><div class="map-road r2"></div><div class="map-road r3"></div>
+          <div class="map-pin"><i data-lucide="map-pin" class="ic"></i></div>
+          <div class="map-label"><div><b>Evision Infoserve</b><span>Gaur City Mall, Greater Noida West</span></div><a href="https://maps.google.com" class="btn btn-blue btn-sm">Directions</a></div>
+        </div>
+
+        <a href="https://wa.me/919811722064" class="info-card" style="display:flex;align-items:center;gap:14px;text-decoration:none">
+          <div class="ico" style="width:46px;height:46px;background:#25D366;color:#fff;border-radius:12px;display:grid;place-items:center;flex:none"><i data-lucide="message-circle" style="width:22px;height:22px"></i></div>
+          <div><div class="v" style="font-weight:700;color:var(--color-navy-800)">WhatsApp us instantly</div><div style="font-size:13px;color:var(--fg-muted-light)">Fastest way to reach our team</div></div>
+          <i data-lucide="arrow-right" style="width:18px;height:18px;color:var(--color-gray-400);margin-left:auto"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="assets/site.js?v=3"></script>
+<script src="assets/chrome.js?v=3"></script>
+</body>
+</html>

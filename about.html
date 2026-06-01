@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Evision Infoserve | Digital Marketing Agency, Greater Noida</title>
+<meta name="description" content="Evision Infoserve is an ISO 9001-certified digital marketing agency in Greater Noida, engineering SEO and AI-search visibility for 320+ brands across India.">
+<link rel="stylesheet" href="assets/tokens.css?v=3">
+<link rel="stylesheet" href="assets/site.css?v=3">
+<link rel="stylesheet" href="assets/chrome.css?v=3">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .about-hero { background: linear-gradient(180deg,var(--bg-subtle),#fff); padding: 56px 0 64px; position: relative; overflow: hidden; }
+  .about-hero::before { content:""; position:absolute; inset:0; background-image: linear-gradient(rgba(11,25,48,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(11,25,48,.03) 1px,transparent 1px); background-size: 46px 46px; mask-image: radial-gradient(700px 460px at 70% 0%,#000,transparent 70%); }
+  .about-hero-inner { position: relative; max-width: 760px; }
+  .about-hero h1 { font-size: clamp(36px,5.4vw,62px); color: var(--color-navy-800); letter-spacing:-0.018em; line-height: 1.02; margin: 16px 0 18px; }
+
+  .story-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; }
+  @media (max-width: 900px){ .story-grid { grid-template-columns: 1fr; gap: 36px; } }
+  .story-grid h2 { font-size: clamp(26px,3.2vw,38px); color: var(--color-navy-800); letter-spacing:-0.01em; margin-bottom: 16px; }
+  .story-grid p { color: var(--fg-muted-light); font-size: 16.5px; line-height: 1.7; margin-bottom: 16px; }
+  .story-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ss { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card); }
+  .ss .n { font-family: var(--font-headline); font-weight: 700; font-size: 40px; color: var(--color-navy-800); line-height: 1; letter-spacing:-0.02em; }
+  .ss .n.blue { color: var(--color-blue-500); }
+  .ss .n.gold { color: var(--color-gold-600); }
+  .ss .l { font-size: 13.5px; color: var(--fg-muted-light); margin-top: 6px; }
+
+  .val-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; margin-top: 44px; }
+  @media (max-width: 820px){ .val-grid { grid-template-columns: 1fr; } }
+  .val { padding: 28px; }
+  .val .ico { width: 50px; height: 50px; border-radius: 13px; background: var(--color-navy-800); color: var(--color-gold-500); display: grid; place-items: center; margin-bottom: 16px; }
+  .val .ico .ic { width: 24px; height: 24px; }
+  .val h3 { font-size: 19px; color: var(--color-navy-800); margin-bottom: 8px; }
+  .val p { font-size: 14.5px; color: var(--fg-muted-light); line-height: 1.6; }
+
+  .timeline { max-width: 720px; margin: 40px auto 0; }
+  .tl { display: flex; gap: 24px; padding-bottom: 28px; position: relative; }
+  .tl:last-child { padding-bottom: 0; }
+  .tl .yr { font-family: var(--font-headline); font-weight: 700; font-size: 22px; color: var(--color-blue-500); width: 70px; flex: none; text-align: right; }
+  .tl .body { border-left: 2px solid var(--border-light); padding: 0 0 0 24px; position: relative; }
+  .tl:last-child .body { border-left-color: transparent; }
+  .tl .body::before { content:""; position:absolute; left:-7px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--color-gold-500); box-shadow: 0 0 0 4px rgba(245,196,0,.2); }
+  .tl h3 { font-size: 17px; color: var(--color-navy-800); margin-bottom: 4px; }
+  .tl p { font-size: 14px; color: var(--fg-muted-light); line-height: 1.55; margin: 0; }
+
+  .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 22px; margin-top: 40px; }
+  @media (max-width: 820px){ .team-grid { grid-template-columns: 1fr 1fr; } }
+  .tm { text-align: center; padding: 26px 18px; }
+  .tm .av { width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 14px; display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; font-size: 28px; color: #fff; }
+  .tm h3 { font-size: 17px; color: var(--color-navy-800); margin-bottom: 2px; }
+  .tm .role { font-size: 13px; color: var(--color-blue-500); font-weight: 600; }
+
+  .certs { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 36px; }
+  .cert { display: inline-flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-pill); padding: 12px 20px; font-weight: 600; font-size: 14px; color: var(--color-navy-800); box-shadow: var(--shadow-sm); }
+  .cert .ic { width: 19px; height: 19px; color: var(--color-blue-500); }
+</style>
+</head>
+<body data-page="about">
+
+<!-- ░░ HERO ░░ -->
+<section class="about-hero" data-screen-label="About hero">
+  <div class="container about-hero-inner">
+    <nav class="crumb"><a href="index.html">Home</a><span class="sep">/</span><span style="color:var(--color-blue-500)">About</span></nav>
+    <span class="eyebrow" style="margin-top:16px">About Evision Infoserve</span>
+    <h1>We make brands impossible to miss — on Google and in AI</h1>
+    <p class="lead">An ISO 9001-certified digital marketing agency in Greater Noida, engineering search and AI-visibility for ambitious businesses since 2018.</p>
+  </div>
+</section>
+
+<!-- ░░ STORY ░░ -->
+<section class="section">
+  <div class="container story-grid">
+    <div>
+      <span class="eyebrow">Our story</span>
+      <h2 style="margin-top:14px">Built for how people actually search now</h2>
+      <p>Evision Infoserve started with a simple frustration: most agencies were still optimising for a version of search that was quietly disappearing. Rankings mattered, but answers — featured snippets, voice results, and increasingly AI summaries — were eating the click.</p>
+      <p>So we rebuilt our playbook around four discovery layers at once: <strong>SEO, AEO, GEO and LLMO</strong>. Today we help 320+ brands across India not just rank on Google, but become the source that ChatGPT, Gemini and Perplexity trust and cite.</p>
+      <a href="contact.html" class="btn btn-primary" style="margin-top:8px">Work with us</a>
+    </div>
+    <div class="story-stats">
+      <div class="ss"><div class="n blue">2018</div><div class="l">Founded in Greater Noida</div></div>
+      <div class="ss"><div class="n">320+</div><div class="l">Brands served across India</div></div>
+      <div class="ss"><div class="n gold">4.7★</div><div class="l">Across 2,124 Google reviews</div></div>
+      <div class="ss"><div class="n blue">24</div><div class="l">Strategists, writers &amp; engineers</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ VALUES ░░ -->
+<section class="section section-subtle">
+  <div class="container">
+    <div class="sec-head reveal"><span class="eyebrow">What makes us different</span><h2 class="h-lg" style="color:var(--color-navy-800)">Principles we build on</h2></div>
+    <div class="val-grid reveal">
+      <div class="card val"><div class="ico"><i data-lucide="layers" class="ic"></i></div><h3>Four layers, one strategy</h3><p>We never optimise for Google alone. Every page is engineered for search crawlers and large language models together.</p></div>
+      <div class="card val"><div class="ico"><i data-lucide="bar-chart-3" class="ic"></i></div><h3>Proof over promises</h3><p>Weekly reporting, real AI-visibility tracking and transparent pricing. You always know exactly what you're paying for.</p></div>
+      <div class="card val"><div class="ico"><i data-lucide="code-2" class="ic"></i></div><h3>Engineered, not guessed</h3><p>Schema, Core Web Vitals and clean architecture baked into every build — the technical rigour AI search demands.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ TIMELINE ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal" style="text-align:center;margin:0 auto"><span class="eyebrow" style="justify-content:center">Our journey</span><h2 class="h-lg" style="color:var(--color-navy-800)">From SEO shop to AI-search agency</h2></div>
+    <div class="timeline reveal">
+      <div class="tl"><div class="yr">2018</div><div class="body"><h3>The beginning</h3><p>Founded in Greater Noida as a focused SEO and web development studio for local businesses.</p></div></div>
+      <div class="tl"><div class="yr">2021</div><div class="body"><h3>Full-funnel agency</h3><p>Expanded into social, PPC, content and ORM — becoming a full-service digital marketing partner.</p></div></div>
+      <div class="tl"><div class="yr">2023</div><div class="body"><h3>ISO 9001 certified</h3><p>Formalised our processes and quality standards, crossing 200 brands served.</p></div></div>
+      <div class="tl"><div class="yr">2026</div><div class="body"><h3>Built for AI search</h3><p>Rolled out our AEO · GEO · LLMO playbook — engineering visibility across Google AND generative engines.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ TEAM ░░ -->
+<section class="section section-subtle">
+  <div class="container">
+    <div class="sec-head reveal"><span class="eyebrow">The people</span><h2 class="h-lg" style="color:var(--color-navy-800)">A team that lives in the SERPs</h2></div>
+    <div class="team-grid reveal">
+      <div class="card tm"><div class="av" style="background:var(--color-navy-800);color:var(--color-gold-500)">AK</div><h3>Amit Khanna</h3><div class="role">Founder &amp; CEO</div></div>
+      <div class="card tm"><div class="av" style="background:var(--color-blue-500)">PS</div><h3>Priya Sharma</h3><div class="role">Head of SEO Strategy</div></div>
+      <div class="card tm"><div class="av" style="background:var(--color-orange-500)">RV</div><h3>Rohit Verma</h3><div class="role">Head of Performance</div></div>
+      <div class="card tm"><div class="av" style="background:var(--color-navy-700);color:var(--color-blue-300)">NG</div><h3>Neha Gupta</h3><div class="role">Content &amp; GEO Lead</div></div>
+    </div>
+    <div class="certs reveal">
+      <span class="cert"><i data-lucide="badge-check" class="ic"></i>ISO 9001 Certified</span>
+      <span class="cert"><i data-lucide="award" class="ic"></i>Google Partner</span>
+      <span class="cert"><i data-lucide="star" class="ic"></i>4.7★ on Google</span>
+      <span class="cert"><i data-lucide="thumbs-up" class="ic"></i>Meta Business Partner</span>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ CTA BAND ░░ -->
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div><h2 class="h-lg" style="color:#fff;max-width:20ch">Let's make you the answer in your category</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Book a free audit and see what's possible.</p></div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap"><a href="contact.html" class="btn btn-primary btn-lg">Get a Free Audit</a><a href="pricing.html" class="btn btn-outline-white btn-lg">View Pricing</a></div>
+  </div>
+</section>
+
+<script src="assets/site.js?v=3"></script>
+<script src="assets/chrome.js?v=3"></script>
+</body>
+</html>

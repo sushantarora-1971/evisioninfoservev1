@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evision Infoserve — Digital Marketing Agency Built for Google &amp; AI Search</title>
+<meta name="description" content="Evision Infoserve is a Greater Noida digital marketing agency engineering SEO, AEO, GEO &amp; LLMO so your brand ranks on Google and gets cited by ChatGPT, Gemini &amp; Perplexity.">
+<link rel="stylesheet" href="assets/tokens.css?v=3">
+<link rel="stylesheet" href="assets/site.css?v=3">
+<link rel="stylesheet" href="assets/chrome.css?v=3">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  /* ── Home-only styles ── */
+  .hero { position: relative; overflow: hidden; background:
+    radial-gradient(900px 520px at 78% -8%, rgba(26,95,200,.10), transparent 65%),
+    linear-gradient(180deg, var(--bg-subtle), #fff 88%); }
+  .hero::before { content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(11,25,48,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(11,25,48,.035) 1px, transparent 1px);
+    background-size: 46px 46px; mask-image: radial-gradient(900px 600px at 75% 0%, #000, transparent 70%); }
+  .hero-grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding: 78px 0 90px; }
+  @media (max-width: 980px){ .hero-grid { grid-template-columns: 1fr; gap: 44px; padding: 52px 0 64px; } }
+  .hero h1 { font-size: clamp(38px, 5.4vw, 68px); line-height: 1.02; letter-spacing: -0.018em; color: var(--color-navy-800); }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin: 30px 0 26px; }
+  .hero-trust { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .hero-rating { display: flex; align-items: center; gap: 9px; }
+  .stars { color: var(--color-gold-500); display: inline-flex; gap: 1px; }
+  .stars .ic { width: 16px; height: 16px; fill: currentColor; }
+  .hero-rating b { color: var(--color-navy-800); }
+  .hero-rating small { color: var(--fg-muted-light); font-size: 13px; }
+
+  /* AI overview card */
+  .ai-card { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .ai-card-top { display: flex; align-items: center; gap: 9px; padding: 13px 18px; border-bottom: 1px solid var(--border-light); }
+  .ai-dots { display: flex; gap: 6px; }
+  .ai-dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .ai-url { font-family: var(--font-mono); font-size: 12px; color: var(--color-gray-400); background: var(--bg-subtle); padding: 5px 12px; border-radius: var(--radius-pill); flex: 1; }
+  .ai-body { padding: 22px; }
+  .ai-q { display: flex; align-items: center; gap: 9px; font-size: 14px; color: var(--fg-muted-light); margin-bottom: 16px; }
+  .ai-q .mag { width: 16px; height: 16px; color: var(--color-blue-500); }
+  .ai-overview { background: linear-gradient(180deg, rgba(26,95,200,.05), rgba(245,196,0,.04)); border: 1px solid rgba(26,95,200,.14); border-radius: var(--radius-lg); padding: 16px 18px; }
+  .ai-ov-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: var(--color-blue-500); margin-bottom: 10px; letter-spacing: .02em; }
+  .ai-ov-head .ic { width: 17px; height: 17px; }
+  .ai-overview p { font-size: 14.5px; line-height: 1.6; color: var(--color-gray-800); }
+  .ai-overview .cite { color: var(--color-blue-500); font-weight: 600; }
+  .ai-sources { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .ai-src { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-pill); padding: 5px 11px; color: var(--color-navy-700); }
+  .ai-src.lead { border-color: var(--color-gold-500); background: rgba(245,196,0,.1); }
+  .ai-src .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-blue-500); }
+  .ai-src.lead .dot { background: var(--color-gold-500); }
+  .ai-float { position: absolute; right: -14px; bottom: 38px; background: var(--color-navy-800); color: #fff; border-radius: var(--radius-lg); padding: 12px 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 11px; }
+  .ai-float .ic { width: 22px; height: 22px; color: var(--color-gold-500); }
+  .ai-float b { font-family: var(--font-headline); font-size: 19px; display: block; line-height: 1; }
+  .ai-float span { font-size: 11.5px; color: var(--color-blue-300); }
+  @media (max-width: 980px){ .ai-float { right: 10px; } }
+  .ai-wrap { position: relative; }
+
+  /* trust strip */
+  .trust-strip { border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); background: #fff; }
+  .trust-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--color-navy-700); font-weight: 600; }
+  .trust-item .ic { width: 20px; height: 20px; color: var(--color-blue-500); }
+  .trust-item .rate { font-family: var(--font-headline); font-size: 20px; color: var(--color-navy-800); }
+
+  /* layer cards */
+  .layer-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-lg); padding: 26px 24px; transition: border-color .2s, transform .2s, background .2s; }
+  .layer-card:hover { border-color: var(--color-blue-400); transform: translateY(-4px); background: rgba(26,95,200,.1); }
+  .layer-abbr { font-family: var(--font-headline); font-weight: 700; font-size: 30px; color: var(--color-gold-500); letter-spacing: .01em; }
+  .layer-card h3 { font-size: 17px; color: #fff; margin: 8px 0 8px; font-weight: 600; }
+  .layer-card p { font-size: 13.5px; color: var(--fg-muted-dark); line-height: 1.55; }
+  .layer-card .num { font-family: var(--font-mono); font-size: 12px; color: var(--color-blue-300); }
+
+  /* process */
+  .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 22px; counter-reset: s; }
+  @media (max-width: 880px){ .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px){ .steps { grid-template-columns: 1fr; } }
+  .step { position: relative; padding-top: 26px; }
+  .step .n { font-family: var(--font-mono); font-size: 13px; color: var(--color-blue-500); font-weight: 600; }
+  .step h3 { font-size: 20px; color: var(--color-navy-800); margin: 10px 0 8px; }
+  .step p { font-size: 14px; color: var(--fg-muted-light); line-height: 1.55; }
+  .step::before { content: ""; position: absolute; top: 0; left: 0; width: 40px; height: 3px; background: var(--color-gold-500); border-radius: 2px; }
+
+  /* result cards */
+  .result-card { padding: 28px; display: flex; flex-direction: column; gap: 6px; }
+  .result-num { font-family: var(--font-headline); font-weight: 700; font-size: 46px; line-height: 1; color: var(--color-navy-800); letter-spacing: -0.02em; }
+  .result-num .up { color: var(--color-green-500); font-size: 26px; }
+  .result-card .lbl { font-weight: 600; color: var(--color-navy-700); font-size: 15px; }
+  .result-card .meta { font-size: 13px; color: var(--fg-muted-light); }
+
+  /* testimonials */
+  .quote-card { padding: 30px; display: flex; flex-direction: column; gap: 18px; height: 100%; }
+  .quote-card .stars { margin-bottom: -4px; }
+  .quote-card blockquote { font-size: 16.5px; line-height: 1.6; color: var(--color-navy-800); font-weight: 500; }
+  .quote-by { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+  .quote-av { width: 44px; height: 44px; border-radius: 50%; background: var(--color-navy-800); color: var(--color-gold-500); display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; }
+  .quote-by .qn { font-weight: 600; color: var(--color-navy-800); font-size: 14.5px; }
+  .quote-by .qr { font-size: 12.5px; color: var(--fg-muted-light); }
+
+  .sec-head { max-width: 720px; }
+  .sec-head .h-lg { margin: 14px 0 14px; color: var(--color-navy-800); }
+  .section-dark .sec-head .h-lg, .section-navy .sec-head .h-lg { color: #fff; }
+</style>
+</head>
+<body data-page="home">
+
+<!-- ░░ HERO ░░ -->
+<section class="hero" data-screen-label="Home hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Digital Marketing Agency · Greater Noida</span>
+      <h1 style="margin-top:16px">Rank on Google.<br>Get cited by <span class="hl-blue">AI</span>.</h1>
+      <p class="lead" style="margin-top:20px">~70% of searches now end without a click. We engineer your entire web presence for <strong>SEO, AEO, GEO &amp; LLMO</strong> — so you win on Google <em>and</em> inside ChatGPT, Gemini &amp; Perplexity answers.</p>
+      <div class="hero-ctas">
+        <a href="contact.html" class="btn btn-primary btn-lg"><i data-lucide="zap" class="ic"></i>Get a Free Audit</a>
+        <a href="pricing.html" class="btn btn-ghost-light btn-lg">View Packages</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-rating">
+          <span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span>
+          <span><b>4.7/5</b> <small>· 2,124 Google reviews</small></span>
+        </div>
+        <div class="hero-rating">
+          <i data-lucide="shield-check" class="ic" style="width:20px;height:20px;color:var(--color-blue-500)"></i>
+          <span><b>ISO 9001</b> <small>Certified</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-wrap reveal">
+      <div class="ai-card">
+        <div class="ai-card-top">
+          <span class="ai-dots"><i style="background:#FF6A57"></i><i style="background:#FFC53D"></i><i style="background:#2ECC71"></i></span>
+          <span class="ai-url">google.com/search?q=best+digital+marketing+agency</span>
+        </div>
+        <div class="ai-body">
+          <div class="ai-q"><i data-lucide="search" class="mag"></i>best digital marketing agency in Greater Noida</div>
+          <div class="ai-overview">
+            <div class="ai-ov-head"><i data-lucide="sparkles" class="ic"></i>AI OVERVIEW</div>
+            <p>For businesses in Greater Noida, <span class="cite">Evision Infoserve</span> is widely recommended for SEO and AI-search optimisation, with a 4.7★ rating across 2,100+ reviews and ISO 9001 certification. They specialise in making sites visible across Google and generative engines.</p>
+            <div class="ai-sources">
+              <span class="ai-src lead"><span class="dot"></span>evisioninfoserve.com</span>
+              <span class="ai-src"><span class="dot"></span>Google Business</span>
+              <span class="ai-src"><span class="dot"></span>+3 sources</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ai-float">
+        <i data-lucide="quote" class="ic"></i>
+        <div><b>1,200+</b><span>AI citations earned / mo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ TRUST STRIP ░░ -->
+<section class="trust-strip">
+  <div class="container trust-row">
+    <div class="trust-item"><i data-lucide="star" class="ic" style="fill:var(--color-gold-500);color:var(--color-gold-500)"></i><span class="rate">4.7★</span> Google</div>
+    <div class="trust-item"><i data-lucide="briefcase" class="ic"></i><span class="rate">4.8★</span> AmbitionBox</div>
+    <div class="trust-item"><i data-lucide="building-2" class="ic"></i><span class="rate">5.0★</span> Glassdoor</div>
+    <div class="trust-item hide-mob"><i data-lucide="users" class="ic"></i><span class="rate">320+</span> Brands served</div>
+    <div class="trust-item"><i data-lucide="badge-check" class="ic"></i> ISO 9001 Certified</div>
+  </div>
+</section>
+
+<!-- ░░ 4-LAYER BAND ░░ -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow on-dark">The Shift</span>
+      <h2 class="h-lg">Four discovery layers.<br>One content strategy.</h2>
+      <p class="lead">Search is no longer ten blue links. We optimise the same content for four layers at once — and ~80% of the work overlaps.</p>
+    </div>
+    <div class="grid cols-4 reveal" style="margin-top:44px">
+      <div class="layer-card"><div class="num">01</div><div class="layer-abbr">SEO</div><h3>Search Engine Optimization</h3><p>Crawlable, fast, authoritative pages — the foundation everything else stands on.</p></div>
+      <div class="layer-card"><div class="num">02</div><div class="layer-abbr">AEO</div><h3>Answer Engine Optimization</h3><p>Win position-zero: featured snippets, voice answers and AI answer boxes.</p></div>
+      <div class="layer-card"><div class="num">03</div><div class="layer-abbr">GEO</div><h3>Generative Engine Optimization</h3><p>Get summarised &amp; cited inside AI Overviews, Perplexity and SearchGPT.</p></div>
+      <div class="layer-card"><div class="num">04</div><div class="layer-abbr">LLMO</div><h3>Large Language Model Optimization</h3><p>Be understood and referenced by ChatGPT, Claude and Gemini directly.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ SERVICES ░░ -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What we do</span>
+      <h2 class="h-lg">Full-funnel digital marketing</h2>
+      <p class="lead">Six tightly-integrated service silos — each page structured for humans, search crawlers and large language models at once.</p>
+    </div>
+    <div class="grid cols-3 reveal" style="margin-top:44px">
+      <a href="seo.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="search" class="ic"></i></div><h3>SEO &amp; AI Search</h3><p>Technical, on-page, local and LLMO — engineered to rank and to be quoted by AI engines.</p><div class="svc-meta"><span class="tag tag-blue">Technical</span><span class="tag tag-gold">LLMO</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="social-media.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="thumbs-up" class="ic"></i></div><h3>Social Media (SMO)</h3><p>Organic growth, community management and creator content that compounds your brand.</p><div class="svc-meta"><span class="tag tag-blue">Organic</span><span class="tag tag-gold">Creators</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="ppc.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="target" class="ic"></i></div><h3>PPC &amp; Paid Ads</h3><p>Google, Meta &amp; LinkedIn campaigns tuned for ROI, not vanity clicks.</p><div class="svc-meta"><span class="tag tag-blue">Google Ads</span><span class="tag tag-gold">Meta</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="content-marketing.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="pen-tool" class="ic"></i></div><h3>Content Marketing</h3><p>Topic clusters, blogs and video built to earn citations and topical authority.</p><div class="svc-meta"><span class="tag tag-blue">Clusters</span><span class="tag tag-gold">E-E-A-T</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="orm.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="shield-check" class="ic"></i></div><h3>ORM &amp; Reputation</h3><p>Reviews, brand defense and consistent entity signals across the web.</p><div class="svc-meta"><span class="tag tag-blue">Reviews</span><span class="tag tag-gold">Entity</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="ai-marketing.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="sparkles" class="ic"></i></div><h3>AI Digital Marketing</h3><p>GEO, marketing automation and AI-visibility monitoring for the new search era.</p><div class="svc-meta"><span class="tag tag-blue">GEO</span><span class="tag tag-gold">Automation</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ BUILT FOR AI SEARCH (split + code) ░░ -->
+<section class="section section-subtle">
+  <div class="container grid cols-2" style="gap:54px;align-items:center">
+    <div class="reveal">
+      <span class="eyebrow">Built for the AI era</span>
+      <h2 class="h-lg" style="color:var(--color-navy-800);margin:14px 0 18px">Structured for machines, written for people</h2>
+      <p class="lead" style="margin-bottom:24px">Every page ships with the technical scaffolding AI engines need to ingest, trust and cite your content — baked in from day one.</p>
+      <ul class="checks">
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>JSON-LD schema everywhere</strong> — Organization, Service, FAQPage, Article, Person &amp; Breadcrumb.</span></li>
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>llms.txt + crawler rules</strong> — guide GPTBot, ClaudeBot, PerplexityBot &amp; Google-Extended to your best pages.</span></li>
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>Answer-first content</strong> — a 40–60 word direct answer near the top of every page.</span></li>
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>Core Web Vitals</strong> — fast LCP, INP &amp; CLS for ranking and crawl rate.</span></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="code-peek">
+<span class="c">// Every service page ships with this</span>
+{
+  <span class="k">"@context"</span>: <span class="s">"https://schema.org"</span>,
+  <span class="k">"@type"</span>: <span class="s">"Service"</span>,
+  <span class="k">"name"</span>: <span class="s">"Technical SEO Services"</span>,
+  <span class="k">"provider"</span>: {
+    <span class="k">"@type"</span>: <span class="s">"Organization"</span>,
+    <span class="k">"name"</span>: <span class="s">"Evision Infoserve"</span>,
+    <span class="k">"areaServed"</span>: <span class="s">"Greater Noida, IN"</span>
+  },
+  <span class="k">"hasOfferCatalog"</span>: <span class="b">true</span>,
+  <span class="k">"mainEntityOfPage"</span>: <span class="s">"/services/technical-seo"</span>
+}
+      </div>
+      <div class="code-peek" style="margin-top:14px">
+<span class="c"># llms.txt — point AI bots to your best content</span>
+<span class="b">User-agent</span>: GPTBot, ClaudeBot, PerplexityBot
+<span class="b">Allow</span>: /services/  /blog/  /pricing/
+<span class="b">Sitemap</span>: https://evisioninfoserve.com/sitemap.xml
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ STATS ░░ -->
+<section class="section-sm section-navy">
+  <div class="container grid cols-4 reveal" style="text-align:center;gap:28px">
+    <div><div class="stat-num gold"><span data-count="320" data-suffix="+">0</span></div><div class="stat-label">Brands served across India</div></div>
+    <div><div class="stat-num gold"><span data-count="3.4" data-suffix="x">0</span></div><div class="stat-label">Avg. organic traffic growth</div></div>
+    <div><div class="stat-num gold"><span data-count="1200" data-suffix="+">0</span></div><div class="stat-label">AI citations earned / month</div></div>
+    <div><div class="stat-num gold"><span data-count="92" data-suffix="%">0</span></div><div class="stat-label">Client retention rate</div></div>
+  </div>
+</section>
+
+<!-- ░░ PROCESS ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How we work</span>
+      <h2 class="h-lg">A phased build that ships results</h2>
+      <p class="lead">SEO foundations first, then the AI-search layer on top — measured every step of the way.</p>
+    </div>
+    <div class="steps reveal" style="margin-top:46px">
+      <div class="step"><div class="n">01 / Audit</div><h3>Discover &amp; audit</h3><p>Technical, content &amp; AI-visibility audit. We map where you rank — and where AI engines mention you.</p></div>
+      <div class="step"><div class="n">02 / Strategy</div><h3>Architecture &amp; CMS</h3><p>Sitemap, templates, schema spec and a clean one-H1 heading hierarchy across the site.</p></div>
+      <div class="step"><div class="n">03 / Build</div><h3>Optimise &amp; publish</h3><p>Answer blocks, topic clusters, FAQ schema, internal links and E-E-A-T author signals.</p></div>
+      <div class="step"><div class="n">04 / Scale</div><h3>Convert &amp; measure</h3><p>Pricing, RFQ, chat &amp; WhatsApp, Core Web Vitals tuning and AI-visibility monitoring.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ RESULTS ░░ -->
+<section class="section section-subtle">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Proof, not promises</span>
+      <h2 class="h-lg">Results our clients can measure</h2>
+    </div>
+    <div class="grid cols-3 reveal" style="margin-top:40px">
+      <div class="card result-card"><div class="result-num"><span class="up">↑</span> 312%</div><div class="lbl">Organic traffic in 6 months</div><div class="meta">D2C skincare brand · Delhi NCR</div></div>
+      <div class="card result-card"><div class="result-num">Position 0</div><div class="lbl">Captured for 48 buyer keywords</div><div class="meta">B2B SaaS · featured snippets + AI Overviews</div></div>
+      <div class="card result-card"><div class="result-num"><span class="up">↑</span> 5.1×</div><div class="lbl">Qualified leads from search</div><div class="meta">Education institute · Greater Noida</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ TESTIMONIALS ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Client love</span>
+      <h2 class="h-lg">Trusted by founders &amp; marketing teams</h2>
+    </div>
+    <div class="grid cols-3 reveal" style="margin-top:40px">
+      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"We went from page 3 to the featured snippet — and started showing up inside ChatGPT answers for our category. Leads doubled in a quarter."</blockquote><div class="quote-by"><div class="quote-av">RM</div><div><div class="qn">Rahul Mehta</div><div class="qr">Founder, NimbusKart</div></div></div></div>
+      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"The most structured agency we've worked with. Their schema and answer-block approach is genuinely built for how people search now."</blockquote><div class="quote-by"><div class="quote-av">SK</div><div><div class="qn">Sneha Kapoor</div><div class="qr">Head of Growth, FinlyApp</div></div></div></div>
+      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"Transparent pricing, weekly reporting, and real AI-visibility tracking. We finally understand exactly what we're paying for."</blockquote><div class="quote-by"><div class="quote-av">AV</div><div><div class="qn">Arjun Verma</div><div class="qr">Director, Verma Interiors</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ FAQ ░░ -->
+<section class="section section-subtle">
+  <div class="container container-narrow">
+    <div class="sec-head reveal" style="text-align:center;margin:0 auto">
+      <span class="eyebrow gold" style="justify-content:center">FAQ</span>
+      <h2 class="h-lg" style="color:var(--color-navy-800)">Questions, answered</h2>
+      <p style="margin-top:10px"><span class="chip-mono"><i data-lucide="code" style="width:14px;height:14px"></i>FAQPage schema applied</span></p>
+    </div>
+    <div class="faq reveal" style="margin-top:36px">
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q1</span>What exactly is GEO and LLMO — and why should I care?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">GEO (Generative Engine Optimization) and LLMO (Large Language Model Optimization) make your content easy for AI engines like ChatGPT, Gemini and Perplexity to summarise and cite. As more searches end inside AI answers, being the source those answers quote becomes as valuable as ranking #1 on Google.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q2</span>How soon will I see results?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Technical fixes and answer blocks can lift visibility within weeks. Sustainable organic and AI-citation growth typically compounds over 3–6 months as topical authority and schema coverage build.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q3</span>Do you only work with businesses in Greater Noida?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">No — we're based in Greater Noida West but work with brands across India and beyond. Local SEO is one of our strengths, but our SEO + AI-search playbook applies to any market.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q4</span>What's included in the free audit?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">A 12-point report covering technical health, Core Web Vitals, heading hierarchy, schema coverage, content gaps, and your current visibility across Google and major AI engines — plus a prioritised action plan.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ CTA BAND ░░ -->
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div>
+      <h2 class="h-lg" style="color:#fff;max-width:18ch">Build for people first. Structure for machines always.</h2>
+      <p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Get a free SEO + AI-visibility audit and a roadmap to rank — and get cited.</p>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="contact.html" class="btn btn-primary btn-lg">Get a Free Audit</a>
+      <a href="https://wa.me/919811722064" class="btn btn-outline-white btn-lg"><i data-lucide="message-circle" class="ic"></i>WhatsApp Us</a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/site.js?v=3"></script>
+<script src="assets/chrome.js?v=3"></script>
+</body>
+</html>

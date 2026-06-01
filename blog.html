@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEO vs SEO: How AI Search Is Changing How Brands Get Found in 2026 | Evision Infoserve</title>
+<meta name="description" content="A practical guide to Generative Engine Optimization (GEO) and how it differs from traditional SEO — and what to do so your brand gets cited by ChatGPT, Gemini and Perplexity.">
+<link rel="stylesheet" href="assets/tokens.css?v=3">
+<link rel="stylesheet" href="assets/site.css?v=3">
+<link rel="stylesheet" href="assets/chrome.css?v=3">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .art-hero { background: var(--bg-subtle); padding: 36px 0 0; border-bottom: 1px solid var(--border-light); }
+  .art-head { max-width: 820px; margin: 0 auto; text-align: center; padding-bottom: 36px; }
+  .art-head h1 { font-size: clamp(30px,4.2vw,48px); color: var(--color-navy-800); letter-spacing:-0.015em; line-height: 1.08; margin: 18px 0 22px; }
+  .art-byline { display: inline-flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; color: var(--fg-muted-light); font-size: 14px; }
+  .art-byline .au { display: flex; align-items: center; gap: 9px; }
+  .art-av { width: 38px; height: 38px; border-radius: 50%; background: var(--color-navy-800); color: var(--color-gold-500); display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; font-size: 14px; }
+  .art-byline b { color: var(--color-navy-800); }
+  .art-byline .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-gray-400); }
+  .art-feat { max-width: 1000px; margin: 0 auto; height: clamp(220px,34vw,400px); border-radius: var(--radius-xl) var(--radius-xl) 0 0; position: relative; overflow: hidden;
+    background: radial-gradient(600px 300px at 30% 20%, rgba(26,95,200,.5), transparent 60%), linear-gradient(135deg, var(--color-navy-800), var(--color-navy-700)); display: grid; place-items: center; }
+  .art-feat::before { content:""; position:absolute; inset:0; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 44px 44px; }
+  .art-feat .ph { position: relative; text-align: center; color: rgba(255,255,255,.85); }
+  .art-feat .ph .big { font-family: var(--font-headline); font-weight: 700; font-size: clamp(40px,7vw,84px); color: #fff; letter-spacing: -0.02em; line-height: 1; }
+  .art-feat .ph .big span { color: var(--color-gold-500); }
+  .art-feat .ph .sm { font-family: var(--font-mono); font-size: 13px; color: var(--color-blue-300); margin-top: 12px; }
+
+  .art-layout { display: grid; grid-template-columns: 1fr 260px; gap: 56px; align-items: start; max-width: 1000px; margin: 0 auto; }
+  @media (max-width: 940px){ .art-layout { grid-template-columns: 1fr; } .art-side { display: none; } }
+
+  .prose { max-width: 680px; }
+  .prose h2 { font-size: clamp(24px,3vw,32px); color: var(--color-navy-800); letter-spacing:-0.01em; margin: 40px 0 14px; scroll-margin-top: 100px; }
+  .prose h3 { font-size: 20px; color: var(--color-navy-800); margin: 28px 0 10px; }
+  .prose p { font-size: 17px; line-height: 1.75; color: #2b3550; margin-bottom: 18px; }
+  .prose a.inline { color: var(--color-blue-500); font-weight: 600; border-bottom: 1px solid rgba(26,95,200,.3); }
+  .prose ul { margin: 0 0 18px 0; padding-left: 4px; list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .prose ul li { display: flex; gap: 11px; font-size: 16.5px; line-height: 1.6; color: #2b3550; }
+  .prose ul li::before { content:""; width: 7px; height: 7px; border-radius: 50%; background: var(--color-gold-500); flex: none; margin-top: 10px; }
+  .prose strong { color: var(--color-navy-800); }
+  .pull { border-left: 4px solid var(--color-blue-500); padding: 4px 0 4px 22px; margin: 26px 0; font-family: var(--font-headline); font-weight: 500; font-size: clamp(20px,2.4vw,26px); color: var(--color-navy-800); line-height: 1.3; }
+
+  .takeaways { background: rgba(245,196,0,.08); border: 1.5px solid rgba(245,196,0,.4); border-radius: var(--radius-lg); padding: 24px 26px; margin-bottom: 8px; }
+  .takeaways .th { display: flex; align-items: center; gap: 9px; font-family: var(--font-headline); font-weight: 600; font-size: 17px; color: var(--color-navy-800); margin-bottom: 12px; }
+  .takeaways .th .ic { width: 20px; height: 20px; color: var(--color-gold-600); }
+  .takeaways ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .takeaways li { display: flex; gap: 10px; font-size: 15px; line-height: 1.5; color: #2b3550; }
+  .takeaways li .ic { width: 18px; height: 18px; color: var(--color-gold-600); flex: none; margin-top: 1px; }
+
+  .stat-callout { display: flex; gap: 18px; align-items: center; background: var(--color-navy-800); color: #fff; border-radius: var(--radius-lg); padding: 22px 26px; margin: 26px 0; }
+  .stat-callout .big { font-family: var(--font-headline); font-weight: 700; font-size: 44px; color: var(--color-gold-500); line-height: 1; flex: none; }
+  .stat-callout p { margin: 0; font-size: 15px; color: var(--fg-muted-dark); }
+
+  .art-side { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 18px; }
+  .toc { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; }
+  .toc h4 { font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--color-gray-400); margin-bottom: 12px; }
+  .toc a { display: block; font-size: 13.5px; color: var(--fg-muted-light); padding: 7px 0 7px 14px; border-left: 2px solid var(--border-light); transition: all .15s; line-height: 1.35; }
+  .toc a.active, .toc a:hover { color: var(--color-blue-500); border-left-color: var(--color-blue-500); font-weight: 600; }
+  .side-news { background: var(--color-navy-800); color: #fff; border-radius: var(--radius-lg); padding: 22px; }
+  .side-news h4 { font-family: var(--font-headline); font-size: 18px; color: #fff; margin-bottom: 6px; }
+  .side-news p { font-size: 13px; color: var(--fg-muted-dark); margin-bottom: 14px; line-height: 1.5; }
+  .side-news input { width: 100%; border: none; border-radius: var(--radius-md); padding: 11px 13px; font-family: var(--font-body); font-size: 13.5px; margin-bottom: 10px; }
+
+  .author-box { display: flex; gap: 18px; background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 24px; margin: 40px 0; align-items: flex-start; }
+  .author-box .av { width: 64px; height: 64px; border-radius: 50%; background: var(--color-navy-800); color: var(--color-gold-500); display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; font-size: 22px; flex: none; }
+  .author-box .an { font-family: var(--font-headline); font-weight: 600; font-size: 18px; color: var(--color-navy-800); }
+  .author-box .ar { font-size: 13px; color: var(--color-blue-500); font-weight: 600; margin-bottom: 8px; }
+  .author-box p { font-size: 14px; color: var(--fg-muted-light); line-height: 1.6; margin: 0; }
+  .author-box .schema { font-family: var(--font-mono); font-size: 11px; color: var(--color-gray-400); margin-top: 8px; }
+
+  .rel-posts { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; margin-top: 36px; }
+  @media (max-width: 760px){ .rel-posts { grid-template-columns: 1fr; } }
+  .rp { overflow: hidden; display: flex; flex-direction: column; }
+  .rp .thumb { height: 150px; background: linear-gradient(135deg,var(--color-navy-800),var(--color-navy-600)); position: relative; }
+  .rp .thumb::after { content:""; position:absolute; inset:0; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 28px 28px; }
+  .rp .thumb.g2 { background: linear-gradient(135deg,#1A5FC8,#0D2347); }
+  .rp .thumb.g3 { background: linear-gradient(135deg,#0B1930,#1A4A90); }
+  .rp .rpb { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 8px; }
+  .rp .rpb h3 { font-size: 17px; color: var(--color-navy-800); line-height: 1.25; }
+  .rp .rpb .m { font-size: 12.5px; color: var(--fg-muted-light); margin-top: auto; }
+</style>
+</head>
+<body data-page="blog">
+
+<!-- ░░ HERO ░░ -->
+<section class="art-hero" data-screen-label="Article hero">
+  <div class="container">
+    <div class="art-head">
+      <span class="tag tag-blue">AI Search</span>
+      <h1>GEO vs SEO: How AI Search Is Changing the Way Brands Get Found in 2026</h1>
+      <div class="art-byline">
+        <span class="au"><span class="art-av">PS</span><b>Priya Sharma</b></span>
+        <span class="dot"></span><span>Head of SEO Strategy</span>
+        <span class="dot"></span><span>11 min read</span>
+        <span class="dot"></span><span>Updated 28 May 2026</span>
+      </div>
+    </div>
+    <div class="art-feat">
+      <div class="ph"><div class="big">GEO <span>vs</span> SEO</div><div class="sm">// the 2026 visibility playbook</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:44px">
+  <div class="container">
+    <div class="art-layout">
+      <!-- ARTICLE -->
+      <article class="prose">
+        <div class="takeaways">
+          <div class="th"><i data-lucide="sparkles" class="ic"></i>Key takeaways</div>
+          <ul>
+            <li><i data-lucide="check" class="ic"></i>SEO gets you ranked; GEO gets you <strong>cited</strong> inside AI answers.</li>
+            <li><i data-lucide="check" class="ic"></i>~70% of searches now end without a click — visibility ≠ traffic.</li>
+            <li><i data-lucide="check" class="ic"></i>The two share ~80% of the work: clean structure, schema, authority.</li>
+            <li><i data-lucide="check" class="ic"></i>Answer-first content + JSON-LD + E-E-A-T is the winning recipe.</li>
+          </ul>
+        </div>
+
+        <div class="quick-answer" style="margin:26px 0">
+          <div class="qa-head"><span class="qa-tag">QUICK ANSWER · AEO</span><span class="qa-q">What is GEO?</span></div>
+          <p>Generative Engine Optimization (GEO) is the practice of structuring content so AI engines like ChatGPT, Gemini and Perplexity summarise and cite it in their answers. Unlike SEO, which optimises for ranked links, GEO optimises to be the trusted source an AI quotes directly.</p>
+        </div>
+
+        <h2 id="shift">The search box is no longer the destination</h2>
+        <p>For two decades, the job was simple: rank in the top results and earn the click. But the interface of search has changed. Google AI Overviews, ChatGPT, Gemini and Perplexity increasingly answer the question <em>on the spot</em> — and the user never visits a website at all.</p>
+        <p>That doesn't make discoverability less important. It makes <strong>where</strong> you're discovered different. The new question isn't only "do I rank?" — it's "<strong>am I the source the AI trusts and names?</strong>"</p>
+
+        <div class="stat-callout"><div class="big">~70%</div><p>of Google searches now end without a click. Being cited inside the answer is the new front page.</p></div>
+
+        <h2 id="difference">SEO vs GEO: what's actually different</h2>
+        <p>It helps to think of them as two layers of the same strategy rather than competitors. <strong>SEO</strong> optimises for ranked links and clicks. <strong>GEO</strong> optimises for inclusion and citation inside generative answers.</p>
+        <h3>Where they overlap</h3>
+        <p>The good news: most of the work compounds. Fast, crawlable, well-structured pages with strong topical authority help you both rank on Google and get pulled into an AI summary.</p>
+        <ul>
+          <li>Clean heading hierarchy — one H1, ordered H2–H6.</li>
+          <li>Structured data (JSON-LD) so machines understand entities.</li>
+          <li>Genuine expertise and citations — Google's E-E-A-T and an AI's trust signals are close cousins.</li>
+        </ul>
+        <h3>Where they diverge</h3>
+        <p>GEO rewards <strong>contextual completeness</strong> over keyword density. AI engines lift self-contained passages, so each section should make sense on its own. Original data, clear definitions and comparison tables are disproportionately valuable — they're exactly what a model reaches for.</p>
+
+        <p class="pull">"Optimise for the question, not just the keyword. The brands that define the answer become the answer."</p>
+
+        <h2 id="playbook">A practical GEO playbook</h2>
+        <p>Here's the approach we ship on every Evision Infoserve build — a repeatable system, not a one-off trick.</p>
+        <h3>1. Lead with the answer</h3>
+        <p>Put a 40–60 word direct answer near the top of every page. This single move wins featured snippets, voice answers and AI answer boxes at once.</p>
+        <h3>2. Build topical authority in clusters</h3>
+        <p>Pillar pages supported by interlinked articles signal depth. AI engines favour sources that demonstrably own a topic, not pages that mention it once.</p>
+        <h3>3. Make your entities consistent</h3>
+        <p>Keep your brand name, services and location identical across your site, Google Business Profile and directories. Consistency is how a model becomes confident enough to name you.</p>
+        <h3>4. Open the door for AI crawlers</h3>
+        <p>An <a href="#" class="inline">llms.txt</a> file plus access for GPTBot, ClaudeBot and PerplexityBot tells the engines where your best, most citable content lives.</p>
+
+        <h2 id="faq">Frequently asked questions</h2>
+        <p style="margin-bottom:6px"><span class="chip-mono"><i data-lucide="code" style="width:14px;height:14px"></i>FAQPage schema applied</span></p>
+        <div class="faq" style="margin-top:14px">
+          <div class="faq-item"><button class="faq-q"><span class="faq-num">Q1</span>Will GEO replace SEO?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">No — they're complementary. SEO remains the foundation; GEO is a layer on top. The same structured, authoritative content powers both, so you're rarely choosing between them.</div></div></div>
+          <div class="faq-item"><button class="faq-q"><span class="faq-num">Q2</span>How do I know if AI engines are citing me?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Track brand mentions in ChatGPT, Gemini and Perplexity for your core queries, and watch referral traffic from AI engines in analytics. We monitor this monthly for clients on Growth and Scale plans.</div></div></div>
+          <div class="faq-item"><button class="faq-q"><span class="faq-num">Q3</span>Does GEO work for small, local businesses?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Especially well. India-specific, local intents are often under-served in AI training data, so clear, well-structured local content can earn citations faster than in crowded global niches.</div></div></div>
+        </div>
+
+        <!-- AUTHOR -->
+        <div class="author-box">
+          <div class="av">PS</div>
+          <div>
+            <div class="an">Priya Sharma</div>
+            <div class="ar">Head of SEO Strategy · Evision Infoserve</div>
+            <p>Priya leads search and AI-visibility strategy at Evision Infoserve, helping 80+ brands rank on Google and earn citations inside generative engines. She writes about the intersection of SEO, content and AI.</p>
+            <div class="schema">// Person schema · sameAs: linkedin.com/in/priyasharma</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SIDEBAR -->
+      <aside class="art-side">
+        <nav class="toc" data-toc>
+          <h4>On this page</h4>
+          <a href="#shift">The search box has changed</a>
+          <a href="#difference">SEO vs GEO</a>
+          <a href="#playbook">A practical playbook</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <div class="side-news">
+          <h4>The AI-Search Brief</h4>
+          <p>Monthly tactics on ranking and getting cited. No fluff.</p>
+          <input type="email" placeholder="you@email.com">
+          <button class="btn btn-secondary btn-block btn-sm">Subscribe</button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- RELATED -->
+    <div style="max-width:1000px;margin:56px auto 0">
+      <span class="eyebrow">Keep reading</span>
+      <div class="rel-posts">
+        <a href="blog.html" class="card lift rp"><div class="thumb"></div><div class="rpb"><span class="tag tag-blue" style="align-self:flex-start">Technical SEO</span><h3>llms.txt explained: the new robots.txt for AI</h3><span class="m">8 min read · May 2026</span></div></a>
+        <a href="blog.html" class="card lift rp"><div class="thumb g2"></div><div class="rpb"><span class="tag tag-gold" style="align-self:flex-start">Strategy</span><h3>E-E-A-T in 2026: signalling trust to Google and AI</h3><span class="m">6 min read · Apr 2026</span></div></a>
+        <a href="blog.html" class="card lift rp"><div class="thumb g3"></div><div class="rpb"><span class="tag tag-orange" style="align-self:flex-start">Local SEO</span><h3>How local brands win featured snippets in India</h3><span class="m">7 min read · Apr 2026</span></div></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ CTA BAND ░░ -->
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div><h2 class="h-lg" style="color:#fff;max-width:20ch">Want to get cited by AI for your category?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Get a free GEO + SEO audit and see where you stand today.</p></div>
+    <a href="contact.html" class="btn btn-primary btn-lg">Get a Free Audit</a>
+  </div>
+</section>
+
+<script src="assets/site.js?v=3"></script>
+<script src="assets/chrome.js?v=3"></script>
+</body>
+</html>

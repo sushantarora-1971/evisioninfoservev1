@@ -1,0 +1,285 @@
+
+===== ppt/slides/slide1.xml =====
+WEBSITE DEVELOPMENT BLUEPRINT  ·  2026
+Evision Infoserve
+A build-ready website template engineered for 
+SEO + AEO + GEO + LLMO
+Site architecture
+Pages, templates &amp; CMS rules
+AI search ready
+Answer &amp; generative engines
+Conversion-built
+Pricing, RFQ, chat &amp; WhatsApp
+evisioninfoserve.com   ·   Digital Marketing Agency
+===== ppt/slides/slide2.xml =====
+PROJECT AT A GLANCE
+Why this build is different
+We are not just rebuilding a website — we are engineering a digital-marketing-agency platform that ranks on Google and gets cited by AI answer engines. Every page is structured for humans, search crawlers and large language models at once.
+~70%
+of Google searches now end without a click
+4 layers
+SEO · AEO · GEO · LLMO optimised together
+1 H1
+per page + clean H2–H6 heading hierarchy
+Reference benchmarks for look, depth &amp; structure
+›  
+techmagnate.com — service depth
+›  
+akswebsoft.com — RFQ flow
+›  
+aerobusinesssolutions.com — pricing tiers
+›  
+rankontechnologies.com — SEO packages
+===== ppt/slides/slide3.xml =====
+INFORMATION ARCHITECTURE
+Complete site map
+Primary navigation, service silos and conversion pages
+Core pages
+Home — Digital Marketing Agency
+About Us
+Portfolio / Case Studies
+Our Clients
+Gallery
+Testimonials &amp; Reviews
+Career
+Contact Us
+Services hub
+Digital Marketing Services
+Content Marketing
+SEO (AI · LLMO · Technical · Local…)
+SMO — Social Media
+PPC — Paid Campaigns
+ORM — Reputation
+AI Digital Marketing
+Affiliate · YouTube · Email · App
+Convert &amp; comply
+Pricing / Packages
+Request for Quotation (RFQ)
+Free Quote
+Blog (with editable slugs)
+FAQ section
+Custom 404 page
+Privacy · Refund · Terms
+===== ppt/slides/slide4.xml =====
+FUNCTIONAL SPEC
+Core build requirements
+Non-negotiable CMS, UX and technical features baked into the template from day one.
+Editable content blocks
+Self-serve content updates on every page
+Editable slugs &amp; internal linking
+Clean URLs + page-to-page link control
+Mobile-first responsive
+Fluid layouts across all breakpoints
+Heading hierarchy
+One H1 per page, ordered H2–H6
+FAQ &amp; Blog modules
+Built-in FAQ blocks + full blog engine
+Custom 404 page
+Branded recovery + smart redirects
+Chatbot + WhatsApp
+Live capture &amp; instant chat CTAs
+Pricing + RFQ pages
+Transparent packages &amp; quote requests
+===== ppt/slides/slide5.xml =====
+REUSABLE TEMPLATES
+The page-template system
+Five master templates power the whole site. Build once, reuse everywhere — each ships with its own SEO &amp; schema rules.
+Home template
+Hero · services overview · proof · CTA
+Schema:  
+Organization + WebSite schema
+Service template
+H1 · direct answer · FAQ · related links
+Schema:  
+Service + FAQPage schema
+Blog / article
+Author · TOC · FAQ · key-takeaways box
+Schema:  
+Article + Person schema
+Pricing / packages
+Tiered cards · comparison · CTA to RFQ
+Schema:  
+Offer + Product schema
+Contact / RFQ
+Lead form · WhatsApp · map · trust signals
+Schema:  
+LocalBusiness + ContactPoint
+===== ppt/slides/slide6.xml =====
+TEMPLATE DEEP-DIVE
+Anatomy of a service page
+Your highest-value, most-repeated template — structured so Google ranks it and AI engines quote it.
+H1
+One keyword-rich H1 (e.g. “Technical SEO Services”)
+Answer
+40–60 word direct answer in the first paragraph
+Body
+H2 / H3 sub-sections, scannable &amp; entity-rich
+FAQ
+5–8 Q&amp;As with FAQPage schema
+CTA
+Pricing link · RFQ · WhatsApp · chatbot
+Always-on signals
+Unique title tag + meta description
+Editable slug, e.g. /services/technical-seo
+JSON-LD: Service + FAQPage + Breadcrumb
+3–5 contextual internal links
+Open Graph + Twitter card tags
+Image alt text + lazy loading
+Visible last-updated date for freshness
+===== ppt/slides/slide7.xml =====
+PART 2 — OPTIMISATION PLAYBOOK
+From SEO to AI Search
+SEO
+  ·  
+AEO
+  ·  
+GEO
+  ·  
+LLMO
+How we make evisioninfoserve.com visible across Google, ChatGPT, Gemini, Perplexity and Google AI Overviews.
+===== ppt/slides/slide8.xml =====
+THE SHIFT
+Four layers, one strategy
+Search is no longer just ten blue links. We optimise the same content for four discovery layers — and ~80% of the work overlaps.
+SEO
+Search Engine Optimization
+Crawlable, fast, authoritative pages — the foundation everything else stands on.
+AEO
+Answer Engine Optimization
+Win position-zero: featured snippets, voice answers and AI answer boxes.
+GEO
+Generative Engine Optimization
+Get summarised &amp; cited inside AI Overviews, Perplexity and SearchGPT.
+LLMO
+Large Language Model Optimization
+Be understood and referenced by ChatGPT, Claude and Gemini directly.
+===== ppt/slides/slide9.xml =====
+ANSWER ENGINE OPTIMIZATION
+Be the direct answer
+AEO
+Optimise for featured snippets, voice search and AI answer boxes — win “position zero”, not just a link.
+What to do
+Answer the question in the first 40–60 words of the page
+Target long-tail, question-form keywords (how / what / cost)
+Add a dedicated FAQ block to every service &amp; blog page
+Use concise, scannable paragraphs and clear sub-headings
+Provide definitions, steps and comparison tables AI can lift
+How we ship it
+FAQPage + HowTo JSON-LD on relevant templates
+A reusable “Quick answer” box at the top of each page
+Question-based H2/H3 headings mapped to real queries
+Speakable schema for voice-assistant readiness
+Internal search-intent map kept in the CMS
+===== ppt/slides/slide10.xml =====
+GENERATIVE ENGINE OPTIMIZATION
+Get summarised &amp; cited
+GEO
+Earn citations inside Google AI Overviews, Perplexity and SearchGPT by being the clearest, most trustworthy source.
+What to do
+Build deep topical authority around each service silo
+Lead with original data, examples, stats and case studies
+Keep entity names (brand, services, locations) consistent
+Demonstrate E-E-A-T: authors, credentials, citations
+Target niche, India-specific intents AI training data lacks
+How we ship it
+Topic clusters: pillar pages + supporting articles, interlinked
+Author bios with Person schema + sameAs profile links
+Key-takeaways summary box on long content
+Fresh “last updated” dates and a real publishing cadence
+Monitor how ChatGPT / Gemini / Perplexity describe the brand
+===== ppt/slides/slide11.xml =====
+LARGE LANGUAGE MODEL OPTIMIZATION
+Speak the machines’ language
+LLMO
+Structure and tag content so ChatGPT, Claude and Gemini can parse, trust and reference it accurately.
+What to do
+Use a clean, logical H2/H3 structure on every page
+Write self-contained sections that make sense out of context
+State facts plainly — brand, services, pricing, location
+Maintain consistent business info across the whole web
+Aim for contextual completeness, not keyword stuffing
+How we ship it
+JSON-LD: Organization, Service, Article, Person, Breadcrumb
+Add an llms.txt file pointing AI bots to your best content
+Allow GPTBot, ClaudeBot, PerplexityBot, Google-Extended
+Server-side render so content is visible without JavaScript
+Keep Google Business Profile + directories in sync
+===== ppt/slides/slide12.xml =====
+FOUNDATION
+Technical SEO for the AI era
+Without clean technicals, GEO and AEO have nothing reliable to ingest. These ship with the build.
+JSON-LD schema everywhere
+Organization, Service, Article, FAQPage, Person, Breadcrumb, LocalBusiness
+llms.txt + robots.txt
+Guide AI crawlers to your best, most citable pages
+AI crawler access
+Allow GPTBot, ClaudeBot, PerplexityBot &amp; Google-Extended
+Core Web Vitals
+Optimise LCP, INP &amp; CLS for ranking and crawl rate
+HTTPS + mobile-first
+Secure, fast, fully responsive — table stakes for trust
+XML sitemap + clean URLs
+Descriptive hierarchical slugs, auto-updating sitemap
+===== ppt/slides/slide13.xml =====
+BUILD STANDARD
+Per-page SEO &amp; build checklist
+Every published page must clear this bar before it goes live.
+Element
+Standard to meet
+Headings
+Exactly one H1; ordered H2–H6, no skips
+URL / slug
+Short, descriptive, editable, lowercase with hyphens
+Meta
+Unique title (≤60 chars) + description (≤155 chars)
+Answer block
+Direct 40–60 word answer near the top
+Schema
+Relevant JSON-LD (Service / Article / FAQPage / Breadcrumb)
+FAQ
+5–8 question-form Q&amp;As with FAQPage markup
+Internal links
+3–5 contextual links to related silo pages
+Social
+Open Graph + Twitter card tags set
+Media
+Compressed images, descriptive alt text, lazy-load
+Freshness
+Visible publish / last-updated date
+===== ppt/slides/slide14.xml =====
+DELIVERY
+Implementation roadmap
+A phased build that ships SEO foundations first, then layers AI-search optimisation on top.
+01
+Architecture &amp; CMS
+Finalise sitemap &amp; templates
+CMS: editable content + slugs
+Responsive design system
+Custom 404 + page linking
+02
+Content &amp; on-page SEO
+Build all service &amp; core pages
+One-H1 hierarchy + meta
+FAQ blocks + blog engine
+Internal linking map
+03
+AI-search layer
+JSON-LD across templates
+llms.txt + crawler rules
+Answer blocks &amp; topic clusters
+E-E-A-T author signals
+04
+Convert &amp; measure
+Pricing, RFQ, chat, WhatsApp
+Core Web Vitals tuning
+AI-visibility monitoring
+Iterate from analytics
+===== ppt/slides/slide15.xml =====
+THE TAKEAWAY
+Build for people first.
+Structure for machines always.
+A single, well-structured Evision Infoserve site that ranks on Google and gets cited by AI — SEO, AEO, GEO and LLMO working as one.
+Approve the sitemap &amp; templates
+Lock the CMS &amp; schema spec
+Kick off Phase 1 build
+evisioninfoserve.com
