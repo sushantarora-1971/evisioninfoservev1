@@ -27,6 +27,8 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(ROOT, "evision.db")
 PORT = int(os.environ.get("PORT", "8000"))
+# Bind 0.0.0.0 for local dev; set HOST=127.0.0.1 in production (behind Nginx).
+HOST = os.environ.get("HOST", "0.0.0.0")
 
 # Default seed admin — CHANGE THE PASSWORD after first login (panel > Settings).
 SEED_EMAIL = os.environ.get("ADMIN_EMAIL", "evisiononweb@gmail.com")
@@ -508,8 +510,9 @@ class Handler(SimpleHTTPRequestHandler):
 
 def main():
     init_db()
-    server = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
+    server = ThreadingHTTPServer((HOST, PORT), Handler)
     print(f"Evision Infoserve server running:")
+    print(f"  Bound  ->  {HOST}:{PORT}")
     print(f"  Site   ->  http://localhost:{PORT}/")
     print(f"  Admin  ->  http://localhost:{PORT}/admin/")
     try:

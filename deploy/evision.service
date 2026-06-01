@@ -1,0 +1,34 @@
+[Unit]
+Description=Evision Infoserve site + admin (Python stdlib server)
+After=network.target
+
+[Service]
+Type=simple
+# Runs as www-data (the nginx user). Make sure this user owns the app directory
+# so it can create/write evision.db. Adjust paths/user if you cloned elsewhere.
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/evisioninfoservev1
+
+# Bind to localhost only — Nginx is the public entry point.
+Environment=HOST=127.0.0.1
+Environment=PORT=8000
+
+# Optional: email alerts on new enquiries (Gmail needs an App Password).
+#Environment=SMTP_HOST=smtp.gmail.com
+#Environment=SMTP_PORT=587
+#Environment=SMTP_USER=you@gmail.com
+#Environment=SMTP_PASS=your-app-password
+#Environment=SMTP_FROM=you@gmail.com
+#Environment=NOTIFY_TO=info@evisioninfoserve.com
+
+# Optional: override the seeded admin on first run (before the DB exists).
+#Environment=ADMIN_EMAIL=you@evisioninfoserve.com
+#Environment=ADMIN_PASSWORD=change-me-strong
+
+ExecStart=/var/www/evisioninfoservev1/.venv/bin/python server.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
