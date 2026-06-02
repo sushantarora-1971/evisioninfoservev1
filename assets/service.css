@@ -24,6 +24,14 @@
 .incl .ic-wrap .ic { width: 21px; height: 21px; }
 .incl h3 { font-size: 16px; margin: 0 0 4px; }
 .incl p { font-size: 13.5px; margin: 0; line-height: 1.5; }
+/* clickable service cards (SEO hub) */
+.incl-link { text-decoration: none; color: inherit; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.incl-link:hover { border-color: var(--color-blue-500); box-shadow: 0 10px 26px rgba(13,30,60,.09); transform: translateY(-3px); }
+.incl-link .ic-wrap { transition: background .15s, color .15s; }
+.incl-link h3 { display: flex; align-items: center; gap: 6px; color: var(--color-navy-800); }
+.incl-arrow { width: 15px; height: 15px; color: var(--color-gray-400); opacity: 0; transform: translate(-3px,3px); transition: all .15s; }
+.incl-link:hover .incl-arrow { opacity: 1; transform: none; color: var(--color-blue-500); }
+.incl-link:hover .ic-wrap { background: var(--color-blue-500); color: #fff; }
 
 .proc-list { list-style: none; counter-reset: p; margin-top: 8px; }
 .proc-list li { position: relative; padding: 0 0 24px 56px; border-left: 2px solid var(--border-light); margin-left: 18px; }
