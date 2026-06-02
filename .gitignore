@@ -16,6 +16,9 @@ venv/
 node_modules/
 package-lock.json
 
+# Uploads (internal docs / blueprints — keep out of the repo)
+uploads/
+
 # Claude Code local config
 .claude/
 
