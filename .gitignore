@@ -18,6 +18,9 @@ package-lock.json
 
 # Uploads (internal docs / blueprints — keep out of the repo)
 uploads/
+screenshots/
+deploy/
+blueprint_text.txt
 
 # Claude Code local config
 .claude/
