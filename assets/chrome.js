@@ -35,11 +35,16 @@
     ["Guest Posting", "guest-posting.html"], ["Digital PR", "digital-pr.html"]];
   var OTHER_SUB = [["Social Media (SMO)", "social-media.html"], ["PPC & Paid Ads", "ppc.html"],
     ["ORM & Reputation", "orm.html"], ["AI Digital Marketing", "ai-marketing.html"]];
-  function megaCol(title, items) {
-    return '<div class="mega-col"><div class="mega-h">' + title + '</div>' +
+  function megaCol(title, items, href) {
+    var head = href
+      ? '<a class="mega-h mega-h-link" href="' + P + href + '">' + title + ' <i data-lucide="arrow-right" class="mega-h-ar"></i></a>'
+      : '<div class="mega-h">' + title + '</div>';
+    return '<div class="mega-col">' + head +
       items.map(function (s) { return '<a href="' + P + s[1] + '">' + s[0] + '</a>'; }).join("") + '</div>';
   }
-  var MEGA = megaCol("SEO", SEO_SUB) + megaCol("Content Marketing", CONTENT_SUB) + megaCol("More Services", OTHER_SUB);
+  var MEGA = megaCol("SEO", SEO_SUB, "seo.html") +
+    megaCol("Content Marketing", CONTENT_SUB, "content-marketing.html") +
+    megaCol("More Services", OTHER_SUB);
   var ALL_SUB = SEO_SUB.concat(CONTENT_SUB, OTHER_SUB);
 
   function navItem(href, label, key) {

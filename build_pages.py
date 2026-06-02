@@ -26,7 +26,23 @@ def rel(href, icon, title, sub):
             f'<div><b>{title}</b><span>{sub}</span></div></a>')
 
 
+# Parent category for the breadcrumb + URL chip (SEO / Content Marketing hubs).
+SEO_CHILDREN = {"ai-seo", "llm-optimization", "agentic-ai-seo", "enterprise-seo",
+                "ecommerce-seo", "technical-seo", "local-seo", "multilingual-seo",
+                "link-building", "white-label-seo", "seo-audit"}
+CONTENT_CHILDREN = {"guest-posting", "content-writing", "digital-pr"}
+
+
+def parent_crumb(slug):
+    if slug in SEO_CHILDREN:
+        return ("SEO & AI Search", "seo.html", "seo")
+    if slug in CONTENT_CHILDREN:
+        return ("Content Marketing", "content-marketing.html", "content-marketing")
+    return ("Services", "pricing.html", "services")
+
+
 def service_page(slug, c):
+    pname, phref, pslug = parent_crumb(slug)
     included = "\n          ".join(incl(*x) for x in c["included"])
     process = "\n          ".join(
         f'<li><h3>{t}</h3><p>{d}</p></li>' for t, d in c["process"])
@@ -52,7 +68,7 @@ def service_page(slug, c):
 <!-- ░░ HERO ░░ -->
 <section class="svc-hero">
   <div class="container svc-hero-inner">
-    <nav class="crumb"><a href="index.html">Home</a><span class="sep">/</span><a href="pricing.html">Services</a><span class="sep">/</span><span style="color:var(--color-gold-500)">{esc(c['name'])}</span></nav>
+    <nav class="crumb"><a href="index.html">Home</a><span class="sep">/</span><a href="{phref}">{esc(pname)}</a><span class="sep">/</span><span style="color:var(--color-gold-500)">{esc(c['name'])}</span></nav>
     <span class="eyebrow on-dark" style="margin-top:18px">{esc(c['eyebrow'])}</span>
     <h1>{esc(c['name'])}</h1>
     <p class="lead">{c['lead']}</p>
@@ -60,7 +76,7 @@ def service_page(slug, c):
       <a href="contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
     </div>
     <div class="svc-meta-row">
-      <span class="chip-mono"><i data-lucide="link" style="width:14px;height:14px"></i>/services/{slug}</span>
+      <span class="chip-mono"><i data-lucide="link" style="width:14px;height:14px"></i>/{pslug}/{slug}</span>
       <span class="chip-mono"><i data-lucide="code" style="width:14px;height:14px"></i>Service + FAQPage schema</span>
     </div>
   </div>
