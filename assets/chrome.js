@@ -27,10 +27,20 @@
     ["AI Digital Marketing", "GEO, automation &amp; analytics", "sparkles", "ai-marketing.html"]
   ];
 
-  var ddItems = SERVICES.map(function (s) {
-    return '<a class="dd-item" href="' + P + s[3] + '"><span class="dd-ic"><i data-lucide="' + s[2] + '"></i></span>' +
-      '<span><span class="dd-t">' + s[0] + '</span><span class="dd-d">' + s[1] + '</span></span></a>';
-  }).join("");
+  var SEO_SUB = [["SEO & AI Search", "seo.html"], ["AI SEO", "ai-seo.html"], ["LLM Optimization", "llm-optimization.html"],
+    ["Agentic AI SEO", "agentic-ai-seo.html"], ["Enterprise SEO", "enterprise-seo.html"], ["Ecommerce SEO", "ecommerce-seo.html"],
+    ["Technical SEO", "technical-seo.html"], ["Local SEO", "local-seo.html"], ["Multilingual SEO", "multilingual-seo.html"],
+    ["Link Building", "link-building.html"], ["White Label SEO", "white-label-seo.html"], ["SEO Audit", "seo-audit.html"]];
+  var CONTENT_SUB = [["Content Marketing", "content-marketing.html"], ["Content Writing", "content-writing.html"],
+    ["Guest Posting", "guest-posting.html"], ["Digital PR", "digital-pr.html"]];
+  var OTHER_SUB = [["Social Media (SMO)", "social-media.html"], ["PPC & Paid Ads", "ppc.html"],
+    ["ORM & Reputation", "orm.html"], ["AI Digital Marketing", "ai-marketing.html"]];
+  function megaCol(title, items) {
+    return '<div class="mega-col"><div class="mega-h">' + title + '</div>' +
+      items.map(function (s) { return '<a href="' + P + s[1] + '">' + s[0] + '</a>'; }).join("") + '</div>';
+  }
+  var MEGA = megaCol("SEO", SEO_SUB) + megaCol("Content Marketing", CONTENT_SUB) + megaCol("More Services", OTHER_SUB);
+  var ALL_SUB = SEO_SUB.concat(CONTENT_SUB, OTHER_SUB);
 
   function navItem(href, label, key) {
     return '<a href="' + P + href + '" class="nav-link' + (page === key ? " active" : "") + '">' + label + '</a>';
@@ -43,7 +53,7 @@
         navItem("index.html", "Home", "home") +
         '<div class="nav-dd"><span class="nav-link' + (page === "services" ? " active" : "") + '">Services ' +
           '<i data-lucide="chevron-down" class="caret"></i></span>' +
-          '<div class="dd-panel">' + ddItems +
+          '<div class="dd-panel mega">' + MEGA +
             '<div class="dd-foot"><span>Not sure what you need? <b class="text-gold">Get a free audit.</b></span>' +
             '<a href="' + P + 'contact.html" data-audit-open class="btn btn-secondary btn-sm">Free Audit</a></div>' +
           '</div></div>' +
@@ -66,8 +76,8 @@
   ].map(function (l) {
     return '<a href="' + P + l[0] + '" class="m-link' + (page === l[2] ? " active" : "") + '">' + l[1] + '</a>';
   }).join("");
-  var mServices = SERVICES.map(function (s) {
-    return '<a class="m-sublink" href="' + P + s[3] + '">' + s[0] + '</a>';
+  var mServices = ALL_SUB.map(function (s) {
+    return '<a class="m-sublink" href="' + P + s[1] + '">' + s[0] + '</a>';
   }).join("");
   var DRAWER = '<div class="m-drawer" id="mDrawer"><div class="m-scrim" data-close></div><div class="m-panel">' +
     '<div class="m-head">' + BRAND + '<button class="m-close" data-close aria-label="Close"><i data-lucide="x"></i></button></div>' +
@@ -103,8 +113,10 @@
         '<a href="' + P + 'about.html">About Us</a>' +
         '<a href="' + P + 'pricing.html">Pricing</a>' +
         '<a href="' + P + 'blog.html">Blog</a>' +
-        '<a href="#">Case Studies</a>' +
-        '<a href="#">Careers</a>' +
+        '<a href="' + P + 'portfolio.html">Case Studies</a>' +
+        '<a href="' + P + 'clients.html">Our Clients</a>' +
+        '<a href="' + P + 'testimonials.html">Testimonials</a>' +
+        '<a href="' + P + 'career.html">Careers</a>' +
         '<a href="' + P + 'contact.html">Contact</a></div>' +
       '<div class="foot-col foot-contact"><h4>Get in touch</h4>' +
         '<div><i data-lucide="map-pin" class="ic"></i><span>Gaur City Mall, Greater Noida West,<br>Uttar Pradesh 201009</span></div>' +
@@ -115,7 +127,7 @@
     '</div>' +
     '<div class="foot-bottom"><div class="copy">© 2026 Evision Infoserve. All rights reserved.</div>' +
       '<div class="foot-layers"><i data-lucide="sparkles" style="width:15px;height:15px"></i>Built for <b>SEO · AEO · GEO · LLMO</b></div>' +
-      '<div class="legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Refund</a><a href="#">Sitemap</a></div>' +
+      '<div class="legal"><a href="' + P + 'privacy-policy.html">Privacy</a><a href="' + P + 'terms.html">Terms</a><a href="' + P + 'refund-policy.html">Refund</a><a href="' + P + 'pricing.html">Pricing</a></div>' +
     '</div></div></footer>';
 
   var WIDGETS =

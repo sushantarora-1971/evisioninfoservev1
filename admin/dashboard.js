@@ -303,6 +303,89 @@
     } catch (ex) { msg.textContent = ex.message; }
   });
 
+  // ───────────────── Pricing & Offers ─────────────────
+  let SERVICES = [], OFFERS = [];
+
+  async function loadPricing() {
+    [SERVICES, OFFERS] = await Promise.all([
+      Admin.api("/api/admin/services"),
+      Admin.api("/api/admin/offers"),
+    ]);
+    renderOffers();
+    renderServices();
+  }
+
+  function renderOffers() {
+    if (!OFFERS.length) { $("#offersWrap").innerHTML = `<div class="muted">No offers yet.</div>`; return; }
+    $("#offersWrap").innerHTML = OFFERS.map(o => `
+      <div class="offer-row">
+        <div>
+          <b>${esc(o.name)}</b> <span class="tag">${o.discount_pct}% off</span>
+          ${o.active ? '<span class="pill pill-converted">active</span>' : ''}
+          ${o.note ? `<div class="muted">${esc(o.note)}</div>` : ''}
+        </div>
+        <div class="offer-actions">
+          <button class="link-btn" data-offer-toggle="${o.id}" data-active="${o.active}">${o.active ? 'Deactivate' : 'Activate'}</button>
+          <button class="link-btn danger" data-offer-del="${o.id}">Delete</button>
+        </div>
+      </div>`).join("");
+    $$("[data-offer-toggle]").forEach(b => b.addEventListener("click", async () => {
+      await Admin.api("/api/admin/offers/" + b.dataset.offerToggle, {
+        method: "PATCH", body: JSON.stringify({ active: b.dataset.active === "1" ? 0 : 1 }) });
+      toast("Offer updated"); await loadPricing();
+    }));
+    $$("[data-offer-del]").forEach(b => b.addEventListener("click", async () => {
+      if (!confirm("Delete this offer?")) return;
+      await Admin.api("/api/admin/offers/" + b.dataset.offerDel, { method: "DELETE" });
+      toast("Offer deleted"); await loadPricing();
+    }));
+  }
+
+  $("#ofAdd").addEventListener("click", async () => {
+    const name = $("#ofName").value.trim();
+    if (!name) { toast("Offer name required", "err"); return; }
+    await Admin.api("/api/admin/offers", { method: "POST", body: JSON.stringify({
+      name, discount_pct: Number($("#ofPct").value || 0),
+      note: $("#ofNote").value.trim(), active: $("#ofActive").checked ? 1 : 0,
+    })});
+    $("#ofName").value = ""; $("#ofPct").value = ""; $("#ofNote").value = ""; $("#ofActive").checked = false;
+    toast("Offer added"); await loadPricing();
+  });
+
+  function renderServices() {
+    const cats = {};
+    SERVICES.forEach(s => { (cats[s.category] = cats[s.category] || []).push(s); });
+    let html = "";
+    Object.keys(cats).forEach(cat => {
+      html += `<div class="svc-cat">${esc(cat)}</div>`;
+      html += `<table class="tbl"><thead><tr><th>Service</th><th>Price ₹</th><th>Unit</th><th>Starting</th><th>Discount %</th><th>Active</th><th></th></tr></thead><tbody>`;
+      cats[cat].forEach(s => {
+        html += `<tr data-svc="${s.id}">
+          <td><b>${esc(s.name)}</b><div class="muted">/${esc(s.slug)}</div></td>
+          <td><input class="mini" type="number" value="${s.price}" data-f="price"></td>
+          <td><input class="mini" value="${esc(s.unit)}" data-f="unit" style="width:84px"></td>
+          <td style="text-align:center"><input type="checkbox" data-f="starting" ${s.starting ? "checked" : ""}></td>
+          <td><input class="mini" type="number" value="${s.discount_pct}" data-f="discount_pct" style="width:64px"></td>
+          <td style="text-align:center"><input type="checkbox" data-f="active" ${s.active ? "checked" : ""}></td>
+          <td><button class="btn-primary sm" data-svc-save="${s.id}">Save</button></td></tr>`;
+      });
+      html += `</tbody></table>`;
+    });
+    $("#svcWrap").innerHTML = html;
+    $$("[data-svc-save]").forEach(b => b.addEventListener("click", async () => {
+      const tr = b.closest("tr");
+      const body = {};
+      tr.querySelectorAll("[data-f]").forEach(inp => {
+        body[inp.dataset.f] = inp.type === "checkbox" ? (inp.checked ? 1 : 0)
+          : (inp.type === "number" ? Number(inp.value || 0) : inp.value);
+      });
+      await Admin.api("/api/admin/services/" + b.dataset.svcSave, { method: "PATCH", body: JSON.stringify(body) });
+      toast("Saved");
+    }));
+  }
+
+  document.querySelector('[data-view="pricing"]').addEventListener("click", loadPricing);
+
   // ───────────────── tiny view helpers ─────────────────
   function table(heads, bodyRows) {
     return `<table class="tbl"><thead><tr>${heads.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${bodyRows}</tbody></table>`;

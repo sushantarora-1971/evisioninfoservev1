@@ -16,6 +16,7 @@
     <button class="nav-item active" data-view="dashboard">Dashboard</button>
     <button class="nav-item" data-view="enquiries">Enquiries <span class="badge" id="navNew"></span></button>
     <button class="nav-item" data-view="clients">Clients</button>
+    <button class="nav-item" data-view="pricing">Pricing &amp; Offers</button>
     <button class="nav-item" data-view="settings">Settings</button>
   </nav>
   <div class="side-foot">
@@ -61,6 +62,28 @@
       </div>
     </header>
     <div class="card"><div id="cliWrap"></div></div>
+  </section>
+
+  <!-- ░ PRICING & OFFERS ░ -->
+  <section class="view hidden" id="view-pricing">
+    <header class="topbar"><h1>Pricing &amp; Offers</h1></header>
+
+    <h2 class="sec-title">Festival / site-wide offer</h2>
+    <div class="card narrow" style="max-width:620px">
+      <p class="muted" style="margin:0 0 14px">Activate one offer to apply a discount across every service (struck-through prices + a banner show site-wide). A per-service discount overrides this for that service.</p>
+      <div id="offersWrap"></div>
+      <h3 class="drawer-h3" style="margin-top:18px">Add an offer</h3>
+      <div class="grid2">
+        <div><label>Name</label><input id="ofName" placeholder="e.g. Diwali Sale"></div>
+        <div><label>Discount %</label><input id="ofPct" type="number" min="0" max="90" placeholder="25"></div>
+      </div>
+      <label>Banner note (optional)</label><input id="ofNote" placeholder="Festive offer — limited time">
+      <label class="ck"><input type="checkbox" id="ofActive"> Activate now (turns off any other active offer)</label>
+      <button class="btn-primary sm" id="ofAdd" style="margin-top:12px">+ Add offer</button>
+    </div>
+
+    <h2 class="sec-title" style="margin-top:30px">Service prices</h2>
+    <div class="card"><div id="svcWrap"></div></div>
   </section>
 
   <!-- ░ SETTINGS ░ -->

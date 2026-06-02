@@ -113,6 +113,27 @@ def init_db():
             from_enquiry INTEGER,
             created_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS services (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            category TEXT NOT NULL,
+            price INTEGER DEFAULT 0,          -- base price in rupees
+            unit TEXT DEFAULT '/mo',          -- e.g. '/mo', 'one-time', '/project'
+            starting INTEGER DEFAULT 1,       -- show "Starting at"
+            discount_pct INTEGER DEFAULT 0,   -- per-service discount override (0 = none)
+            description TEXT DEFAULT '',
+            sort INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1
+        );
+        CREATE TABLE IF NOT EXISTS offers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,               -- e.g. 'Diwali Sale'
+            discount_pct INTEGER DEFAULT 0,
+            note TEXT DEFAULT '',             -- short line shown in the banner
+            active INTEGER DEFAULT 0,
+            created_at TEXT NOT NULL
+        );
         """
     )
     conn.commit()
@@ -122,6 +143,15 @@ def init_db():
                      ("marketing", "marketing INTEGER DEFAULT 0")):
         if col not in existing_cols:
             c.execute(f"ALTER TABLE enquiries ADD COLUMN {ddl}")
+    conn.commit()
+    # Seed services on first run (idempotent: INSERT OR IGNORE on unique slug).
+    for i, (slug, name, cat, price, unit, starting, desc) in enumerate(SERVICES_SEED):
+        c.execute(
+            """INSERT OR IGNORE INTO services
+               (slug,name,category,price,unit,starting,description,sort,active)
+               VALUES (?,?,?,?,?,?,?,?,1)""",
+            (slug, name, cat, price, unit, starting, desc, i),
+        )
     conn.commit()
     # Seed the first admin if none exist.
     existing = c.execute("SELECT COUNT(*) AS n FROM admins").fetchone()["n"]
@@ -154,6 +184,57 @@ def session_email(token):
 
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+# Services seeded on first run. Prices are PLACEHOLDERS — edit them in the admin
+# panel (Pricing tab). (slug, name, category, price, unit, starting, description)
+SERVICES_SEED = [
+    # ── SEO ──
+    ("seo", "SEO & AI Search", "SEO", 15000, "/mo", 1, "Full-funnel SEO engineered to rank on Google and get cited by AI engines."),
+    ("ai-seo", "AI SEO", "SEO", 18000, "/mo", 1, "Optimisation for AI Overviews and answer engines (AEO/GEO)."),
+    ("llm-optimization", "LLM Optimization", "SEO", 20000, "/mo", 1, "Get your brand surfaced and cited inside ChatGPT, Gemini & Perplexity."),
+    ("agentic-ai-seo", "Agentic AI SEO", "SEO", 25000, "/mo", 1, "Automation-driven SEO with AI agents handling research and execution."),
+    ("enterprise-seo", "Enterprise SEO", "SEO", 40000, "/mo", 1, "Scaled SEO programs for large, complex sites and multiple teams."),
+    ("ecommerce-seo", "Ecommerce SEO", "SEO", 30000, "/mo", 1, "Category, product and collection-page SEO that drives revenue."),
+    ("technical-seo", "Technical SEO", "SEO", 22000, "/mo", 1, "Crawl, indexation, Core Web Vitals and schema fixed at the root."),
+    ("local-seo", "Local SEO", "SEO", 12000, "/mo", 1, "Google Business Profile, maps pack and local citation dominance."),
+    ("multilingual-seo", "Multilingual SEO Services", "SEO", 28000, "/mo", 1, "Hreflang, localisation and SEO across multiple languages and regions."),
+    ("link-building", "Link Building Services", "SEO", 15000, "/mo", 1, "White-hat authority links from relevant, high-quality publishers."),
+    ("white-label-seo", "White Label SEO Services", "SEO", 20000, "/mo", 1, "SEO delivery under your agency's brand, reported your way."),
+    ("seo-audit", "SEO Audit", "SEO", 9000, "one-time", 0, "A 12-point technical, content and AI-visibility audit with an action plan."),
+    # ── Content Marketing ──
+    ("content-marketing", "Content Marketing", "Content Marketing", 20000, "/mo", 1, "Topic clusters, blogs and video that build topical authority."),
+    ("guest-posting", "Guest Posting", "Content Marketing", 12000, "/mo", 1, "Editorially placed guest articles on relevant, authoritative sites."),
+    ("content-writing", "Content Writing Services", "Content Marketing", 15000, "/mo", 1, "SEO-led blogs, web copy and landing pages written to convert."),
+    ("digital-pr", "Digital PR", "Content Marketing", 25000, "/mo", 1, "Newsworthy campaigns that earn coverage, links and brand mentions."),
+    # ── Other services ──
+    ("social-media", "Social Media (SMO)", "Other Services", 14000, "/mo", 1, "Organic social growth, community and content that converts."),
+    ("ppc", "PPC & Paid Ads", "Other Services", 18000, "/mo", 1, "Google, Meta and LinkedIn ad campaigns engineered for ROI."),
+    ("orm", "ORM & Reputation", "Other Services", 16000, "/mo", 1, "Review management and brand defence across the web."),
+    ("ai-marketing", "AI Digital Marketing", "Other Services", 22000, "/mo", 1, "GEO, automation and analytics for the AI-search era."),
+]
+CATEGORY_ORDER = ["SEO", "Content Marketing", "Other Services"]
+
+
+def compute_pricing(conn):
+    """Return (offer_dict_or_None, [service_dicts]) with final prices computed."""
+    offer_row = conn.execute(
+        "SELECT name, discount_pct, note FROM offers WHERE active=1 ORDER BY id DESC LIMIT 1"
+    ).fetchone()
+    offer = dict(offer_row) if offer_row else None
+    site_disc = offer["discount_pct"] if offer else 0
+    rows = conn.execute(
+        "SELECT * FROM services WHERE active=1 ORDER BY sort, id"
+    ).fetchall()
+    out = []
+    for r in rows:
+        d = dict(r)
+        # Per-service discount overrides the site-wide offer; otherwise use site-wide.
+        eff = d["discount_pct"] if d["discount_pct"] else site_disc
+        eff = max(0, min(90, eff))
+        d["effective_discount"] = eff
+        d["final_price"] = round(d["price"] * (100 - eff) / 100) if eff else d["price"]
+        out.append(d)
+    return offer, out
 
 
 def notify_new_enquiry(e):
@@ -229,7 +310,7 @@ class Handler(SimpleHTTPRequestHandler):
             return {}
         raw = self.rfile.read(length)
         try:
-            return json.loads(raw.decode() or "{}")
+            return json.loads(raw.decode("utf-8", "replace") or "{}")
         except json.JSONDecodeError:
             return {}
 
@@ -271,6 +352,26 @@ class Handler(SimpleHTTPRequestHandler):
     # ───────────── API: GET ─────────────
     def api_get(self):
         path = self.path.split("?")[0]
+        # Public pricing feed (services + active festival offer, prices computed).
+        if path == "/api/pricing":
+            conn = db()
+            offer, services = compute_pricing(conn)
+            conn.close()
+            return self._json({"offer": offer, "services": services})
+        if path == "/api/admin/services":
+            if not self._require_auth():
+                return
+            conn = db()
+            rows = conn.execute("SELECT * FROM services ORDER BY sort, id").fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
+        if path == "/api/admin/offers":
+            if not self._require_auth():
+                return
+            conn = db()
+            rows = conn.execute("SELECT * FROM offers ORDER BY id DESC").fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
         if path == "/api/admin/enquiries":
             if not self._require_auth():
                 return
@@ -414,6 +515,28 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True, "id": cid}, 201)
 
+        # Admin: create a festival offer
+        if path == "/api/admin/offers":
+            if not self._require_auth():
+                return
+            name = (data.get("name") or "").strip()
+            if not name:
+                return self._json({"error": "Offer name is required."}, 400)
+            active = 1 if data.get("active") else 0
+            conn = db()
+            # Only one site-wide offer should be active at a time.
+            if active:
+                conn.execute("UPDATE offers SET active=0")
+            cur = conn.execute(
+                "INSERT INTO offers (name,discount_pct,note,active,created_at) VALUES (?,?,?,?,?)",
+                (name, int(data.get("discount_pct") or 0), (data.get("note") or "").strip(),
+                 active, now_iso()),
+            )
+            conn.commit()
+            oid = cur.lastrowid
+            conn.close()
+            return self._json({"ok": True, "id": oid}, 201)
+
         # Admin: convert an enquiry into a client
         m = re.match(r"^/api/admin/enquiries/(\d+)/convert$", path)
         if m:
@@ -485,6 +608,48 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True})
 
+        m = re.match(r"^/api/admin/services/(\d+)$", self.path)
+        if m:
+            sid = int(m.group(1))
+            allowed = ("name", "category", "price", "unit", "starting",
+                       "discount_pct", "description", "sort", "active")
+            ints = {"price", "starting", "discount_pct", "sort", "active"}
+            fields, vals = [], []
+            for k in allowed:
+                if k in data:
+                    fields.append(f"{k}=?")
+                    vals.append(int(data[k]) if k in ints else data[k])
+            if not fields:
+                return self._json({"error": "Nothing to update."}, 400)
+            vals.append(sid)
+            conn = db()
+            conn.execute(f"UPDATE services SET {','.join(fields)} WHERE id=?", vals)
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+
+        m = re.match(r"^/api/admin/offers/(\d+)$", self.path)
+        if m:
+            oid = int(m.group(1))
+            conn = db()
+            if "active" in data and data.get("active"):
+                conn.execute("UPDATE offers SET active=0")  # only one active
+            allowed = ("name", "discount_pct", "note", "active")
+            ints = {"discount_pct", "active"}
+            fields, vals = [], []
+            for k in allowed:
+                if k in data:
+                    fields.append(f"{k}=?")
+                    vals.append(int(data[k]) if k in ints else data[k])
+            if not fields:
+                conn.close()
+                return self._json({"error": "Nothing to update."}, 400)
+            vals.append(oid)
+            conn.execute(f"UPDATE offers SET {','.join(fields)} WHERE id=?", vals)
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: DELETE ─────────────
@@ -502,6 +667,13 @@ class Handler(SimpleHTTPRequestHandler):
         if m:
             conn = db()
             conn.execute("DELETE FROM clients WHERE id=?", (int(m.group(1)),))
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+        m = re.match(r"^/api/admin/offers/(\d+)$", self.path)
+        if m:
+            conn = db()
+            conn.execute("DELETE FROM offers WHERE id=?", (int(m.group(1)),))
             conn.commit()
             conn.close()
             return self._json({"ok": True})

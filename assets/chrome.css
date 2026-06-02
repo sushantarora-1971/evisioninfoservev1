@@ -50,6 +50,12 @@
 .dd-foot span { font-size: 13px; color: #fff; font-weight: 500; }
 .dd-foot .text-gold { color: var(--color-gold-500); font-weight: 700; }
 
+/* mega menu */
+.dd-panel.mega { width: 690px; grid-template-columns: repeat(3, 1fr); gap: 4px 16px; padding: 20px 22px; }
+.mega-col .mega-h { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--color-blue-500); margin: 2px 0 6px; }
+.mega-col a { display: block; padding: 6px 9px; border-radius: var(--radius-md); font-size: 13.5px; color: var(--color-navy-700); font-weight: 500; }
+.mega-col a:hover { background: var(--bg-subtle); color: var(--color-blue-500); }
+
 /* hamburger */
 .nav-burger { display: none; width: 42px; height: 42px; border: 1px solid var(--border-light); border-radius: var(--radius-md);
   background: #fff; cursor: pointer; place-items: center; color: var(--color-navy-800); }
