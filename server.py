@@ -185,6 +185,33 @@ def session_email(token):
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
+# ── Clean / hierarchical URLs ──────────────────────────────────────────────
+# Map each file to its pretty URL. The server serves the file at the clean URL
+# and 301-redirects the old .html URL to it.
+_SEO_CHILDREN = ["ai-seo", "llm-optimization", "agentic-ai-seo", "enterprise-seo",
+                 "ecommerce-seo", "technical-seo", "local-seo", "multilingual-seo",
+                 "link-building", "white-label-seo", "seo-audit"]
+_CONTENT_CHILDREN = ["content-writing", "guest-posting", "digital-pr"]
+FILE_TO_CLEAN = {
+    "index.html": "/",
+    "seo.html": "/services/seo",
+    "content-marketing.html": "/services/content-marketing",
+    "social-media.html": "/services/social-media",
+    "ppc.html": "/services/ppc",
+    "orm.html": "/services/orm",
+    "ai-marketing.html": "/services/ai-digital-marketing",
+    "pricing.html": "/pricing", "about.html": "/about", "blog.html": "/blog",
+    "contact.html": "/contact", "portfolio.html": "/portfolio", "clients.html": "/clients",
+    "career.html": "/career", "testimonials.html": "/testimonials",
+    "privacy-policy.html": "/privacy-policy", "refund-policy.html": "/refund-policy",
+    "terms.html": "/terms", "service.html": "/service",
+}
+for _c in _SEO_CHILDREN:
+    FILE_TO_CLEAN[_c + ".html"] = "/services/seo/" + _c
+for _c in _CONTENT_CHILDREN:
+    FILE_TO_CLEAN[_c + ".html"] = "/services/content-marketing/" + _c
+CLEAN_TO_FILE = {v: k for k, v in FILE_TO_CLEAN.items()}
+
 # Services seeded on first run. Prices are PLACEHOLDERS — edit them in the admin
 # panel (Pricing tab). (slug, name, category, price, unit, starting, description)
 SERVICES_SEED = [
@@ -327,11 +354,27 @@ class Handler(SimpleHTTPRequestHandler):
             return None
         return email
 
+    def _redirect301(self, location):
+        self.send_response(301)
+        self.send_header("Location", location)
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
     # ---- dispatch ----
     def do_GET(self):
-        if self.path.split("?")[0].startswith("/api/"):
+        raw = self.path.split("?")[0]
+        if raw.startswith("/api/"):
             return self.api_get()
-        # Pretty URL: /admin -> /admin/index.html handled by SimpleHTTPRequestHandler
+        # Old .html URL → 301 to the clean URL.
+        fname = raw[1:] if raw.startswith("/") else raw
+        if fname in FILE_TO_CLEAN:
+            return self._redirect301(FILE_TO_CLEAN[fname])
+        # Clean URL → serve the underlying file.
+        clean = raw.rstrip("/") or "/"
+        if clean in CLEAN_TO_FILE:
+            self.path = "/" + CLEAN_TO_FILE[clean]
+            return super().do_GET()
+        # Everything else (assets, /admin/, etc.) served as-is.
         return super().do_GET()
 
     def do_POST(self):

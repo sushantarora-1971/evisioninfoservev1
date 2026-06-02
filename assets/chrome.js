@@ -5,7 +5,7 @@
    ============================================================ */
 (function () {
   var page = document.body.dataset.page || "";
-  var P = (window.SITE_PREFIX || ""); // relative prefix if pages live in subfolders
+  var P = (window.SITE_PREFIX || "/"); // absolute links → server 301s .html to clean URLs
 
   var MARK = '<svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">' +
     '<rect width="36" height="36" rx="9" fill="#0B1930"/>' +
@@ -27,11 +27,11 @@
     ["AI Digital Marketing", "GEO, automation &amp; analytics", "sparkles", "ai-marketing.html"]
   ];
 
-  var SEO_SUB = [["SEO & AI Search", "seo.html"], ["AI SEO", "ai-seo.html"], ["LLM Optimization", "llm-optimization.html"],
+  var SEO_SUB = [["AI SEO", "ai-seo.html"], ["LLM Optimization", "llm-optimization.html"],
     ["Agentic AI SEO", "agentic-ai-seo.html"], ["Enterprise SEO", "enterprise-seo.html"], ["Ecommerce SEO", "ecommerce-seo.html"],
     ["Technical SEO", "technical-seo.html"], ["Local SEO", "local-seo.html"], ["Multilingual SEO", "multilingual-seo.html"],
     ["Link Building", "link-building.html"], ["White Label SEO", "white-label-seo.html"], ["SEO Audit", "seo-audit.html"]];
-  var CONTENT_SUB = [["Content Marketing", "content-marketing.html"], ["Content Writing", "content-writing.html"],
+  var CONTENT_SUB = [["Content Writing", "content-writing.html"],
     ["Guest Posting", "guest-posting.html"], ["Digital PR", "digital-pr.html"]];
   var OTHER_SUB = [["Social Media (SMO)", "social-media.html"], ["PPC & Paid Ads", "ppc.html"],
     ["ORM & Reputation", "orm.html"], ["AI Digital Marketing", "ai-marketing.html"]];
@@ -42,10 +42,12 @@
     return '<div class="mega-col">' + head +
       items.map(function (s) { return '<a href="' + P + s[1] + '">' + s[0] + '</a>'; }).join("") + '</div>';
   }
-  var MEGA = megaCol("SEO", SEO_SUB, "seo.html") +
+  // Parent service page is the column header; its child pages are listed under it.
+  var MEGA = megaCol("SEO &amp; AI Search", SEO_SUB, "seo.html") +
     megaCol("Content Marketing", CONTENT_SUB, "content-marketing.html") +
     megaCol("More Services", OTHER_SUB);
-  var ALL_SUB = SEO_SUB.concat(CONTENT_SUB, OTHER_SUB);
+  var ALL_SUB = [["SEO &amp; AI Search", "seo.html"]].concat(SEO_SUB,
+    [["Content Marketing", "content-marketing.html"]], CONTENT_SUB, OTHER_SUB);
 
   function navItem(href, label, key) {
     return '<a href="' + P + href + '" class="nav-link' + (page === key ? " active" : "") + '">' + label + '</a>';

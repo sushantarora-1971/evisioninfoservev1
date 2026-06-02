@@ -34,7 +34,7 @@
           '<div class="ps-amount">' + amount +
             '<span class="ps-unit">' + unitLabel(s) + '</span> ' + badge + '</div>' +
         '</div>' +
-        '<a href="contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-lg">Get Started</a>' +
+        '<a href="/contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-lg">Get Started</a>' +
       '</div></div>';
   }
 
@@ -56,7 +56,7 @@
     bar.innerHTML = '<div class="container">🎉 <b>' + offer.name + '</b> — ' +
       offer.discount_pct + '% OFF all services' +
       (offer.note ? ' · ' + offer.note : '') +
-      ' <a href="pricing.html">View pricing →</a></div>';
+      ' <a href="/pricing.html">View pricing →</a></div>';
     document.body.insertBefore(bar, document.body.firstChild);
   }
 
@@ -74,8 +74,8 @@
           (s.starting ? '<span class="pg-from">Starting at</span>' : '') +
           '<div class="pg-amount">' + amount + '</div></div>' +
         '<div class="pg-card-actions">' +
-          '<a href="' + s.slug + '.html" class="btn btn-ghost-light btn-sm">Details</a>' +
-          '<a href="contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-sm">Get Started</a>' +
+          '<a href="/' + s.slug + '.html" class="btn btn-ghost-light btn-sm">Details</a>' +
+          '<a href="/contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-sm">Get Started</a>' +
         '</div>' +
       '</div>';
   }

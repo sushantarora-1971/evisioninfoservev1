@@ -22,6 +22,8 @@ def faq_item(i, q, a):
 
 
 def rel(href, icon, title, sub):
+    if not href.startswith(('/', 'http')):
+        href = '/' + href
     return (f'<a href="{href}" class="rel"><i data-lucide="{icon}" class="ic"></i>'
             f'<div><b>{title}</b><span>{sub}</span></div></a>')
 
@@ -35,10 +37,10 @@ CONTENT_CHILDREN = {"guest-posting", "content-writing", "digital-pr"}
 
 def parent_crumb(slug):
     if slug in SEO_CHILDREN:
-        return ("SEO & AI Search", "seo.html", "seo")
+        return ("SEO & AI Search", "/services/seo", "services/seo")
     if slug in CONTENT_CHILDREN:
-        return ("Content Marketing", "content-marketing.html", "content-marketing")
-    return ("Services", "pricing.html", "services")
+        return ("Content Marketing", "/services/content-marketing", "services/content-marketing")
+    return ("Services", "/pricing", "services")
 
 
 def service_page(slug, c):
@@ -57,10 +59,10 @@ def service_page(slug, c):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{esc(c['title'])} | Evision Infoserve</title>
 <meta name="description" content="{esc(c['metadesc'])}">
-<link rel="stylesheet" href="assets/tokens.css{VER}">
-<link rel="stylesheet" href="assets/site.css{VER}">
-<link rel="stylesheet" href="assets/chrome.css{VER}">
-<link rel="stylesheet" href="assets/service.css">
+<link rel="stylesheet" href="/assets/tokens.css{VER}">
+<link rel="stylesheet" href="/assets/site.css{VER}">
+<link rel="stylesheet" href="/assets/chrome.css{VER}">
+<link rel="stylesheet" href="/assets/service.css">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body data-page="services">
@@ -68,12 +70,12 @@ def service_page(slug, c):
 <!-- ░░ HERO ░░ -->
 <section class="svc-hero">
   <div class="container svc-hero-inner">
-    <nav class="crumb"><a href="index.html">Home</a><span class="sep">/</span><a href="{phref}">{esc(pname)}</a><span class="sep">/</span><span style="color:var(--color-gold-500)">{esc(c['name'])}</span></nav>
+    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><a href="{phref}">{esc(pname)}</a><span class="sep">/</span><span style="color:var(--color-gold-500)">{esc(c['name'])}</span></nav>
     <span class="eyebrow on-dark" style="margin-top:18px">{esc(c['eyebrow'])}</span>
     <h1>{esc(c['name'])}</h1>
     <p class="lead">{c['lead']}</p>
     <div class="hero-ctas" style="margin:26px 0 0;display:flex;gap:14px;flex-wrap:wrap">
-      <a href="contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
+      <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
     </div>
     <div class="svc-meta-row">
       <span class="chip-mono"><i data-lucide="link" style="width:14px;height:14px"></i>/{pslug}/{slug}</span>
@@ -144,7 +146,7 @@ def service_page(slug, c):
       <div class="side-cta">
         <h4>{esc(c['side_title'])}</h4>
         <p>{c['side_text']}</p>
-        <a href="contact.html" data-audit-open class="btn btn-primary btn-block">Get a Free Audit</a>
+        <a href="/contact.html" data-audit-open class="btn btn-primary btn-block">Get a Free Audit</a>
         <a href="https://wa.me/919811722064" class="btn btn-outline-white btn-block" style="margin-top:10px"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>
       </div>
       <div class="side-rate">
@@ -169,13 +171,13 @@ def service_page(slug, c):
 <section class="cta-band">
   <div class="container cta-inner">
     <div><h2 class="h-lg" style="color:#fff;max-width:22ch">{c['cta_h']}</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Book a free audit this week — no obligation.</p></div>
-    <a href="contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
+    <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
   </div>
 </section>
 
-<script src="assets/site.js{VER}"></script>
-<script src="assets/chrome.js{VER}"></script>
-<script src="assets/pricing.js{VER}"></script>
+<script src="/assets/site.js{VER}"></script>
+<script src="/assets/chrome.js{VER}"></script>
+<script src="/assets/pricing.js{VER}"></script>
 </body>
 </html>
 """
@@ -564,17 +566,17 @@ def simple_page(slug, c):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{esc(c['title'])} | Evision Infoserve</title>
 <meta name="description" content="{esc(c['metadesc'])}">
-<link rel="stylesheet" href="assets/tokens.css{VER}">
-<link rel="stylesheet" href="assets/site.css{VER}">
-<link rel="stylesheet" href="assets/chrome.css{VER}">
-<link rel="stylesheet" href="assets/service.css">
+<link rel="stylesheet" href="/assets/tokens.css{VER}">
+<link rel="stylesheet" href="/assets/site.css{VER}">
+<link rel="stylesheet" href="/assets/chrome.css{VER}">
+<link rel="stylesheet" href="/assets/service.css">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body data-page="{c.get('page','')}">
 
 <section class="svc-hero">
   <div class="container svc-hero-inner">
-    <nav class="crumb"><a href="index.html">Home</a><span class="sep">/</span><span style="color:var(--color-gold-500)">{esc(c['name'])}</span></nav>
+    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-gold-500)">{esc(c['name'])}</span></nav>
     <span class="eyebrow on-dark" style="margin-top:18px">{esc(c['eyebrow'])}</span>
     <h1>{esc(c['name'])}</h1>
     <p class="lead">{c['lead']}</p>
@@ -591,13 +593,13 @@ def simple_page(slug, c):
 <section class="cta-band">
   <div class="container cta-inner">
     <div><h2 class="h-lg" style="color:#fff;max-width:22ch">Ready to grow with Evision?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Book a free audit this week — no obligation.</p></div>
-    <a href="contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
+    <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
   </div>
 </section>
 
-<script src="assets/site.js{VER}"></script>
-<script src="assets/chrome.js{VER}"></script>
-<script src="assets/pricing.js{VER}"></script>
+<script src="/assets/site.js{VER}"></script>
+<script src="/assets/chrome.js{VER}"></script>
+<script src="/assets/pricing.js{VER}"></script>
 </body>
 </html>
 """
@@ -623,7 +625,7 @@ SIMPLE = {
       <div class="incl"><div class="ic-wrap"><i data-lucide="megaphone" class="ic"></i></div><div><h3>D2C · digital PR</h3><p>A data study earned 40+ pieces of coverage and high-authority links.</p></div></div>
       <div class="incl"><div class="ic-wrap"><i data-lucide="target" class="ic"></i></div><div><h3>Lead-gen · −38% CPL</h3><p>Restructured paid campaigns to cut cost-per-lead while scaling volume.</p></div></div>
     </div>
-    <p style="margin-top:24px">Want the full case study for your industry? <a href="contact.html" data-audit-open>Ask us for relevant examples</a> and we'll share detailed results.</p>"""),
+    <p style="margin-top:24px">Want the full case study for your industry? <a href="/contact.html" data-audit-open>Ask us for relevant examples</a> and we'll share detailed results.</p>"""),
 
  "clients": dict(
    title="Our Clients", name="Our Clients", eyebrow="Who we work with", page="",
@@ -636,7 +638,7 @@ SIMPLE = {
       <div class="incl"><div class="ic-wrap"><i data-lucide="stethoscope" class="ic"></i></div><div><h3>Healthcare & clinics</h3><p>Local and trust-led visibility that books appointments.</p></div></div>
       <div class="incl"><div class="ic-wrap"><i data-lucide="briefcase" class="ic"></i></div><div><h3>Professional services</h3><p>Authority content that wins high-value enquiries.</p></div></div>
     </div>
-    <p style="margin-top:24px">Curious whether we've worked in your niche? <a href="contact.html" data-audit-open>Get in touch</a> — we'll share relevant results.</p>"""),
+    <p style="margin-top:24px">Curious whether we've worked in your niche? <a href="/contact.html" data-audit-open>Get in touch</a> — we'll share relevant results.</p>"""),
 
  "career": dict(
    title="Careers", name="Careers", eyebrow="Join the team", page="",
@@ -650,7 +652,7 @@ SIMPLE = {
       <div class="incl"><div class="ic-wrap"><i data-lucide="target" class="ic"></i></div><div><h3>Performance Marketer</h3><p>2–4 yrs · Greater Noida</p></div></div>
       <div class="incl"><div class="ic-wrap"><i data-lucide="bot" class="ic"></i></div><div><h3>AI SEO Specialist</h3><p>2+ yrs · Greater Noida / hybrid</p></div></div>
     </div>
-    <p style="margin-top:24px">Don't see your role? We still want to hear from great people. Email your CV to <a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a> or <a href="contact.html" data-audit-open>say hello</a>.</p>"""),
+    <p style="margin-top:24px">Don't see your role? We still want to hear from great people. Email your CV to <a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a> or <a href="/contact.html" data-audit-open>say hello</a>.</p>"""),
 
  "testimonials": dict(
    title="Testimonials & Reviews", name="Testimonials & Reviews", eyebrow="What clients say", page="",
@@ -662,7 +664,7 @@ SIMPLE = {
       <div class="incl"><div class="ic-wrap"><i data-lucide="quote" class="ic"></i></div><div><h3>Rahul · Clinic owner</h3><p>"We're #1 in the map pack now and the phone hasn't stopped. Brilliant local SEO."</p></div></div>
       <div class="incl"><div class="ic-wrap"><i data-lucide="quote" class="ic"></i></div><div><h3>Meera · Marketing head</h3><p>"The only team that actually understands AI search. We're cited in ChatGPT now."</p></div></div>
     </div>
-    <p style="margin-top:24px">Want references in your industry? <a href="contact.html" data-audit-open>Ask us</a> — we're happy to connect you with relevant clients.</p>"""),
+    <p style="margin-top:24px">Want references in your industry? <a href="/contact.html" data-audit-open>Ask us</a> — we're happy to connect you with relevant clients.</p>"""),
 
  "privacy-policy": dict(
    title="Privacy Policy", name="Privacy Policy", eyebrow="Legal", page="",
