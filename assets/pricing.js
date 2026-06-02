@@ -70,21 +70,27 @@
       .concat(Object.keys(byCat).filter(function (c) { return order.indexOf(c) < 0; }));
     var html = "";
     cats.forEach(function (cat) {
-      html += '<h3 class="pg-cat">' + cat + '</h3><div class="pg-rows">';
+      html += '<div class="pg-group"><div class="pg-cat">' + cat +
+        ' <span class="pg-count">' + byCat[cat].length + ' services</span></div><div class="pg-cards">';
       byCat[cat].forEach(function (s) {
         var disc = s.effective_discount;
-        var price = disc
+        var amount = (disc
           ? '<span class="pg-old">' + inr(s.price) + '</span> <b>' + inr(s.final_price) + '</b>'
-          : '<b>' + inr(s.price) + '</b>';
-        html += '<a class="pg-row" href="' + s.slug + '.html">' +
-          '<div class="pg-name"><span class="pg-title">' + s.name +
-            (disc ? ' <span class="ps-badge">' + disc + '% OFF</span>' : '') + '</span>' +
-            '<span class="pg-desc">' + (s.description || "") + '</span></div>' +
-          '<div class="pg-price">' + (s.starting ? '<span class="pg-from">from</span> ' : '') +
-            price + '<span class="pg-unit">' + unitLabel(s) + '</span></div>' +
-          '</a>';
+          : '<b>' + inr(s.price) + '</b>') + '<span class="pg-unit">' + unitLabel(s) + '</span>';
+        html += '<div class="pg-card">' +
+            (disc ? '<span class="pg-ribbon">' + disc + '% OFF</span>' : '') +
+            '<h4 class="pg-card-name">' + s.name + '</h4>' +
+            '<p class="pg-card-desc">' + (s.description || "") + '</p>' +
+            '<div class="pg-card-price">' +
+              (s.starting ? '<span class="pg-from">Starting at</span>' : '') +
+              '<div class="pg-amount">' + amount + '</div></div>' +
+            '<div class="pg-card-actions">' +
+              '<a href="' + s.slug + '.html" class="btn btn-ghost-light btn-sm">Details</a>' +
+              '<a href="contact.html" data-audit-open class="btn btn-primary btn-sm">Get Started</a>' +
+            '</div>' +
+          '</div>';
       });
-      html += '</div>';
+      html += '</div></div>';
     });
     grid.innerHTML = html;
   }

@@ -36,7 +36,10 @@
   box-shadow: var(--shadow-lg); padding: 14px; opacity: 0; visibility: hidden; transition: opacity .18s, transform .18s;
   display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
 }
-.nav-dd:hover .dd-panel { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+/* invisible hover bridge across the gap so the menu doesn't close mid-move */
+.dd-panel::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 18px; }
+.nav-dd:hover .dd-panel { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); transition-delay: 0s; }
+.dd-panel { transition: opacity .18s, transform .18s, visibility 0s .25s; }
 .nav-dd:hover .nav-link .caret { transform: rotate(180deg); }
 .dd-item { display: flex; gap: 12px; padding: 11px 13px; border-radius: var(--radius-md); transition: background .15s; }
 .dd-item:hover { background: var(--bg-subtle); }
