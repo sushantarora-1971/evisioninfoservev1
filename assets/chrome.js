@@ -187,9 +187,43 @@
       '</div>' +
     '</div>';
 
+  // ── Get Started modal (service-specific lead → call & WhatsApp) ──
+  var START_MODAL =
+    '<div class="audit-modal" id="startModal" aria-hidden="true">' +
+      '<div class="audit-scrim" data-start-close></div>' +
+      '<div class="audit-dialog" role="dialog" aria-modal="true" aria-labelledby="startTitle">' +
+        '<button class="audit-x" data-start-close aria-label="Close">&times;</button>' +
+        '<div id="startFormWrap">' +
+          '<span class="audit-eyebrow"><i data-lucide="rocket"></i> Get Started</span>' +
+          '<h3 id="startTitle">Let\'s get you started</h3>' +
+          '<p class="audit-sub">Leave your details and our team will contact you <b>shortly via call &amp; WhatsApp</b>.</p>' +
+          '<form id="startForm" novalidate>' +
+            '<input type="hidden" name="type" value="get-started">' +
+            '<input type="hidden" name="service" id="startService">' +
+            '<div class="start-svc-chip" id="startSvcChip" style="display:none"></div>' +
+            '<div class="audit-row">' +
+              '<input type="text" name="name" placeholder="Full name *" autocomplete="name">' +
+              '<input type="tel" name="phone" placeholder="Phone / WhatsApp *" autocomplete="tel">' +
+            '</div>' +
+            '<input type="email" name="email" placeholder="Email (optional)" autocomplete="email">' +
+            '<textarea name="message" rows="2" placeholder="Anything we should know? (optional)"></textarea>' +
+            '<div class="audit-err" id="startErr"></div>' +
+            '<button type="submit" class="btn btn-primary btn-block btn-lg">Request a callback <i data-lucide="phone-call" class="ic"></i></button>' +
+            '<p class="audit-fine">We\'ll reach out via call &amp; WhatsApp. No spam, ever.</p>' +
+          '</form>' +
+        '</div>' +
+        '<div class="audit-success" id="startSuccess" style="display:none">' +
+          '<div class="audit-ok"><i data-lucide="check"></i></div>' +
+          '<h3>Thank you! 🎉</h3>' +
+          '<p>We\'ve received your request. Our team will contact you <b>shortly via call and WhatsApp</b>. Prefer to chat now?</p>' +
+          '<a href="https://wa.me/919811722064" class="btn btn-secondary btn-block">Message us on WhatsApp</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
   // ── inject ──
   document.body.insertAdjacentHTML("afterbegin", HEADER + DRAWER);
-  document.body.insertAdjacentHTML("beforeend", FOOTER + WIDGETS + AUDIT_MODAL);
+  document.body.insertAdjacentHTML("beforeend", FOOTER + WIDGETS + AUDIT_MODAL + START_MODAL);
 
   // ── interactions ──
   var header = document.querySelector(".site-header");
@@ -275,6 +309,64 @@
   });
   // Deep-link: open the audit popup from ?audit=1 or #audit (great for email campaigns).
   if (/[?&]audit(=|&|$)/.test(location.search) || location.hash === "#audit") openAudit();
+
+  // ── Get Started modal interactions ──
+  var startModal = document.getElementById("startModal");
+  var startForm = document.getElementById("startForm");
+  function openStart(service) {
+    document.getElementById("startFormWrap").style.display = "";
+    document.getElementById("startSuccess").style.display = "none";
+    var chip = document.getElementById("startSvcChip");
+    document.getElementById("startService").value = service || "";
+    if (service) {
+      chip.innerHTML = '<i data-lucide="tag" style="width:14px;height:14px"></i> ' + service;
+      chip.style.display = "";
+    } else { chip.style.display = "none"; }
+    startModal.classList.add("open");
+    startModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    if (window.lucide) lucide.createIcons();
+    var first = startForm.querySelector('input[name="name"]'); if (first) setTimeout(function () { first.focus(); }, 50);
+  }
+  function closeStart() {
+    startModal.classList.remove("open");
+    startModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-start-open]");
+    if (t) { e.preventDefault(); openStart(t.getAttribute("data-service") || ""); return; }
+    if (e.target.closest("[data-start-close]")) { e.preventDefault(); closeStart(); }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && startModal.classList.contains("open")) closeStart();
+  });
+  startForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = document.getElementById("startErr"); err.textContent = "";
+    var get = function (n) { return startForm.querySelector('[name="' + n + '"]'); };
+    var nameV = get("name").value.trim();
+    var phoneV = get("phone").value.trim();
+    var emailV = get("email").value.trim();
+    if (!nameV) { err.textContent = "Please enter your name."; return; }
+    if (phoneV.replace(/\D/g, "").length < 8) { err.textContent = "Please enter a valid phone number."; return; }
+    if (emailV && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailV)) { err.textContent = "Enter a valid email, or leave it blank."; return; }
+    var payload = {
+      type: "get-started", name: nameV, phone: phoneV, email: emailV,
+      service: get("service").value, message: get("message").value.trim(),
+      source: (location.pathname.split("/").pop() || "home") + " (get started)",
+    };
+    var btn = startForm.querySelector("button[type=submit]");
+    btn.disabled = true; btn.textContent = "Sending…";
+    function done() {
+      document.getElementById("startFormWrap").style.display = "none";
+      document.getElementById("startSuccess").style.display = "";
+      if (window.lucide) lucide.createIcons();
+    }
+    fetch("/api/enquiry", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
+    }).then(done).catch(done);
+  });
   auditForm.addEventListener("submit", function (e) {
     e.preventDefault();
     var err = document.getElementById("auditErr"); err.textContent = "";

@@ -240,7 +240,7 @@ def compute_pricing(conn):
 def notify_new_enquiry(e):
     """Email the admin about a new enquiry. Runs in a background thread so the
     visitor's request is never blocked. Degrades gracefully if SMTP is unset."""
-    label = "Free Audit" if e.get("type") == "audit" else "Quote"
+    label = {"audit": "Free Audit", "get-started": "Get Started"}.get(e.get("type"), "Quote")
     if not (SMTP_HOST and SMTP_USER and SMTP_PASS):
         print(f"[enquiry] New {label}: {e.get('name')} <{e.get('email')}> "
               f"— email notify not configured (set SMTP_* env vars to enable).")
@@ -415,8 +415,12 @@ class Handler(SimpleHTTPRequestHandler):
             name = (data.get("name") or "").strip()
             email = (data.get("email") or "").strip()
             phone = (data.get("phone") or "").strip()
-            if not name or not EMAIL_RE.match(email):
-                return self._json({"error": "Name and a valid email are required."}, 400)
+            if not name:
+                return self._json({"error": "Name is required."}, 400)
+            if email and not EMAIL_RE.match(email):
+                return self._json({"error": "Please enter a valid email."}, 400)
+            if not email and not phone:
+                return self._json({"error": "Please provide an email or phone number."}, 400)
             record = {
                 "name": name, "email": email, "phone": phone,
                 "company": (data.get("company") or "").strip(),

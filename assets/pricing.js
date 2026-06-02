@@ -8,6 +8,7 @@
 (function () {
   var CACHE = null;
   function inr(n) { return "₹" + Number(n).toLocaleString("en-IN"); }
+  function attr(s) { return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;"); }
 
   function fetchPricing() {
     if (CACHE) return Promise.resolve(CACHE);
@@ -33,7 +34,7 @@
           '<div class="ps-amount">' + amount +
             '<span class="ps-unit">' + unitLabel(s) + '</span> ' + badge + '</div>' +
         '</div>' +
-        '<a href="contact.html" data-audit-open class="btn btn-primary btn-lg">Get Started</a>' +
+        '<a href="contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-lg">Get Started</a>' +
       '</div></div>';
   }
 
@@ -74,7 +75,7 @@
           '<div class="pg-amount">' + amount + '</div></div>' +
         '<div class="pg-card-actions">' +
           '<a href="' + s.slug + '.html" class="btn btn-ghost-light btn-sm">Details</a>' +
-          '<a href="contact.html" data-audit-open class="btn btn-primary btn-sm">Get Started</a>' +
+          '<a href="contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-sm">Get Started</a>' +
         '</div>' +
       '</div>';
   }
