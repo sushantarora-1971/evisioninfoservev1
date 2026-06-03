@@ -21,6 +21,9 @@ uploads/
 screenshots/
 blueprint_text.txt
 
+# Source content briefs (Word docs — working documents, not site files)
+*.docx
+
 # Claude Code local config
 .claude/
 
