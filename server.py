@@ -190,7 +190,7 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 # and 301-redirects the old .html URL to it.
 _SEO_CHILDREN = ["ai-seo", "llm-optimization", "agentic-ai-seo", "enterprise-seo",
                  "ecommerce-seo", "technical-seo", "local-seo", "multilingual-seo",
-                 "link-building", "white-label-seo", "seo-audit"]
+                 "link-building", "white-label-seo", "seo-audit", "industry-seo"]
 _CONTENT_CHILDREN = ["content-writing", "guest-posting", "digital-pr"]
 FILE_TO_CLEAN = {
     "index.html": "/",
@@ -200,6 +200,10 @@ FILE_TO_CLEAN = {
     "ppc.html": "/services/ppc",
     "orm.html": "/services/orm",
     "ai-marketing.html": "/services/ai-digital-marketing",
+    "affiliate-marketing.html": "/services/affiliate-marketing",
+    "youtube-marketing.html": "/services/youtube-marketing",
+    "email-marketing.html": "/services/email-marketing",
+    "mobile-app-marketing.html": "/services/mobile-app-marketing",
     "pricing.html": "/pricing", "about.html": "/about", "blog.html": "/blog",
     "contact.html": "/contact", "portfolio.html": "/portfolio", "clients.html": "/clients",
     "career.html": "/career", "testimonials.html": "/testimonials",
@@ -228,6 +232,7 @@ SERVICES_SEED = [
     ("link-building", "Link Building Services", "SEO", 15000, "/mo", 1, "White-hat authority links from relevant, high-quality publishers."),
     ("white-label-seo", "White Label SEO Services", "SEO", 20000, "/mo", 1, "SEO delivery under your agency's brand, reported your way."),
     ("seo-audit", "SEO Audit", "SEO", 9000, "one-time", 0, "A 12-point technical, content and AI-visibility audit with an action plan."),
+    ("industry-seo", "Industry-Based SEO", "SEO", 22000, "/mo", 1, "Customised SEO for healthcare, education, travel, ecommerce, finance and more."),
     # ── Content Marketing ──
     ("content-marketing", "Content Marketing", "Content Marketing", 20000, "/mo", 1, "Topic clusters, blogs and video that build topical authority."),
     ("guest-posting", "Guest Posting", "Content Marketing", 12000, "/mo", 1, "Editorially placed guest articles on relevant, authoritative sites."),
@@ -238,6 +243,10 @@ SERVICES_SEED = [
     ("ppc", "PPC & Paid Ads", "Other Services", 18000, "/mo", 1, "Google, Meta and LinkedIn ad campaigns engineered for ROI."),
     ("orm", "ORM & Reputation", "Other Services", 16000, "/mo", 1, "Review management and brand defence across the web."),
     ("ai-marketing", "AI Digital Marketing", "Other Services", 22000, "/mo", 1, "GEO, automation and analytics for the AI-search era."),
+    ("affiliate-marketing", "Affiliate Marketing", "Other Services", 15000, "/mo", 1, "Performance-based programs that drive qualified traffic, leads and sales."),
+    ("youtube-marketing", "YouTube Video Marketing", "Other Services", 16000, "/mo", 1, "Channel management, YouTube SEO and video strategy that grow leads."),
+    ("email-marketing", "Email Marketing", "Other Services", 12000, "/mo", 1, "Targeted campaigns, automation and lead nurturing with measurable ROI."),
+    ("mobile-app-marketing", "Mobile App Marketing", "Other Services", 18000, "/mo", 1, "ASO, app CRO and growth campaigns that drive downloads and retention."),
 ]
 CATEGORY_ORDER = ["SEO", "Content Marketing", "Other Services"]
 

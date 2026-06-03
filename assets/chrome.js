@@ -30,11 +30,14 @@
   var SEO_SUB = [["AI SEO", "ai-seo.html"], ["LLM Optimization", "llm-optimization.html"],
     ["Agentic AI SEO", "agentic-ai-seo.html"], ["Enterprise SEO", "enterprise-seo.html"], ["Ecommerce SEO", "ecommerce-seo.html"],
     ["Technical SEO", "technical-seo.html"], ["Local SEO", "local-seo.html"], ["Multilingual SEO", "multilingual-seo.html"],
-    ["Link Building", "link-building.html"], ["White Label SEO", "white-label-seo.html"], ["SEO Audit", "seo-audit.html"]];
+    ["Link Building", "link-building.html"], ["White Label SEO", "white-label-seo.html"], ["SEO Audit", "seo-audit.html"],
+    ["Industry-Based SEO", "industry-seo.html"]];
   var CONTENT_SUB = [["Content Writing", "content-writing.html"],
     ["Guest Posting", "guest-posting.html"], ["Digital PR", "digital-pr.html"]];
   var OTHER_SUB = [["Social Media (SMO)", "social-media.html"], ["PPC & Paid Ads", "ppc.html"],
-    ["ORM & Reputation", "orm.html"], ["AI Digital Marketing", "ai-marketing.html"]];
+    ["ORM & Reputation", "orm.html"], ["AI Digital Marketing", "ai-marketing.html"],
+    ["Affiliate Marketing", "affiliate-marketing.html"], ["YouTube Video Marketing", "youtube-marketing.html"],
+    ["Email Marketing", "email-marketing.html"], ["Mobile App Marketing", "mobile-app-marketing.html"]];
   function megaCol(title, items, href) {
     var head = href
       ? '<a class="mega-h mega-h-link" href="' + P + href + '">' + title + ' <i data-lucide="arrow-right" class="mega-h-ar"></i></a>'
