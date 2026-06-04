@@ -209,6 +209,7 @@ FILE_TO_CLEAN = {
     "career.html": "/career", "testimonials.html": "/testimonials",
     "privacy-policy.html": "/privacy-policy", "refund-policy.html": "/refund-policy",
     "terms.html": "/terms", "service.html": "/service",
+    "services.html": "/services",
 }
 for _c in _SEO_CHILDREN:
     FILE_TO_CLEAN[_c + ".html"] = "/services/seo/" + _c
@@ -220,7 +221,7 @@ CLEAN_TO_FILE = {v: k for k, v in FILE_TO_CLEAN.items()}
 # panel (Pricing tab). (slug, name, category, price, unit, starting, description)
 SERVICES_SEED = [
     # ── SEO ──
-    ("seo", "SEO & AI Search", "SEO", 15000, "/mo", 1, "Full-funnel SEO engineered to rank on Google and get cited by AI engines."),
+    ("seo", "SEO Services", "SEO", 15000, "/mo", 1, "Full-funnel SEO engineered to rank on Google and get cited by AI engines."),
     ("ai-seo", "AI SEO", "SEO", 18000, "/mo", 1, "Optimisation for AI Overviews and answer engines (AEO/GEO)."),
     ("llm-optimization", "LLM Optimization", "SEO", 20000, "/mo", 1, "Get your brand surfaced and cited inside ChatGPT, Gemini & Perplexity."),
     ("agentic-ai-seo", "Agentic AI SEO", "SEO", 25000, "/mo", 1, "Automation-driven SEO with AI agents handling research and execution."),
@@ -324,6 +325,8 @@ class Handler(SimpleHTTPRequestHandler):
         pass
 
     def end_headers(self):
+        # DEV PHASE — block all indexing until launch. Remove this header before going live.
+        self.send_header("X-Robots-Tag", "noindex, nofollow")
         # Tell browsers not to cache static assets, so edits show up on reload.
         p = self.path.split("?")[0]
         if not p.startswith("/api/") and (p.endswith((".html", ".js", ".css")) or p.endswith("/")):

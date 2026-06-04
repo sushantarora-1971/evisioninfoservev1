@@ -7,6 +7,31 @@
   var page = document.body.dataset.page || "";
   var P = (window.SITE_PREFIX || "/"); // absolute links → server 301s .html to clean URLs
 
+  // Canonical clean-URL map (mirrors server.py FILE_TO_CLEAN). Links are authored
+  // with .html filenames; we rewrite every internal anchor to its clean URL after
+  // injection so the browser status bar / hover never shows the old .html path.
+  var _SEOC = ["ai-seo", "llm-optimization", "agentic-ai-seo", "enterprise-seo", "ecommerce-seo",
+    "technical-seo", "local-seo", "multilingual-seo", "link-building", "white-label-seo", "seo-audit", "industry-seo"];
+  var _CONTC = ["content-writing", "guest-posting", "digital-pr"];
+  var CLEAN = {
+    "index.html": "/", "seo.html": "/services/seo", "content-marketing.html": "/services/content-marketing",
+    "social-media.html": "/services/social-media", "ppc.html": "/services/ppc", "orm.html": "/services/orm",
+    "ai-marketing.html": "/services/ai-digital-marketing", "affiliate-marketing.html": "/services/affiliate-marketing",
+    "youtube-marketing.html": "/services/youtube-marketing", "email-marketing.html": "/services/email-marketing",
+    "mobile-app-marketing.html": "/services/mobile-app-marketing", "services.html": "/services",
+    "pricing.html": "/pricing", "about.html": "/about", "blog.html": "/blog", "contact.html": "/contact",
+    "portfolio.html": "/portfolio", "clients.html": "/clients", "career.html": "/career", "testimonials.html": "/testimonials",
+    "privacy-policy.html": "/privacy-policy", "refund-policy.html": "/refund-policy", "terms.html": "/terms", "service.html": "/service"
+  };
+  _SEOC.forEach(function (c) { CLEAN[c + ".html"] = "/services/seo/" + c; });
+  _CONTC.forEach(function (c) { CLEAN[c + ".html"] = "/services/content-marketing/" + c; });
+  function cleanHrefs(root) {
+    (root || document).querySelectorAll('a[href]').forEach(function (a) {
+      var m = (a.getAttribute("href") || "").match(/^\/?([A-Za-z0-9_-]+\.html)(#.*)?$/);
+      if (m && CLEAN[m[1]]) a.setAttribute("href", CLEAN[m[1]] + (m[2] || ""));
+    });
+  }
+
   var MARK = '<svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">' +
     '<rect width="36" height="36" rx="9" fill="#0B1930"/>' +
     '<rect x="9" y="20" width="4.6" height="7" rx="1.4" fill="#6FA3F5"/>' +
@@ -19,7 +44,7 @@
     '<div class="brand-sub">Digital Marketing Agency</div></div></a>';
 
   var SERVICES = [
-    ["SEO &amp; AI Search", "Technical, local, LLMO &amp; AEO", "search", "seo.html"],
+    ["SEO Services", "Technical, local, LLMO &amp; AEO", "search", "seo.html"],
     ["Social Media (SMO)", "Organic growth &amp; community", "thumbs-up", "social-media.html"],
     ["PPC &amp; Paid Ads", "Google, Meta &amp; LinkedIn ROI", "target", "ppc.html"],
     ["Content Marketing", "Blogs, topic clusters, video", "pen-tool", "content-marketing.html"],
@@ -46,10 +71,10 @@
       items.map(function (s) { return '<a href="' + P + s[1] + '">' + s[0] + '</a>'; }).join("") + '</div>';
   }
   // Parent service page is the column header; its child pages are listed under it.
-  var MEGA = megaCol("SEO &amp; AI Search", SEO_SUB, "seo.html") +
+  var MEGA = megaCol("SEO Services", SEO_SUB, "seo.html") +
     megaCol("Content Marketing", CONTENT_SUB, "content-marketing.html") +
     megaCol("More Services", OTHER_SUB);
-  var ALL_SUB = [["SEO &amp; AI Search", "seo.html"]].concat(SEO_SUB,
+  var ALL_SUB = [["SEO Services", "seo.html"]].concat(SEO_SUB,
     [["Content Marketing", "content-marketing.html"]], CONTENT_SUB, OTHER_SUB);
 
   function navItem(href, label, key) {
@@ -61,8 +86,8 @@
       BRAND +
       '<div class="nav-links">' +
         navItem("index.html", "Home", "home") +
-        '<div class="nav-dd"><span class="nav-link' + (page === "services" ? " active" : "") + '">Services ' +
-          '<i data-lucide="chevron-down" class="caret"></i></span>' +
+        '<div class="nav-dd"><a href="' + P + 'services.html" class="nav-link' + (page === "services" ? " active" : "") + '">Services ' +
+          '<i data-lucide="chevron-down" class="caret"></i></a>' +
           '<div class="dd-panel mega">' + MEGA +
             '<div class="dd-foot"><span>Not sure what you need? <b class="text-gold">Get a free audit.</b></span>' +
             '<a href="' + P + 'contact.html" data-audit-open class="btn btn-secondary btn-sm">Free Audit</a></div>' +
@@ -113,7 +138,7 @@
         '</div>' +
       '</div>' +
       '<div class="foot-col"><h4>Services</h4>' +
-        '<a href="' + P + 'seo.html">SEO &amp; AI Search</a>' +
+        '<a href="' + P + 'seo.html">SEO Services</a>' +
         '<a href="' + P + 'social-media.html">Social Media</a>' +
         '<a href="' + P + 'ppc.html">PPC &amp; Paid Ads</a>' +
         '<a href="' + P + 'content-marketing.html">Content Marketing</a>' +
@@ -158,6 +183,14 @@
     '<div class="floaties">' +
       '<a class="fab fab-wa fab-pulse" href="https://wa.me/919811722064" aria-label="WhatsApp"><i data-lucide="message-circle" class="ic"></i></a>' +
       '<button class="fab fab-chat" id="chatToggle" aria-label="Open chat"><i data-lucide="messages-square" class="ic"></i></button>' +
+    '</div>';
+
+  // ── Mobile bottom action bar (phones only; styled via .m-cta-bar media query) ──
+  var M_CTA =
+    '<div class="m-cta-bar">' +
+      '<a href="tel:+919811722064" class="m-cta m-cta-call"><i data-lucide="phone" class="ic"></i>Call Us</a>' +
+      '<a href="mailto:info@evisioninfoserve.com" class="m-cta m-cta-mail"><i data-lucide="mail" class="ic"></i>Email Us</a>' +
+      '<a href="https://wa.me/919811722064" class="m-cta m-cta-wa"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>' +
     '</div>';
 
   // ── Free Audit modal ──
@@ -233,7 +266,12 @@
 
   // ── inject ──
   document.body.insertAdjacentHTML("afterbegin", HEADER + DRAWER);
-  document.body.insertAdjacentHTML("beforeend", FOOTER + WIDGETS + AUDIT_MODAL + START_MODAL);
+  document.body.insertAdjacentHTML("beforeend", FOOTER + WIDGETS + M_CTA + AUDIT_MODAL + START_MODAL);
+
+  // Rewrite every internal .html link (injected chrome + page content) to its clean URL.
+  // Run again on load to catch links injected by later scripts (e.g. the offer banner).
+  cleanHrefs(document);
+  window.addEventListener("load", function () { cleanHrefs(document); });
 
   // ── interactions ──
   var header = document.querySelector(".site-header");

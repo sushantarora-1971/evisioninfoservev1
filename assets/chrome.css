@@ -69,6 +69,9 @@
 .nav-burger .ic { width: 22px; height: 22px; }
 
 @media (max-width: 1080px){ .nav-links, .nav-phone { display: none; } .nav-burger { display: grid; } }
+/* On phones the header CTA is redundant (burger menu + bottom action bar carry it) and
+   its long label overflows the row — keep just the logo + burger so the header fits. */
+@media (max-width: 768px){ .nav-actions .btn { display: none; } }
 
 /* mobile drawer */
 .m-drawer { position: fixed; inset: 0; z-index: 300; visibility: hidden; }
@@ -102,6 +105,9 @@
 .foot-col h4 { font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
 .foot-col a { display: block; font-size: 14px; color: var(--color-gray-400); padding: 6px 0; transition: color .15s; }
 .foot-col a:hover { color: var(--color-gold-500); }
+/* Buttons inside footer columns must keep their own look, not the muted link style. */
+.foot-col a.btn { display: inline-flex; width: auto; color: #fff; padding: 9px 16px; margin-top: 10px; }
+.foot-col a.btn:hover { color: #fff; transform: translateY(-2px); }
 .foot-contact div { display: flex; gap: 11px; font-size: 14px; color: var(--color-gray-400); margin-bottom: 14px; line-height: 1.5; }
 .foot-contact .ic { width: 18px; height: 18px; color: var(--color-blue-400); flex: none; margin-top: 2px; }
 .foot-socials { display: flex; gap: 10px; margin-top: 6px; }
@@ -151,6 +157,30 @@
 .chat-foot input:focus { outline: none; border-color: var(--color-blue-500); }
 .chat-foot button { width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--color-blue-500); color: #fff; cursor: pointer; display: grid; place-items: center; flex: none; }
 @media (max-width: 520px){ .floaties { right: 16px; bottom: 16px; } }
+
+/* ── Mobile bottom action bar (Call / Email / WhatsApp) ────── */
+.m-cta-bar { display: none; }
+@media (max-width: 768px){
+  .m-cta-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 240;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+    padding: 9px 12px calc(9px + env(safe-area-inset-bottom));
+    background: var(--color-navy-900); border-top: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 -6px 22px rgba(0,0,0,.28);
+  }
+  .m-cta { display: flex; align-items: center; justify-content: center; gap: 7px;
+    height: 46px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+    color: #fff; white-space: nowrap; }
+  .m-cta .ic { width: 18px; height: 18px; flex: none; }
+  .m-cta-call { background: var(--color-blue-500); }
+  .m-cta-mail { background: rgba(255,255,255,.14); }
+  .m-cta-wa { background: #25D366; }
+  /* WhatsApp now lives in the bar — drop the redundant FAB and lift the chat FAB above the bar */
+  .floaties { bottom: calc(74px + env(safe-area-inset-bottom)); }
+  .floaties .fab-wa { display: none; }
+  /* keep page content clear of the fixed bar */
+  body { padding-bottom: 70px; }
+}
 
 /* ░░ Free Audit modal ░░ */
 .audit-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }

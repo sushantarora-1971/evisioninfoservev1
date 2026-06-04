@@ -56,7 +56,7 @@
     bar.innerHTML = '<div class="container">🎉 <b>' + offer.name + '</b> — ' +
       offer.discount_pct + '% OFF all services' +
       (offer.note ? ' · ' + offer.note : '') +
-      ' <a href="/pricing.html">View pricing →</a></div>';
+      ' <a href="/pricing">View pricing →</a></div>';
     document.body.insertBefore(bar, document.body.firstChild);
   }
 

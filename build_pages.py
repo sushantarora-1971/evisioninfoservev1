@@ -37,7 +37,7 @@ CONTENT_CHILDREN = {"guest-posting", "content-writing", "digital-pr"}
 
 def parent_crumb(slug):
     if slug in SEO_CHILDREN:
-        return ("SEO & AI Search", "/services/seo", "services/seo")
+        return ("SEO Services", "/services/seo", "services/seo")
     if slug in CONTENT_CHILDREN:
         return ("Content Marketing", "/services/content-marketing", "services/content-marketing")
     return ("Services", "/pricing", "services")
@@ -57,6 +57,7 @@ def service_page(slug, c):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow"><!-- DEV PHASE: remove before launch -->
 <title>{esc(c['title'])} | Evision Infoserve</title>
 <meta name="description" content="{esc(c['metadesc'])}">
 <link rel="stylesheet" href="/assets/tokens.css{VER}">
@@ -216,7 +217,7 @@ SERVICES = {
         ("Which businesses benefit most from AI SEO?","Ecommerce brands, SaaS companies, enterprises, agencies, and content-driven businesses benefit significantly from AI SEO."),
         ("Is AI SEO replacing traditional SEO?","No. AI SEO enhances traditional SEO strategies rather than replacing them."),
         ("Why is AI SEO important for future search visibility?","As AI-driven search adoption grows, AI SEO helps businesses maintain visibility, authority, and digital competitiveness.")],
-   related=[("seo.html","search","SEO & AI Search","The full programme"),("llm-optimization.html","bot","LLM Optimization","Get cited by AI"),("technical-seo.html","gauge","Technical SEO","Clean foundations")],
+   related=[("seo.html","search","SEO Services","The full programme"),("llm-optimization.html","bot","LLM Optimization","Get cited by AI"),("technical-seo.html","gauge","Technical SEO","Clean foundations")],
    side_title="Free AI-SEO audit", side_text="See how your site shows up across Google and AI answers today.",
    cta_h="Be the answer AI search shows your customers"),
 
@@ -366,7 +367,7 @@ SERVICES = {
         ("How does page speed affect SEO?","Faster websites improve user experience and search performance."),
         ("What is schema markup?","Schema markup helps search engines understand content and display rich results."),
         ("How often should Technical SEO audits be performed?","At least every 3–6 months.")],
-   related=[("seo.html","search","SEO & AI Search","The full programme"),("enterprise-seo.html","building","Enterprise SEO","At scale"),("seo-audit.html","clipboard-check","SEO Audit","One-time check")],
+   related=[("seo.html","search","SEO Services","The full programme"),("enterprise-seo.html","building","Enterprise SEO","At scale"),("seo-audit.html","clipboard-check","SEO Audit","One-time check")],
    side_title="Free technical SEO audit", side_text="A crawl-level look at the issues capping your rankings.",
    cta_h="Build rankings on solid technical foundations"),
 
@@ -396,7 +397,7 @@ SERVICES = {
         ("How do reviews affect Local SEO?","Positive reviews improve credibility and local rankings."),
         ("Can Local SEO increase phone calls?","Yes. It helps businesses appear for high-intent local searches."),
         ("How long does Local SEO take?","Many businesses see improvements within a few months.")],
-   related=[("seo.html","search","SEO & AI Search","The full programme"),("ecommerce-seo.html","shopping-cart","Ecommerce SEO","Online stores"),("orm.html","shield-check","ORM","Reviews & rep")],
+   related=[("seo.html","search","SEO Services","The full programme"),("ecommerce-seo.html","shopping-cart","Ecommerce SEO","Online stores"),("orm.html","shield-check","ORM","Reviews & rep")],
    side_title="Free local SEO audit", side_text="See how you rank in the map pack — and how to climb it.",
    cta_h="Get found by customers right around you"),
 
@@ -456,7 +457,7 @@ SERVICES = {
         ("Can link building improve rankings?","Yes. Strong backlinks remain a major ranking factor."),
         ("How long does link building take?","Results typically develop over several months."),
         ("Is link building safe?","Yes, when ethical SEO practices are followed.")],
-   related=[("digital-pr.html","megaphone","Digital PR","Coverage & links"),("guest-posting.html","newspaper","Guest Posting","Placed articles"),("seo.html","search","SEO & AI Search","The full programme")],
+   related=[("digital-pr.html","megaphone","Digital PR","Coverage & links"),("guest-posting.html","newspaper","Guest Posting","Placed articles"),("seo.html","search","SEO Services","The full programme")],
    side_title="Free backlink audit", side_text="See your link profile and the gaps versus your competitors.",
    cta_h="Build the authority that lifts every page"),
 
@@ -486,7 +487,7 @@ SERVICES = {
         ("Can agencies retain client ownership?","Yes. Agencies maintain client relationships."),
         ("Is White Label SEO cost-effective?","It reduces hiring and operational expenses."),
         ("How does White Label SEO support agency growth?","It enables agencies to expand without increasing internal resources.")],
-   related=[("seo.html","search","SEO & AI Search","Core delivery"),("link-building.html","link","Link Building","Authority"),("content-writing.html","pen-tool","Content Writing","At scale")],
+   related=[("seo.html","search","SEO Services","Core delivery"),("link-building.html","link","Link Building","Authority"),("content-writing.html","pen-tool","Content Writing","At scale")],
    side_title="Partner with us", side_text="Get a white-label proposal and sample report for your agency.",
    cta_h="Grow your agency's revenue with SEO we deliver"),
 
@@ -516,7 +517,7 @@ SERVICES = {
         ("Can audits improve rankings?","Yes. Fixing issues can enhance search performance."),
         ("What tools are used in SEO audits?","Analytics, crawling, keyword, and technical SEO tools."),
         ("Who needs an SEO audit?","Any business seeking better search visibility.")],
-   related=[("technical-seo.html","gauge","Technical SEO","Fix the issues"),("seo.html","search","SEO & AI Search","Ongoing growth"),("ai-seo.html","sparkles","AI SEO","AI Overviews")],
+   related=[("technical-seo.html","gauge","Technical SEO","Fix the issues"),("seo.html","search","SEO Services","Ongoing growth"),("ai-seo.html","sparkles","AI SEO","AI Overviews")],
    side_title="Get your audit", side_text="Request your 12-point SEO + AI-visibility audit today.",
    cta_h="Start with a clear, honest picture of your SEO"),
 
@@ -576,7 +577,7 @@ SERVICES = {
         ("Can Content Writing Services help generate leads and sales?","Yes. Well-written content educates visitors, answers their questions, builds trust, and guides them through the buying process, increasing conversions, leads, and sales opportunities."),
         ("How often should businesses publish new content?","Businesses should publish content consistently based on their industry and marketing goals. Regular content updates help improve SEO performance, audience engagement, and online visibility."),
         ("What makes Evision Infoserve's Content Writing Services different?","Evision Infoserve combines SEO expertise, audience research, AI-search optimization, industry knowledge, and conversion-focused writing to create content that drives traffic, engagement, rankings, and business growth.")],
-   related=[("content-marketing.html","pen-tool","Content Marketing","Full strategy"),("guest-posting.html","newspaper","Guest Posting","Off-site content"),("seo.html","search","SEO & AI Search","Make it rank")],
+   related=[("content-marketing.html","pen-tool","Content Marketing","Full strategy"),("guest-posting.html","newspaper","Guest Posting","Off-site content"),("seo.html","search","SEO Services","Make it rank")],
    side_title="Free content sample", side_text="Get a sample brief and outline for one of your key pages.",
    cta_h="Publish content that ranks and converts"),
 
@@ -636,7 +637,7 @@ SERVICES = {
         ("What is Travel SEO?","Travel SEO helps travel agencies, tour operators, hotels, and tourism businesses increase visibility for travel-related searches and bookings."),
         ("Can Ecommerce businesses benefit from Industry-Based SEO?","Yes. Ecommerce SEO focuses on product visibility, category optimization, transactional keywords, and conversion-driven search strategies."),
         ("Which industries can benefit from specialized SEO services?","Healthcare, education, travel, finance, real estate, manufacturing, technology, legal services, ecommerce, and professional services can all benefit from industry-specific SEO.")],
-   related=[("seo.html","search","SEO & AI Search","The full programme"),("local-seo.html","map-pin","Local SEO","Location-based"),("ecommerce-seo.html","shopping-cart","Ecommerce SEO","Online stores")],
+   related=[("seo.html","search","SEO Services","The full programme"),("local-seo.html","map-pin","Local SEO","Location-based"),("ecommerce-seo.html","shopping-cart","Ecommerce SEO","Online stores")],
    side_title="Free industry SEO review", side_text="See the sector-specific opportunities your competitors are winning.",
    cta_h="Win the searches that matter in your industry"),
 
@@ -696,7 +697,7 @@ SERVICES = {
         ("What types of businesses benefit from YouTube Marketing?","Educational institutions, ecommerce brands, healthcare providers, consultants, SaaS companies, and service businesses benefit from YouTube marketing."),
         ("Can YouTube Marketing generate leads?","Yes. Strategic video content can attract qualified viewers and guide them toward inquiries, purchases, or conversions."),
         ("How long does YouTube growth take?","Growth depends on content quality, consistency, optimization, audience engagement, and competition within the niche.")],
-   related=[("social-media.html","thumbs-up","Social Media","Distribute video"),("content-marketing.html","pen-tool","Content Marketing","Repurpose content"),("seo.html","search","SEO & AI Search","Rank everywhere")],
+   related=[("social-media.html","thumbs-up","Social Media","Distribute video"),("content-marketing.html","pen-tool","Content Marketing","Repurpose content"),("seo.html","search","SEO Services","Rank everywhere")],
    side_title="Free YouTube channel review", side_text="Find the quick wins holding back your video visibility.",
    cta_h="Grow your brand on the world's #2 search engine"),
 
@@ -756,7 +757,7 @@ SERVICES = {
         ("How does ASO improve app downloads?","ASO increases visibility in app store search results, helping more users discover and install the application."),
         ("Can Mobile App Marketing reduce acquisition costs?","Yes. Organic app visibility through ASO can lower paid advertising expenses and improve long-term growth."),
         ("Which businesses need Mobile App Marketing?","Startups, ecommerce brands, SaaS companies, gaming apps, healthcare apps, educational apps, and enterprise applications benefit from app marketing.")],
-   related=[("ppc.html","target","PPC & Paid Ads","Paid installs"),("seo.html","search","SEO & AI Search","Web visibility"),("ai-marketing.html","sparkles","AI Digital Marketing","Automation")],
+   related=[("ppc.html","target","PPC & Paid Ads","Paid installs"),("seo.html","search","SEO Services","Web visibility"),("ai-marketing.html","sparkles","AI Digital Marketing","Automation")],
    side_title="Free ASO audit", side_text="See how discoverable your app is — and how to lift installs.",
    cta_h="Get more of the right users installing your app"),
 }
@@ -770,6 +771,7 @@ def simple_page(slug, c):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow"><!-- DEV PHASE: remove before launch -->
 <title>{esc(c['title'])} | Evision Infoserve</title>
 <meta name="description" content="{esc(c['metadesc'])}">
 <link rel="stylesheet" href="/assets/tokens.css{VER}">
