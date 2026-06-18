@@ -118,6 +118,16 @@ button{cursor:pointer;font:inherit}
 input.mini{width:100px;padding:6px 8px;border-radius:7px}
 #svcWrap .tbl td{padding:8px 16px}
 
+/* ── Image upload field (testimonials / portfolio) ── */
+.imgfield{display:flex;gap:14px;align-items:center;margin-top:6px}
+.imgprev{width:72px;height:72px;border-radius:12px;flex:none;background:#f1f4f9 center/cover no-repeat;border:1px solid var(--border);display:grid;place-items:center;color:var(--muted);font-size:11px;overflow:hidden}
+.imgprev.round{border-radius:50%}
+.imgfield .imgctl{flex:1;min-width:0}
+.imgfield .imgctl input[type=file]{padding:7px;font-size:12.5px}
+.thumb{width:42px;height:42px;border-radius:8px;object-fit:cover;background:#f1f4f9;flex:none}
+.thumb.round{border-radius:50%}
+.cell-media{display:flex;align-items:center;gap:10px}
+
 /* ── Toast ── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 22px;border-radius:10px;box-shadow:var(--shadow);z-index:60;font-weight:600;font-size:13.5px}
 .toast.err{background:var(--red)}

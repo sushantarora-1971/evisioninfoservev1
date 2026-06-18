@@ -17,6 +17,8 @@
     <button class="nav-item active" data-view="dashboard">Dashboard</button>
     <button class="nav-item" data-view="enquiries">Enquiries <span class="badge" id="navNew"></span></button>
     <button class="nav-item" data-view="clients">Clients</button>
+    <button class="nav-item" data-view="testimonials">Testimonials</button>
+    <button class="nav-item" data-view="portfolio">Portfolio</button>
     <button class="nav-item" data-view="pricing">Pricing &amp; Offers</button>
     <button class="nav-item" data-view="settings">Settings</button>
   </nav>
@@ -63,6 +65,32 @@
       </div>
     </header>
     <div class="card"><div id="cliWrap"></div></div>
+  </section>
+
+  <!-- ░ TESTIMONIALS ░ -->
+  <section class="view hidden" id="view-testimonials">
+    <header class="topbar">
+      <h1>Testimonials</h1>
+      <div class="filters">
+        <input type="search" id="tSearch" placeholder="Search testimonials…">
+        <button class="btn-primary sm" id="addTestiBtn">+ Add testimonial</button>
+      </div>
+    </header>
+    <p class="muted" style="margin:-6px 0 16px">Client photos &amp; comments shown on the <a href="/clients" target="_blank" rel="noopener">Clients page</a>. Drag-free ordering via the “Sort” number (lower shows first).</p>
+    <div class="card"><div id="tWrap"></div></div>
+  </section>
+
+  <!-- ░ PORTFOLIO ░ -->
+  <section class="view hidden" id="view-portfolio">
+    <header class="topbar">
+      <h1>Portfolio</h1>
+      <div class="filters">
+        <input type="search" id="pSearch" placeholder="Search portfolio…">
+        <button class="btn-primary sm" id="addWorkBtn">+ Add work</button>
+      </div>
+    </header>
+    <p class="muted" style="margin:-6px 0 16px">Case studies shown on the <a href="/portfolio" target="_blank" rel="noopener">Portfolio page</a>. Lower “Sort” shows first.</p>
+    <div class="card"><div id="pWrap"></div></div>
   </section>
 
   <!-- ░ PRICING & OFFERS ░ -->
@@ -116,5 +144,6 @@
 
 <script src="admin.js"></script>
 <script src="dashboard.js"></script>
+<script src="content.js"></script>
 </body>
 </html>

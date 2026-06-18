@@ -11,6 +11,22 @@
 <link rel="stylesheet" href="/assets/chrome.css?v=4">
 <link rel="stylesheet" href="/assets/service.css">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+  @media (max-width: 900px){ .work-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px){ .work-grid { grid-template-columns: 1fr; } }
+  .work-card { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+  .work-media { position: relative; aspect-ratio: 16/10; background: var(--bg-subtle) center/cover no-repeat; }
+  .work-metric { position: absolute; left: 12px; bottom: 12px; background: var(--color-navy-800); color: var(--color-gold-500);
+    font-family: var(--font-headline); font-weight: 700; font-size: 14px; padding: 6px 12px; border-radius: var(--radius-pill); }
+  .work-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .work-cat { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--color-blue-500); }
+  .work-card h3 { font-size: 18px; color: var(--color-navy-800); margin: 0; }
+  .work-client { font-size: 13px; color: var(--fg-muted-light); margin-top: -4px; }
+  .work-card p { font-size: 14px; color: var(--fg-muted-light); line-height: 1.55; margin: 4px 0 0; }
+  .work-link { margin-top: auto; padding-top: 10px; font-weight: 600; font-size: 14px; color: var(--color-blue-500); display: inline-flex; align-items: center; gap: 6px; }
+  .work-link .ic { width: 16px; height: 16px; }
+</style>
 </head>
 <body data-page="">
 
@@ -24,16 +40,11 @@
 </section>
 
 <section class="section">
-  <div class="container" style="max-width:880px">
-    <div class="incl-grid">
-      <div class="incl"><div class="ic-wrap"><i data-lucide="trending-up" class="ic"></i></div><div><h3>SaaS · +212% organic</h3><p>Doubled non-brand traffic in 7 months with technical fixes and topic clusters.</p></div></div>
-      <div class="incl"><div class="ic-wrap"><i data-lucide="shopping-cart" class="ic"></i></div><div><h3>Ecommerce · +after AI Overviews</h3><p>Category-page SEO grew revenue from organic by 64% year on year.</p></div></div>
-      <div class="incl"><div class="ic-wrap"><i data-lucide="map-pin" class="ic"></i></div><div><h3>Local services · map-pack #1</h3><p>From page two to the top of the local pack across 9 service areas.</p></div></div>
-      <div class="incl"><div class="ic-wrap"><i data-lucide="bot" class="ic"></i></div><div><h3>B2B · cited by AI</h3><p>Became a cited source in ChatGPT and Perplexity for core category queries.</p></div></div>
-      <div class="incl"><div class="ic-wrap"><i data-lucide="megaphone" class="ic"></i></div><div><h3>D2C · digital PR</h3><p>A data study earned 40+ pieces of coverage and high-authority links.</p></div></div>
-      <div class="incl"><div class="ic-wrap"><i data-lucide="target" class="ic"></i></div><div><h3>Lead-gen · −38% CPL</h3><p>Restructured paid campaigns to cut cost-per-lead while scaling volume.</p></div></div>
+  <div class="container">
+    <div class="work-grid reveal" id="pWrap">
+      <p class="muted" style="grid-column:1/-1">Loading our work…</p>
     </div>
-    <p style="margin-top:24px">Want the full case study for your industry? <a href="/contact.html" data-audit-open>Ask us for relevant examples</a> and we'll share detailed results.</p>
+    <p style="margin-top:30px;color:var(--fg-muted-light)">Want the full case study for your industry? <a href="/contact.html" data-audit-open>Ask us for relevant examples</a> and we'll share detailed results.</p>
   </div>
 </section>
 
@@ -48,5 +59,36 @@
 <script src="/assets/site.js?v=4"></script>
 <script src="/assets/chrome.js?v=4"></script>
 <script src="/assets/pricing.js?v=4"></script>
+<script>
+/* Portfolio items are managed from the admin panel (Portfolio tab). */
+(function () {
+  var wrap = document.getElementById("pWrap");
+  if (!wrap) return;
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  function card(w) {
+    var media = '<div class="work-media" style="' + (w.image ? "background-image:url('" + esc(w.image) + "')" : "") + '">'
+      + (w.metric ? '<span class="work-metric">' + esc(w.metric) + '</span>' : "") + '</div>';
+    var link = w.url ? '<a class="work-link" href="' + esc(w.url) + '" target="_blank" rel="noopener">View case study <i data-lucide="arrow-up-right" class="ic"></i></a>' : "";
+    return '<article class="card lift work-card">' + media
+      + '<div class="work-body">'
+      + (w.category ? '<span class="work-cat">' + esc(w.category) + '</span>' : "")
+      + '<h3>' + esc(w.title) + '</h3>'
+      + (w.client ? '<div class="work-client">' + esc(w.client) + '</div>' : "")
+      + (w.summary ? '<p>' + esc(w.summary) + '</p>' : "")
+      + link
+      + '</div></article>';
+  }
+  fetch("/api/portfolio").then(function (r) { return r.json(); }).then(function (list) {
+    if (!Array.isArray(list) || !list.length) {
+      wrap.innerHTML = '<p class="muted" style="grid-column:1/-1">Case studies coming soon. <a href="/contact.html" data-audit-open>Ask us</a> for relevant examples.</p>';
+      return;
+    }
+    wrap.innerHTML = list.map(card).join("");
+    if (window.lucide) lucide.createIcons();
+  }).catch(function () {
+    wrap.innerHTML = '<p class="muted" style="grid-column:1/-1">Could not load portfolio right now.</p>';
+  });
+})();
+</script>
 </body>
 </html>

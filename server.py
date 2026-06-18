@@ -11,6 +11,7 @@ Auth    : PBKDF2-HMAC-SHA256 password hashing + in-memory bearer tokens
 Run     : python server.py   (defaults to http://localhost:8000)
 """
 
+import base64
 import json
 import os
 import re
@@ -134,6 +135,30 @@ def init_db():
             active INTEGER DEFAULT 0,
             created_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS testimonials (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            role TEXT DEFAULT '',             -- e.g. 'Founder, NimbusKart'
+            quote TEXT NOT NULL,
+            photo TEXT DEFAULT '',            -- image URL/path (/uploads/.. or /assets/..)
+            rating INTEGER DEFAULT 5,
+            sort INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1,
+            created_at TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS portfolio (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            client TEXT DEFAULT '',
+            category TEXT DEFAULT '',
+            image TEXT DEFAULT '',            -- cover image URL/path
+            summary TEXT DEFAULT '',
+            metric TEXT DEFAULT '',           -- headline result, e.g. '+212% organic'
+            url TEXT DEFAULT '',              -- optional case-study / live link
+            sort INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1,
+            created_at TEXT NOT NULL
+        );
         """
     )
     conn.commit()
@@ -143,6 +168,11 @@ def init_db():
                      ("marketing", "marketing INTEGER DEFAULT 0")):
         if col not in existing_cols:
             c.execute(f"ALTER TABLE enquiries ADD COLUMN {ddl}")
+    conn.commit()
+    # One-time data fix: rename the SEO service to match the rest of the site
+    # (nav, services page). Only touches the row if it still has the original
+    # seed label, so any custom name set in the admin panel is preserved.
+    c.execute("UPDATE services SET name='SEO Services' WHERE slug='seo' AND name='SEO & AI Search'")
     conn.commit()
     # Seed services on first run (idempotent: INSERT OR IGNORE on unique slug).
     for i, (slug, name, cat, price, unit, starting, desc) in enumerate(SERVICES_SEED):
@@ -164,6 +194,24 @@ def init_db():
         conn.commit()
         print(f"  -> Seeded admin account: {SEED_EMAIL}  (password: {SEED_PASSWORD})")
         print("    Please change this password after your first login.")
+    # Seed testimonials on first run (only if the table is empty).
+    if c.execute("SELECT COUNT(*) AS n FROM testimonials").fetchone()["n"] == 0:
+        for i, (name, role, quote, photo, rating) in enumerate(TESTIMONIALS_SEED):
+            c.execute(
+                """INSERT INTO testimonials (name,role,quote,photo,rating,sort,active,created_at)
+                   VALUES (?,?,?,?,?,?,1,?)""",
+                (name, role, quote, photo, rating, i, now_iso()),
+            )
+        conn.commit()
+    # Seed portfolio on first run (only if the table is empty).
+    if c.execute("SELECT COUNT(*) AS n FROM portfolio").fetchone()["n"] == 0:
+        for i, (title, client, cat, image, summary, metric, url) in enumerate(PORTFOLIO_SEED):
+            c.execute(
+                """INSERT INTO portfolio (title,client,category,image,summary,metric,url,sort,active,created_at)
+                   VALUES (?,?,?,?,?,?,?,?,1,?)""",
+                (title, client, cat, image, summary, metric, url, i, now_iso()),
+            )
+        conn.commit()
     conn.close()
 
 
@@ -250,6 +298,81 @@ SERVICES_SEED = [
     ("mobile-app-marketing", "Mobile App Marketing", "Other Services", 18000, "/mo", 1, "ASO, app CRO and growth campaigns that drive downloads and retention."),
 ]
 CATEGORY_ORDER = ["SEO", "Content Marketing", "Other Services"]
+
+# Client testimonials seeded on first run. Edit/add/remove from the admin panel
+# (Testimonials tab). (name, role, quote, photo, rating)
+TESTIMONIALS_SEED = [
+    ("Rahul Mehta", "Founder, NimbusKart",
+     "We went from page 3 to the featured snippet — and started showing up inside ChatGPT answers for our category. Leads doubled in a quarter.",
+     "/assets/clients/rahul-mehta.jpg", 5),
+    ("Sneha Kapoor", "Head of Growth, FinlyApp",
+     "The most structured agency we've worked with. Their schema and answer-block approach is genuinely built for how people search now.",
+     "/assets/clients/sneha-kapoor.jpg", 5),
+    ("Ankit Sharma", "Founder, SaaS startup",
+     "Organic became our biggest channel within two quarters. Clear reporting, no jargon, and real results we could take to the board.",
+     "/assets/clients/ankit-sharma.jpg", 5),
+    ("Priya Nair", "Director, D2C brand",
+     "They fixed technical issues three agencies before them had missed. Category traffic and revenue are both up double digits.",
+     "/assets/clients/priya-nair.jpg", 5),
+    ("Dr. Arjun Rao", "Owner, multi-clinic group",
+     "We're #1 in the local map pack now and the phone hasn't stopped ringing. Brilliant local SEO and a team that actually responds.",
+     "/assets/clients/arjun-rao.jpg", 5),
+    ("Meera Iyer", "Marketing Head, EdTech",
+     "The only team that truly understands AI search. Within months we were being cited in ChatGPT and Perplexity for our niche.",
+     "/assets/clients/meera-iyer.jpg", 5),
+]
+
+# Portfolio / case studies seeded on first run. Manage from the admin panel
+# (Portfolio tab). (title, client, category, image, summary, metric, url)
+PORTFOLIO_SEED = [
+    ("SaaS organic growth engine", "B2B SaaS", "SEO", "/assets/portfolio/saas.jpg",
+     "Technical fixes plus topic clusters doubled non-brand organic traffic in seven months.", "+212% organic", ""),
+    ("Ecommerce category SEO", "D2C Ecommerce", "Ecommerce SEO", "/assets/portfolio/ecommerce.jpg",
+     "Category-page optimisation grew revenue from organic search 64% year on year.", "+64% revenue", ""),
+    ("Local services map-pack #1", "Multi-location services", "Local SEO", "/assets/portfolio/local.jpg",
+     "From page two to the top of the local pack across nine service areas.", "#1 map pack", ""),
+    ("Cited by AI engines", "B2B technology", "AI SEO / GEO", "/assets/portfolio/ai.jpg",
+     "Became a cited source in ChatGPT and Perplexity for core category queries.", "AI-cited", ""),
+    ("D2C digital PR campaign", "Consumer brand", "Digital PR", "/assets/portfolio/pr.jpg",
+     "A data-led study earned 40+ pieces of coverage and high-authority links.", "40+ links", ""),
+    ("Lead-gen paid restructure", "Lead generation", "PPC & Paid Ads", "/assets/portfolio/ppc.jpg",
+     "Restructured paid campaigns to cut cost-per-lead while scaling volume.", "−38% CPL", ""),
+]
+
+# ── Image uploads (admin) ──────────────────────────────────────────────────
+UPLOAD_DIR = os.path.join(ROOT, "uploads")
+_EXT_BY_MIME = {"image/jpeg": "jpg", "image/jpg": "jpg", "image/png": "png",
+                "image/webp": "webp", "image/gif": "gif", "image/avif": "avif"}
+_DATAURL_RE = re.compile(r"^data:([\w/+.-]+);base64,(.*)$", re.S)
+MAX_UPLOAD_BYTES = 6 * 1024 * 1024  # 6 MB
+
+
+def save_upload(data_url, suggested_name=""):
+    """Decode a base64 data URL, save it under /uploads/, return its public path.
+    Raises ValueError on bad input. Used by the admin image picker."""
+    m = _DATAURL_RE.match(data_url or "")
+    if not m:
+        raise ValueError("Invalid image data.")
+    mime = m.group(1).lower()
+    ext = _EXT_BY_MIME.get(mime)
+    if not ext:
+        raise ValueError("Unsupported image type. Use JPG, PNG, WEBP, GIF or AVIF.")
+    try:
+        raw = base64.b64decode(m.group(2), validate=True)
+    except Exception:
+        raise ValueError("Could not decode the image.")
+    if not raw:
+        raise ValueError("Empty image.")
+    if len(raw) > MAX_UPLOAD_BYTES:
+        raise ValueError("Image is too large (max 6 MB).")
+    # Build a safe, unique filename: <slug>-<token>.<ext>
+    stem = re.sub(r"[^a-z0-9]+", "-", os.path.splitext(suggested_name or "")[0].lower()).strip("-") or "image"
+    stem = stem[:40]
+    fname = f"{stem}-{secrets.token_hex(4)}.{ext}"
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    with open(os.path.join(UPLOAD_DIR, fname), "wb") as fh:
+        fh.write(raw)
+    return "/uploads/" + fname
 
 
 def compute_pricing(conn):
@@ -413,6 +536,22 @@ class Handler(SimpleHTTPRequestHandler):
             offer, services = compute_pricing(conn)
             conn.close()
             return self._json({"offer": offer, "services": services})
+        # Public: client testimonials feed (clients page).
+        if path == "/api/testimonials":
+            conn = db()
+            rows = conn.execute(
+                "SELECT id,name,role,quote,photo,rating FROM testimonials WHERE active=1 ORDER BY sort, id"
+            ).fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
+        # Public: portfolio / case studies feed (portfolio page).
+        if path == "/api/portfolio":
+            conn = db()
+            rows = conn.execute(
+                "SELECT id,title,client,category,image,summary,metric,url FROM portfolio WHERE active=1 ORDER BY sort, id"
+            ).fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
         if path == "/api/admin/services":
             if not self._require_auth():
                 return
@@ -439,6 +578,20 @@ class Handler(SimpleHTTPRequestHandler):
                 return
             conn = db()
             rows = conn.execute("SELECT * FROM clients ORDER BY id DESC").fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
+        if path == "/api/admin/testimonials":
+            if not self._require_auth():
+                return
+            conn = db()
+            rows = conn.execute("SELECT * FROM testimonials ORDER BY sort, id").fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
+        if path == "/api/admin/portfolio":
+            if not self._require_auth():
+                return
+            conn = db()
+            rows = conn.execute("SELECT * FROM portfolio ORDER BY sort, id").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/stats":
@@ -622,6 +775,58 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True, "id": cid}, 201)
 
+        # Admin: upload an image (base64 data URL) → returns its public /uploads/ path
+        if path == "/api/admin/upload":
+            if not self._require_auth():
+                return
+            try:
+                url = save_upload(data.get("data") or "", data.get("filename") or "")
+            except ValueError as ex:
+                return self._json({"error": str(ex)}, 400)
+            return self._json({"ok": True, "url": url}, 201)
+
+        # Admin: add a testimonial
+        if path == "/api/admin/testimonials":
+            if not self._require_auth():
+                return
+            name = (data.get("name") or "").strip()
+            quote = (data.get("quote") or "").strip()
+            if not name or not quote:
+                return self._json({"error": "Name and quote are required."}, 400)
+            conn = db()
+            cur = conn.execute(
+                """INSERT INTO testimonials (name,role,quote,photo,rating,sort,active,created_at)
+                   VALUES (?,?,?,?,?,?,?,?)""",
+                (name, (data.get("role") or "").strip(), quote, (data.get("photo") or "").strip(),
+                 int(data.get("rating") or 5), int(data.get("sort") or 0),
+                 1 if data.get("active", 1) else 0, now_iso()),
+            )
+            conn.commit()
+            tid = cur.lastrowid
+            conn.close()
+            return self._json({"ok": True, "id": tid}, 201)
+
+        # Admin: add a portfolio item
+        if path == "/api/admin/portfolio":
+            if not self._require_auth():
+                return
+            title = (data.get("title") or "").strip()
+            if not title:
+                return self._json({"error": "Title is required."}, 400)
+            conn = db()
+            cur = conn.execute(
+                """INSERT INTO portfolio (title,client,category,image,summary,metric,url,sort,active,created_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                (title, (data.get("client") or "").strip(), (data.get("category") or "").strip(),
+                 (data.get("image") or "").strip(), (data.get("summary") or "").strip(),
+                 (data.get("metric") or "").strip(), (data.get("url") or "").strip(),
+                 int(data.get("sort") or 0), 1 if data.get("active", 1) else 0, now_iso()),
+            )
+            conn.commit()
+            pid = cur.lastrowid
+            conn.close()
+            return self._json({"ok": True, "id": pid}, 201)
+
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: PATCH ─────────────
@@ -709,6 +914,44 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True})
 
+        m = re.match(r"^/api/admin/testimonials/(\d+)$", self.path)
+        if m:
+            tid = int(m.group(1))
+            allowed = ("name", "role", "quote", "photo", "rating", "sort", "active")
+            ints = {"rating", "sort", "active"}
+            fields, vals = [], []
+            for k in allowed:
+                if k in data:
+                    fields.append(f"{k}=?")
+                    vals.append(int(data[k]) if k in ints else data[k])
+            if not fields:
+                return self._json({"error": "Nothing to update."}, 400)
+            vals.append(tid)
+            conn = db()
+            conn.execute(f"UPDATE testimonials SET {','.join(fields)} WHERE id=?", vals)
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+
+        m = re.match(r"^/api/admin/portfolio/(\d+)$", self.path)
+        if m:
+            pid = int(m.group(1))
+            allowed = ("title", "client", "category", "image", "summary", "metric", "url", "sort", "active")
+            ints = {"sort", "active"}
+            fields, vals = [], []
+            for k in allowed:
+                if k in data:
+                    fields.append(f"{k}=?")
+                    vals.append(int(data[k]) if k in ints else data[k])
+            if not fields:
+                return self._json({"error": "Nothing to update."}, 400)
+            vals.append(pid)
+            conn = db()
+            conn.execute(f"UPDATE portfolio SET {','.join(fields)} WHERE id=?", vals)
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: DELETE ─────────────
@@ -733,6 +976,20 @@ class Handler(SimpleHTTPRequestHandler):
         if m:
             conn = db()
             conn.execute("DELETE FROM offers WHERE id=?", (int(m.group(1)),))
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+        m = re.match(r"^/api/admin/testimonials/(\d+)$", self.path)
+        if m:
+            conn = db()
+            conn.execute("DELETE FROM testimonials WHERE id=?", (int(m.group(1)),))
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+        m = re.match(r"^/api/admin/portfolio/(\d+)$", self.path)
+        if m:
+            conn = db()
+            conn.execute("DELETE FROM portfolio WHERE id=?", (int(m.group(1)),))
             conn.commit()
             conn.close()
             return self._json({"ok": True})

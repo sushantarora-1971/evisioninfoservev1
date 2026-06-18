@@ -361,7 +361,7 @@
       html += `<table class="tbl"><thead><tr><th>Service</th><th>Price ₹</th><th>Unit</th><th>Starting</th><th>Discount %</th><th>Active</th><th></th></tr></thead><tbody>`;
       cats[cat].forEach(s => {
         html += `<tr data-svc="${s.id}">
-          <td><b>${esc(s.name)}</b><div class="muted">/${esc(s.slug)}</div></td>
+          <td><input class="mini" value="${esc(s.name)}" data-f="name" style="width:180px"><div class="muted">/${esc(s.slug)}</div></td>
           <td><input class="mini" type="number" value="${s.price}" data-f="price"></td>
           <td><input class="mini" value="${esc(s.unit)}" data-f="unit" style="width:84px"></td>
           <td style="text-align:center"><input type="checkbox" data-f="starting" ${s.starting ? "checked" : ""}></td>

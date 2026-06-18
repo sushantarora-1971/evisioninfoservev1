@@ -11,6 +11,20 @@
 <link rel="stylesheet" href="/assets/chrome.css?v=4">
 <link rel="stylesheet" href="/assets/service.css">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  /* Client testimonial cards (photo + rating + comment) */
+  .quote-card { padding: 28px; display: flex; flex-direction: column; gap: 16px; height: 100%; }
+  .quote-card .stars { color: var(--color-gold-500); display: inline-flex; gap: 2px; }
+  .quote-card .stars .ic { width: 16px; height: 16px; fill: currentColor; }
+  .quote-card blockquote { font-size: 16px; line-height: 1.62; color: var(--color-navy-800); font-weight: 500; margin: 0; }
+  .quote-by { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+  .quote-av { width: 48px; height: 48px; border-radius: 50%; background: var(--color-navy-800);
+    color: var(--color-gold-500); display: grid; place-items: center; font-family: var(--font-headline);
+    font-weight: 700; font-size: 15px; flex: none; overflow: hidden; position: relative; }
+  .quote-av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .quote-by .qn { font-family: var(--font-headline); font-weight: 600; color: var(--color-navy-800); font-size: 15px; }
+  .quote-by .qr { font-size: 13px; color: var(--fg-muted-light); }
+</style>
 </head>
 <body data-page="">
 
@@ -36,6 +50,22 @@
   </div>
 </section>
 
+<!-- ░░ CLIENT TESTIMONIALS ░░ -->
+<!-- Placeholder stock photos live in /assets/clients/. Swap each <img src> for a real
+     client photo (same filename) before launch; if an image is missing it falls back to initials. -->
+<section class="section section-subtle" id="testimonials">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Client stories</span>
+      <h2 class="h-lg">What our clients say</h2>
+      <p class="lead">Rated 4.7 / 5 across 2,000+ reviews — here's growth in their words.</p>
+    </div>
+    <div class="grid cols-3 reveal" style="margin-top:40px" id="tWrap">
+      <p class="muted" style="grid-column:1/-1">Loading client stories…</p>
+    </div>
+  </div>
+</section>
+
 <!-- ░░ CTA BAND ░░ -->
 <section class="cta-band">
   <div class="container cta-inner">
@@ -47,5 +77,38 @@
 <script src="/assets/site.js?v=4"></script>
 <script src="/assets/chrome.js?v=4"></script>
 <script src="/assets/pricing.js?v=4"></script>
+<script>
+/* Client testimonials are managed from the admin panel (Testimonials tab). */
+(function () {
+  var wrap = document.getElementById("tWrap");
+  if (!wrap) return;
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  function initials(name) {
+    return (name || "").trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join("").toUpperCase() || "•";
+  }
+  function star() { return '<i data-lucide="star"></i>'; }
+  function card(t) {
+    var rating = Math.max(0, Math.min(5, t.rating || 5));
+    var av = esc(initials(t.name))
+      + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.name) + '" loading="lazy" onerror="this.remove()">' : "");
+    return '<div class="card quote-card">'
+      + '<span class="stars">' + new Array(rating + 1).join(star()) + '</span>'
+      + '<blockquote>' + esc(t.quote) + '</blockquote>'
+      + '<div class="quote-by"><div class="quote-av">' + av + '</div>'
+      + '<div><div class="qn">' + esc(t.name) + '</div><div class="qr">' + esc(t.role) + '</div></div></div>'
+      + '</div>';
+  }
+  fetch("/api/testimonials").then(function (r) { return r.json(); }).then(function (list) {
+    if (!Array.isArray(list) || !list.length) {
+      wrap.innerHTML = '<p class="muted" style="grid-column:1/-1">Client stories coming soon. <a href="/contact.html" data-audit-open>Get in touch</a> for references.</p>';
+      return;
+    }
+    wrap.innerHTML = list.map(card).join("");
+    if (window.lucide) lucide.createIcons();
+  }).catch(function () {
+    wrap.innerHTML = '<p class="muted" style="grid-column:1/-1">Could not load testimonials right now.</p>';
+  });
+})();
+</script>
 </body>
 </html>
