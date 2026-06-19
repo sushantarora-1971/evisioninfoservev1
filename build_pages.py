@@ -57,6 +57,7 @@ def service_page(slug, c):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
 <meta name="robots" content="noindex, nofollow"><!-- DEV PHASE: remove before launch -->
 <title>{esc(c['title'])} | Evision Infoserve</title>
 <meta name="description" content="{esc(c['metadesc'])}">
@@ -771,6 +772,7 @@ def simple_page(slug, c):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
 <meta name="robots" content="noindex, nofollow"><!-- DEV PHASE: remove before launch -->
 <title>{esc(c['title'])} | Evision Infoserve</title>
 <meta name="description" content="{esc(c['metadesc'])}">
