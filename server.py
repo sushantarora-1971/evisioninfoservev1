@@ -12,6 +12,7 @@ Run     : python server.py   (defaults to http://localhost:8000)
 """
 
 import base64
+import html
 import json
 import os
 import re
@@ -62,6 +63,24 @@ SESSIONS = {}
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def slugify(text, fallback="post"):
+    """URL-safe slug: lowercase, alnum + single hyphens."""
+    s = re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
+    return s[:80] or fallback
+
+
+def unique_slug(conn, base, exclude_id=None):
+    """Ensure the slug is unique in the posts table (append -2, -3, … on clash)."""
+    base = slugify(base)
+    slug, n = base, 1
+    while True:
+        row = conn.execute("SELECT id FROM posts WHERE slug=?", (slug,)).fetchone()
+        if not row or row["id"] == exclude_id:
+            return slug
+        n += 1
+        slug = f"{base}-{n}"
 
 
 def db():
@@ -159,6 +178,28 @@ def init_db():
             active INTEGER DEFAULT 1,
             created_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug TEXT UNIQUE NOT NULL,
+            title TEXT NOT NULL,
+            excerpt TEXT DEFAULT '',          -- short summary for cards & meta fallback
+            cover TEXT DEFAULT '',            -- hero/cover image URL/path
+            body TEXT DEFAULT '',             -- article HTML (authored in the admin editor)
+            tag TEXT DEFAULT '',              -- category label, e.g. 'AI Search'
+            author TEXT DEFAULT '',
+            author_role TEXT DEFAULT '',
+            read_min INTEGER DEFAULT 5,       -- estimated read time (minutes)
+            meta_title TEXT DEFAULT '',       -- <title> override (falls back to title)
+            meta_desc TEXT DEFAULT '',        -- meta description (falls back to excerpt)
+            og_title TEXT DEFAULT '',         -- Open Graph title (falls back to meta_title/title)
+            og_desc TEXT DEFAULT '',          -- Open Graph description (falls back to meta_desc/excerpt)
+            og_image TEXT DEFAULT '',         -- Open Graph image (falls back to cover)
+            status TEXT DEFAULT 'draft',      -- 'draft' | 'published'
+            sort INTEGER DEFAULT 0,
+            created_at TEXT NOT NULL,
+            updated_at TEXT DEFAULT '',
+            published_at TEXT DEFAULT ''
+        );
         """
     )
     conn.commit()
@@ -211,6 +252,20 @@ def init_db():
                    VALUES (?,?,?,?,?,?,?,?,1,?)""",
                 (title, client, cat, image, summary, metric, url, i, now_iso()),
             )
+        conn.commit()
+    # Seed the first blog post on first run (only if the table is empty).
+    if c.execute("SELECT COUNT(*) AS n FROM posts").fetchone()["n"] == 0:
+        p = POST_SEED
+        c.execute(
+            """INSERT INTO posts
+               (slug,title,excerpt,cover,body,tag,author,author_role,read_min,
+                meta_title,meta_desc,og_title,og_desc,og_image,status,sort,
+                created_at,updated_at,published_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'published',0,?,?,?)""",
+            (p["slug"], p["title"], p["excerpt"], p["cover"], p["body"], p["tag"],
+             p["author"], p["author_role"], p["read_min"], p["meta_title"], p["meta_desc"],
+             p["og_title"], p["og_desc"], p["og_image"], now_iso(), now_iso(), now_iso()),
+        )
         conn.commit()
     conn.close()
 
@@ -339,6 +394,51 @@ PORTFOLIO_SEED = [
      "Restructured paid campaigns to cut cost-per-lead while scaling volume.", "−38% CPL", ""),
 ]
 
+# First blog post — seeded once so the Blog is never empty. Fully editable in admin.
+POST_SEED = {
+    "slug": "geo-vs-seo-ai-search-2026",
+    "title": "GEO vs SEO: How AI Search Is Changing the Way Brands Get Found in 2026",
+    "tag": "AI Search",
+    "author": "Priya Sharma",
+    "author_role": "Head of SEO Strategy · Evision Infoserve",
+    "read_min": 11,
+    "excerpt": "A practical guide to Generative Engine Optimization (GEO) and how it differs "
+               "from traditional SEO — and what to do so your brand gets cited by ChatGPT, "
+               "Gemini and Perplexity.",
+    "cover": "",
+    "meta_title": "GEO vs SEO: How AI Search Is Changing How Brands Get Found in 2026 | Evision Infoserve",
+    "meta_desc": "A practical guide to Generative Engine Optimization (GEO) and how it differs from "
+                 "traditional SEO — and what to do so your brand gets cited by ChatGPT, Gemini and Perplexity.",
+    "og_title": "GEO vs SEO: How AI Search Is Changing How Brands Get Found in 2026",
+    "og_desc": "SEO gets you ranked; GEO gets you cited inside AI answers. Here's the 2026 visibility playbook.",
+    "og_image": "",
+    "body": """<h2 id="shift">The search box is no longer the destination</h2>
+<p>For two decades, the job was simple: rank in the top results and earn the click. But the interface of search has changed. Google AI Overviews, ChatGPT, Gemini and Perplexity increasingly answer the question <em>on the spot</em> — and the user never visits a website at all.</p>
+<p>That doesn't make discoverability less important. It makes <strong>where</strong> you're discovered different. The new question isn't only "do I rank?" — it's "<strong>am I the source the AI trusts and names?</strong>"</p>
+<h2 id="difference">SEO vs GEO: what's actually different</h2>
+<p>It helps to think of them as two layers of the same strategy rather than competitors. <strong>SEO</strong> optimises for ranked links and clicks. <strong>GEO</strong> optimises for inclusion and citation inside generative answers.</p>
+<h3>Where they overlap</h3>
+<p>The good news: most of the work compounds. Fast, crawlable, well-structured pages with strong topical authority help you both rank on Google and get pulled into an AI summary.</p>
+<ul>
+<li>Clean heading hierarchy — one H1, ordered H2–H6.</li>
+<li>Structured data (JSON-LD) so machines understand entities.</li>
+<li>Genuine expertise and citations — Google's E-E-A-T and an AI's trust signals are close cousins.</li>
+</ul>
+<h3>Where they diverge</h3>
+<p>GEO rewards <strong>contextual completeness</strong> over keyword density. AI engines lift self-contained passages, so each section should make sense on its own. Original data, clear definitions and comparison tables are disproportionately valuable — they're exactly what a model reaches for.</p>
+<blockquote>"Optimise for the question, not just the keyword. The brands that define the answer become the answer."</blockquote>
+<h2 id="playbook">A practical GEO playbook</h2>
+<p>Here's the approach we ship on every Evision Infoserve build — a repeatable system, not a one-off trick.</p>
+<h3>1. Lead with the answer</h3>
+<p>Put a 40–60 word direct answer near the top of every page. This single move wins featured snippets, voice answers and AI answer boxes at once.</p>
+<h3>2. Build topical authority in clusters</h3>
+<p>Pillar pages supported by interlinked articles signal depth. AI engines favour sources that demonstrably own a topic, not pages that mention it once.</p>
+<h3>3. Make your entities consistent</h3>
+<p>Keep your brand name, services and location identical across your site, Google Business Profile and directories. Consistency is how a model becomes confident enough to name you.</p>
+<h3>4. Open the door for AI crawlers</h3>
+<p>An llms.txt file plus access for GPTBot, ClaudeBot and PerplexityBot tells the engines where your best, most citable content lives.</p>""",
+}
+
 # ── Image uploads (admin) ──────────────────────────────────────────────────
 UPLOAD_DIR = os.path.join(ROOT, "uploads")
 _EXT_BY_MIME = {"image/jpeg": "jpg", "image/jpg": "jpg", "image/png": "png",
@@ -437,6 +537,152 @@ def notify_new_enquiry(e):
         print(f"[enquiry] Email notification failed: {ex}")
 
 
+# ───────────────────────── blog post rendering ─────────────────────────
+
+SITE_URL = os.environ.get("SITE_URL", "https://evisioninfoserve.com").rstrip("/")
+
+
+def _fmt_date(iso):
+    """'2026-05-28T...' → 'May 28, 2026'. Returns '' on bad input."""
+    try:
+        return datetime.fromisoformat(iso).strftime("%b %d, %Y")
+    except Exception:
+        return ""
+
+
+def render_post_page(post):
+    """Build a full, SEO-ready HTML page for a single blog post from a DB row
+    (dict). Title, meta description and Open Graph tags all come from the post so
+    they're editable in the admin panel; the body HTML is authored there too."""
+    e = html.escape
+    title = post["title"]
+    meta_title = post.get("meta_title") or f"{title} | Evision Infoserve"
+    meta_desc = post.get("meta_desc") or post.get("excerpt") or ""
+    og_title = post.get("og_title") or post.get("meta_title") or title
+    og_desc = post.get("og_desc") or meta_desc
+    og_image = post.get("og_image") or post.get("cover") or ""
+    url = f"{SITE_URL}/blog/{post['slug']}"
+    if og_image and og_image.startswith("/"):
+        og_image = SITE_URL + og_image
+
+    # Byline pieces
+    byline = []
+    if post.get("author"):
+        initials = "".join(w[0] for w in post["author"].split()[:2]).upper() or "E"
+        byline.append(f'<span class="au"><span class="art-av">{e(initials)}</span><b>{e(post["author"])}</b></span>')
+    if post.get("author_role"):
+        byline.append(f'<span class="dot"></span><span>{e(post["author_role"])}</span>')
+    if post.get("read_min"):
+        byline.append(f'<span class="dot"></span><span>{int(post["read_min"])} min read</span>')
+    date_str = _fmt_date(post.get("published_at") or post.get("created_at") or "")
+    if date_str:
+        byline.append(f'<span class="dot"></span><span>{e(date_str)}</span>')
+    byline_html = "".join(byline)
+
+    # Feature image / placeholder
+    if post.get("cover"):
+        feat = f'<div class="art-feat has-img"><img src="{e(post["cover"])}" alt="{e(title)}"></div>'
+    else:
+        feat = (f'<div class="art-feat"><div class="ph"><div class="big">{e(title)}</div>'
+                f'<div class="sm">// evisioninfoserve.com/blog</div></div></div>')
+
+    tag_html = f'<span class="tag tag-blue">{e(post["tag"])}</span>' if post.get("tag") else ""
+
+    # Author box
+    author_box = ""
+    if post.get("author"):
+        initials = "".join(w[0] for w in post["author"].split()[:2]).upper() or "E"
+        role = post.get("author_role") or "Evision Infoserve"
+        author_box = (
+            '<div class="author-box"><div class="av">' + e(initials) + '</div><div>'
+            '<div class="an">' + e(post["author"]) + '</div>'
+            '<div class="ar">' + e(role) + '</div></div></div>'
+        )
+
+    og_img_tags = ""
+    if og_image:
+        og_img_tags = (f'<meta property="og:image" content="{e(og_image)}">'
+                       f'<meta name="twitter:image" content="{e(og_image)}">')
+
+    # JSON-LD Article schema (helps Google + AI engines)
+    ld = {
+        "@context": "https://schema.org", "@type": "Article",
+        "headline": title, "description": meta_desc,
+        "author": {"@type": "Person", "name": post.get("author") or "Evision Infoserve"},
+        "publisher": {"@type": "Organization", "name": "Evision Infoserve"},
+        "mainEntityOfPage": url, "url": url,
+    }
+    if og_image:
+        ld["image"] = og_image
+    if post.get("published_at"):
+        ld["datePublished"] = post["published_at"]
+    if post.get("updated_at"):
+        ld["dateModified"] = post["updated_at"]
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
+<meta name="robots" content="noindex, nofollow"><!-- DEV PHASE: remove before launch -->
+<title>{e(meta_title)}</title>
+<meta name="description" content="{e(meta_desc)}">
+<link rel="canonical" href="{e(url)}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{e(og_title)}">
+<meta property="og:description" content="{e(og_desc)}">
+<meta property="og:url" content="{e(url)}">
+<meta property="og:site_name" content="Evision Infoserve">
+{og_img_tags}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{e(og_title)}">
+<meta name="twitter:description" content="{e(og_desc)}">
+<script type="application/ld+json">{json.dumps(ld)}</script>
+<link rel="stylesheet" href="/assets/tokens.css?v=4">
+<link rel="stylesheet" href="/assets/site.css?v=4">
+<link rel="stylesheet" href="/assets/chrome.css?v=4">
+<link rel="stylesheet" href="/assets/blog.css?v=1">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="blog">
+
+<section class="art-hero" data-screen-label="Article hero">
+  <div class="container">
+    <div class="art-head">
+      {tag_html}
+      <h1>{e(title)}</h1>
+      <div class="art-byline">{byline_html}</div>
+    </div>
+    {feat}
+  </div>
+</section>
+
+<section class="section" style="padding-top:44px">
+  <div class="container">
+    <div class="art-body">
+      <article class="prose">
+        {post["body"]}
+        {author_box}
+      </article>
+      <p style="margin-top:36px"><a href="/blog" class="btn btn-ghost-light btn-sm">← Back to all articles</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div><h2 class="h-lg" style="color:#fff;max-width:20ch">Want results like this for your brand?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Get a free SEO + AI-visibility audit and see where you stand today.</p></div>
+    <a href="/contact.html" class="btn btn-primary btn-lg">Get a Free Audit</a>
+  </div>
+</section>
+
+<script src="/assets/site.js?v=4"></script>
+<script src="/assets/chrome.js?v=4"></script>
+</body>
+</html>"""
+
+
 # ───────────────────────── request handler ─────────────────────────
 
 class Handler(SimpleHTTPRequestHandler):
@@ -509,8 +755,34 @@ class Handler(SimpleHTTPRequestHandler):
         if clean in CLEAN_TO_FILE:
             self.path = "/" + CLEAN_TO_FILE[clean]
             return super().do_GET()
+        # Blog article: /blog/<slug> → server-render the post (SEO meta + OG tags).
+        m = re.match(r"^/blog/([a-z0-9][a-z0-9-]*)$", clean)
+        if m:
+            return self.serve_post(m.group(1))
         # Everything else (assets, /admin/, etc.) served as-is.
         return super().do_GET()
+
+    def serve_post(self, slug):
+        """Render a published blog post, or a draft when the admin passes a valid
+        preview token (?preview=<token>) so authors can review before publishing."""
+        qs = self.path.split("?", 1)[1] if "?" in self.path else ""
+        preview_tok = ""
+        for part in qs.split("&"):
+            if part.startswith("preview="):
+                preview_tok = part[8:]
+        conn = db()
+        row = conn.execute("SELECT * FROM posts WHERE slug=?", (slug,)).fetchone()
+        conn.close()
+        allowed = row and (row["status"] == "published" or (preview_tok and session_email(preview_tok)))
+        if not allowed:
+            self.send_error(404, "Post not found")
+            return
+        body = render_post_page(dict(row)).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def do_POST(self):
         if self.path.startswith("/api/"):
@@ -549,6 +821,16 @@ class Handler(SimpleHTTPRequestHandler):
             conn = db()
             rows = conn.execute(
                 "SELECT id,title,client,category,image,summary,metric,url FROM portfolio WHERE active=1 ORDER BY sort, id"
+            ).fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
+        # Public: blog listing feed (published posts only) for the /blog index page.
+        if path == "/api/posts":
+            conn = db()
+            rows = conn.execute(
+                """SELECT slug,title,excerpt,cover,tag,author,read_min,published_at
+                   FROM posts WHERE status='published'
+                   ORDER BY COALESCE(NULLIF(published_at,''), created_at) DESC, id DESC"""
             ).fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
@@ -594,6 +876,27 @@ class Handler(SimpleHTTPRequestHandler):
             rows = conn.execute("SELECT * FROM portfolio ORDER BY sort, id").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
+        if path == "/api/admin/posts":
+            if not self._require_auth():
+                return
+            conn = db()
+            rows = conn.execute(
+                """SELECT id,slug,title,excerpt,cover,tag,author,status,read_min,
+                          created_at,updated_at,published_at
+                   FROM posts ORDER BY id DESC"""
+            ).fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
+        m = re.match(r"^/api/admin/posts/(\d+)$", path)
+        if m:
+            if not self._require_auth():
+                return
+            conn = db()
+            row = conn.execute("SELECT * FROM posts WHERE id=?", (int(m.group(1)),)).fetchone()
+            conn.close()
+            if not row:
+                return self._json({"error": "Post not found."}, 404)
+            return self._json(dict(row))
         if path == "/api/admin/stats":
             if not self._require_auth():
                 return
@@ -827,6 +1130,37 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True, "id": pid}, 201)
 
+        # Admin: create a blog post
+        if path == "/api/admin/posts":
+            if not self._require_auth():
+                return
+            title = (data.get("title") or "").strip()
+            if not title:
+                return self._json({"error": "Title is required."}, 400)
+            status = "published" if (data.get("status") == "published") else "draft"
+            conn = db()
+            slug = unique_slug(conn, data.get("slug") or title)
+            now = now_iso()
+            cur = conn.execute(
+                """INSERT INTO posts
+                   (slug,title,excerpt,cover,body,tag,author,author_role,read_min,
+                    meta_title,meta_desc,og_title,og_desc,og_image,status,sort,
+                    created_at,updated_at,published_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (slug, title, (data.get("excerpt") or "").strip(), (data.get("cover") or "").strip(),
+                 data.get("body") or "", (data.get("tag") or "").strip(),
+                 (data.get("author") or "").strip(), (data.get("author_role") or "").strip(),
+                 int(data.get("read_min") or 5), (data.get("meta_title") or "").strip(),
+                 (data.get("meta_desc") or "").strip(), (data.get("og_title") or "").strip(),
+                 (data.get("og_desc") or "").strip(), (data.get("og_image") or "").strip(),
+                 status, int(data.get("sort") or 0), now, now,
+                 now if status == "published" else ""),
+            )
+            conn.commit()
+            pid = cur.lastrowid
+            conn.close()
+            return self._json({"ok": True, "id": pid, "slug": slug}, 201)
+
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: PATCH ─────────────
@@ -952,6 +1286,43 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True})
 
+        m = re.match(r"^/api/admin/posts/(\d+)$", self.path)
+        if m:
+            pid = int(m.group(1))
+            conn = db()
+            row = conn.execute("SELECT * FROM posts WHERE id=?", (pid,)).fetchone()
+            if not row:
+                conn.close()
+                return self._json({"error": "Post not found."}, 404)
+            allowed = ("title", "excerpt", "cover", "body", "tag", "author", "author_role",
+                       "read_min", "meta_title", "meta_desc", "og_title", "og_desc",
+                       "og_image", "status", "sort")
+            ints = {"read_min", "sort"}
+            fields, vals = [], []
+            for k in allowed:
+                if k in data:
+                    fields.append(f"{k}=?")
+                    vals.append(int(data[k] or 0) if k in ints else data[k])
+            # Slug: only regenerate when explicitly provided (keeps existing URLs stable).
+            if data.get("slug"):
+                fields.append("slug=?")
+                vals.append(unique_slug(conn, data["slug"], exclude_id=pid))
+            # Stamp published_at the first time a post goes live.
+            if data.get("status") == "published" and not row["published_at"]:
+                fields.append("published_at=?")
+                vals.append(now_iso())
+            if not fields:
+                conn.close()
+                return self._json({"error": "Nothing to update."}, 400)
+            fields.append("updated_at=?")
+            vals.append(now_iso())
+            vals.append(pid)
+            conn.execute(f"UPDATE posts SET {','.join(fields)} WHERE id=?", vals)
+            conn.commit()
+            new_slug = conn.execute("SELECT slug FROM posts WHERE id=?", (pid,)).fetchone()["slug"]
+            conn.close()
+            return self._json({"ok": True, "slug": new_slug})
+
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: DELETE ─────────────
@@ -990,6 +1361,13 @@ class Handler(SimpleHTTPRequestHandler):
         if m:
             conn = db()
             conn.execute("DELETE FROM portfolio WHERE id=?", (int(m.group(1)),))
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+        m = re.match(r"^/api/admin/posts/(\d+)$", self.path)
+        if m:
+            conn = db()
+            conn.execute("DELETE FROM posts WHERE id=?", (int(m.group(1)),))
             conn.commit()
             conn.close()
             return self._json({"ok": True})

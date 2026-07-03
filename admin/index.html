@@ -19,6 +19,7 @@
     <button class="nav-item" data-view="clients">Clients</button>
     <button class="nav-item" data-view="testimonials">Testimonials</button>
     <button class="nav-item" data-view="portfolio">Portfolio</button>
+    <button class="nav-item" data-view="blog">Blog</button>
     <button class="nav-item" data-view="pricing">Pricing &amp; Offers</button>
     <button class="nav-item" data-view="settings">Settings</button>
   </nav>
@@ -93,6 +94,35 @@
     <div class="card"><div id="pWrap"></div></div>
   </section>
 
+  <!-- ░ BLOG (list) ░ -->
+  <section class="view hidden" id="view-blog">
+    <header class="topbar">
+      <h1>Blog</h1>
+      <div class="filters">
+        <input type="search" id="blogSearch" placeholder="Search posts…">
+        <button class="btn-primary sm" id="newPostBtn">+ New post</button>
+      </div>
+    </header>
+    <p class="muted" style="margin:-6px 0 16px">Posts show on the <a href="/blog" target="_blank" rel="noopener">Blog page</a>. Draft posts are hidden from the site until you publish. Each post has its own SEO title &amp; Open Graph tags.</p>
+    <div class="card"><div id="blogWrap"></div></div>
+  </section>
+
+  <!-- ░ BLOG (editor) ░ -->
+  <section class="view hidden" id="view-blog-edit">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="link-btn" id="blogBack">← Back</button>
+        <h1 id="blogEditHeading">New post</h1>
+      </div>
+      <div class="filters">
+        <span class="muted" id="blogStatusPill"></span>
+        <button class="btn-ghost sm" id="blogPreviewBtn" type="button">Preview</button>
+        <button class="btn-primary sm" id="blogSaveBtn" type="button">Save</button>
+      </div>
+    </header>
+    <div id="blogEditBody"></div>
+  </section>
+
   <!-- ░ PRICING & OFFERS ░ -->
   <section class="view hidden" id="view-pricing">
     <header class="topbar"><h1>Pricing &amp; Offers</h1></header>
@@ -145,5 +175,6 @@
 <script src="admin.js"></script>
 <script src="dashboard.js"></script>
 <script src="content.js"></script>
+<script src="blog.js"></script>
 </body>
 </html>

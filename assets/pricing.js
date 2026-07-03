@@ -21,20 +21,14 @@
     return s.unit === "one-time" ? " one-time" : s.unit;
   }
 
-  // ── per-page price strip ──
+  // ── per-page CTA strip (pricing hidden — quote-only) ──
   function priceStripHTML(s) {
-    var disc = s.effective_discount;
-    var amount = disc
-      ? '<span class="ps-old">' + inr(s.price) + '</span> <b>' + inr(s.final_price) + '</b>'
-      : '<b>' + inr(s.price) + '</b>';
-    var badge = disc ? '<span class="ps-badge">' + disc + '% OFF</span>' : '';
     return '<div class="container"><div class="price-strip-inner">' +
         '<div>' +
-          '<span class="ps-label">' + (s.starting ? "Starting at" : "Price") + '</span>' +
-          '<div class="ps-amount">' + amount +
-            '<span class="ps-unit">' + unitLabel(s) + '</span> ' + badge + '</div>' +
+          '<span class="ps-label">Pricing tailored to your goals</span>' +
+          '<div class="ps-amount"><b>Request a custom quote</b></div>' +
         '</div>' +
-        '<a href="/contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-lg">Get Started</a>' +
+        '<a href="/contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-lg">Get a Quote</a>' +
       '</div></div>';
   }
 
@@ -60,22 +54,15 @@
     document.body.insertBefore(bar, document.body.firstChild);
   }
 
-  // ── one service card ──
+  // ── one service card (pricing hidden — quote-only) ──
   function cardHTML(s) {
-    var disc = s.effective_discount;
-    var amount = (disc
-      ? '<span class="pg-old">' + inr(s.price) + '</span> <b>' + inr(s.final_price) + '</b>'
-      : '<b>' + inr(s.price) + '</b>') + '<span class="pg-unit">' + unitLabel(s) + '</span>';
     return '<div class="pg-card">' +
-        (disc ? '<span class="pg-ribbon">' + disc + '% OFF</span>' : '') +
         '<h4 class="pg-card-name">' + s.name + '</h4>' +
         '<p class="pg-card-desc">' + (s.description || "") + '</p>' +
-        '<div class="pg-card-price">' +
-          (s.starting ? '<span class="pg-from">Starting at</span>' : '') +
-          '<div class="pg-amount">' + amount + '</div></div>' +
+        '<div class="pg-card-price"><span class="pg-from">Custom pricing — get a quote</span></div>' +
         '<div class="pg-card-actions">' +
           '<a href="/' + s.slug + '.html" class="btn btn-ghost-light btn-sm">Details</a>' +
-          '<a href="/contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-sm">Get Started</a>' +
+          '<a href="/contact.html" data-start-open data-service="' + attr(s.name) + '" class="btn btn-primary btn-sm">Get a Quote</a>' +
         '</div>' +
       '</div>';
   }
@@ -113,7 +100,7 @@
 
   function run() {
     fetchPricing().then(function (data) {
-      renderBanner(data.offer);
+      // Pricing is hidden site-wide for now — no discount banner (it shows prices).
       renderStrips(data);
       renderGrid(data);
     }).catch(function () { /* keep the page usable if the API is down */ });

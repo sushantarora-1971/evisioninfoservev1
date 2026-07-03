@@ -92,7 +92,6 @@
             '<div class="dd-foot"><span>Not sure what you need? <b class="text-gold">Get a free audit.</b></span>' +
             '<a href="' + P + 'contact.html" data-audit-open class="btn btn-secondary btn-sm">Free Audit</a></div>' +
           '</div></div>' +
-        navItem("pricing.html", "Pricing", "pricing") +
         navItem("blog.html", "Blog", "blog") +
         navItem("about.html", "About", "about") +
         navItem("contact.html", "Contact", "contact") +
@@ -106,7 +105,7 @@
 
   // mobile drawer
   var mLinks = [
-    ["index.html", "Home", "home"], ["pricing.html", "Pricing", "pricing"],
+    ["index.html", "Home", "home"],
     ["blog.html", "Blog", "blog"], ["about.html", "About", "about"], ["contact.html", "Contact", "contact"]
   ].map(function (l) {
     return '<a href="' + P + l[0] + '" class="m-link' + (page === l[2] ? " active" : "") + '">' + l[1] + '</a>';
@@ -118,7 +117,6 @@
     '<div class="m-head">' + BRAND + '<button class="m-close" data-close aria-label="Close"><i data-lucide="x"></i></button></div>' +
     '<a href="' + P + 'index.html" class="m-link' + (page === "home" ? " active" : "") + '">Home</a>' +
     '<div class="m-sub">Services</div>' + mServices +
-    '<a href="' + P + 'pricing.html" class="m-link' + (page === "pricing" ? " active" : "") + '">Pricing</a>' +
     '<a href="' + P + 'blog.html" class="m-link' + (page === "blog" ? " active" : "") + '">Blog</a>' +
     '<a href="' + P + 'about.html" class="m-link' + (page === "about" ? " active" : "") + '">About</a>' +
     '<a href="' + P + 'contact.html" class="m-link' + (page === "contact" ? " active" : "") + '">Contact</a>' +
@@ -131,10 +129,10 @@
       '<div class="foot-brand">' + BRAND.replace('class="brand"', 'class="brand foot-brand-link"') +
         '<p class="foot-about">A digital marketing agency engineered for the AI-search era — we build sites that rank on Google and get cited by ChatGPT, Gemini &amp; Perplexity.</p>' +
         '<div class="foot-socials">' +
-          '<a href="#" aria-label="LinkedIn"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21h-4z"/></svg></a>' +
-          '<a href="#" aria-label="Instagram"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>' +
-          '<a href="#" aria-label="YouTube"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 00-1.77-1.77C19.3 5.1 12 5.1 12 5.1s-7.3 0-8.83.42A2.5 2.5 0 001.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 001.77 1.77c1.53.43 8.83.43 8.83.43s7.3 0 8.83-.43a2.5 2.5 0 001.77-1.77C23 15.2 23 12 23 12zM9.75 15.02V8.98L15.5 12z"/></svg></a>' +
-          '<a href="#" aria-label="Facebook"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>' +
+          '<a href="https://www.linkedin.com/company/evisioninfoserve/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21h-4z"/></svg></a>' +
+          '<a href="https://www.instagram.com/evisioninfoserve/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>' +
+          '<a href="https://www.youtube.com/@evisioninfoserve" target="_blank" rel="noopener" aria-label="YouTube"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 00-1.77-1.77C19.3 5.1 12 5.1 12 5.1s-7.3 0-8.83.42A2.5 2.5 0 001.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 001.77 1.77c1.53.43 8.83.43 8.83.43s7.3 0 8.83-.43a2.5 2.5 0 001.77-1.77C23 15.2 23 12 23 12zM9.75 15.02V8.98L15.5 12z"/></svg></a>' +
+          '<a href="https://www.facebook.com/EvisionInfoservepvtltd/" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>' +
         '</div>' +
       '</div>' +
       '<div class="foot-col"><h4>Services</h4>' +
@@ -146,7 +144,6 @@
         '<a href="' + P + 'ai-marketing.html">AI Digital Marketing</a></div>' +
       '<div class="foot-col"><h4>Company</h4>' +
         '<a href="' + P + 'about.html">About Us</a>' +
-        '<a href="' + P + 'pricing.html">Pricing</a>' +
         '<a href="' + P + 'blog.html">Blog</a>' +
         '<a href="' + P + 'portfolio.html">Case Studies</a>' +
         '<a href="' + P + 'clients.html">Our Clients</a>' +
@@ -162,7 +159,7 @@
     '</div>' +
     '<div class="foot-bottom"><div class="copy">© 2026 Evision Infoserve. All rights reserved.</div>' +
       '<div class="foot-layers"><i data-lucide="sparkles" style="width:15px;height:15px"></i>Built for <b>SEO · AEO · GEO · LLMO</b></div>' +
-      '<div class="legal"><a href="' + P + 'privacy-policy.html">Privacy</a><a href="' + P + 'terms.html">Terms</a><a href="' + P + 'refund-policy.html">Refund</a><a href="' + P + 'pricing.html">Pricing</a></div>' +
+      '<div class="legal"><a href="' + P + 'privacy-policy.html">Privacy</a><a href="' + P + 'terms.html">Terms</a><a href="' + P + 'refund-policy.html">Refund</a></div>' +
     '</div></div></footer>';
 
   var WIDGETS =
@@ -174,7 +171,7 @@
       '</div>' +
       '<div class="chat-quick" id="chatQuick">' +
         '<button data-q="I want an SEO audit">Get an SEO audit</button>' +
-        '<button data-q="What do your packages cost?">Pricing &amp; packages</button>' +
+        '<button data-q="I would like to talk to your team">Talk to our team</button>' +
         '<button data-q="Tell me about AI search (GEO/LLMO)">AI search (GEO/LLMO)</button>' +
       '</div>' +
       '<form class="chat-foot" id="chatForm"><input id="chatInput" placeholder="Type your message…" autocomplete="off">' +
@@ -293,7 +290,7 @@
   function botReply(text) {
     var map = {
       audit: "Great — our team can run a free SEO + AI-visibility audit and email you a 12-point report. What's your website URL?",
-      pricing: "Our retainers start at ₹14,999/mo (Starter), ₹34,999/mo (Growth) and custom Scale plans. Want me to open the pricing page?",
+      pricing: "Our plans are tailored to your goals and scope, so we share a custom quote rather than fixed prices. Tell me a bit about your business and I'll have a strategist send pricing — or reach us on WhatsApp at +91 98117 22064.",
       ai: "We optimise across 4 layers — SEO, AEO, GEO &amp; LLMO — so you rank on Google AND get cited by ChatGPT, Gemini &amp; Perplexity. Shall I send our AI-search guide?",
       default: "Thanks! A strategist will reach out shortly. You can also reach us on WhatsApp at +91 98117 22064 for an instant reply. 🚀"
     };
@@ -357,6 +354,44 @@
   });
   // Deep-link: open the audit popup from ?audit=1 or #audit (great for email campaigns).
   if (/[?&]audit(=|&|$)/.test(location.search) || location.hash === "#audit") openAudit();
+
+  // ── Auto lead popup: fire once per session, on scroll depth OR after dwell time ──
+  (function () {
+    var SEEN = "ev_lead_popup_seen";
+    try { if (sessionStorage.getItem(SEEN)) return; } catch (e) {}
+    var DWELL_MS = 22000;     // fire after ~22s on the page…
+    var SCROLL_PCT = 0.35;    // …or once the visitor scrolls 35% down, whichever first
+    var done = false, timer;
+    function anyModalOpen() {
+      return auditModal.classList.contains("open") || (startModal && startModal.classList.contains("open"));
+    }
+    function cleanup() {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    }
+    function fire() {
+      if (done) return;
+      if (anyModalOpen()) return;   // don't interrupt an already-open form; try again on next scroll
+      done = true;
+      try { sessionStorage.setItem(SEEN, "1"); } catch (e) {}
+      cleanup();
+      openAudit();
+    }
+    function onScroll() {
+      var top = window.scrollY || document.documentElement.scrollTop;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max > 0 && top / max >= SCROLL_PCT) fire();
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    timer = setTimeout(fire, DWELL_MS);
+    // If the visitor opens/submits any lead form themselves, don't nag them later.
+    document.addEventListener("submit", function (e) {
+      if (e.target && (e.target.id === "auditForm" || e.target.id === "startForm")) {
+        try { sessionStorage.setItem(SEEN, "1"); } catch (ex) {}
+        done = true; cleanup();
+      }
+    }, true);
+  })();
 
   // ── Get Started modal interactions ──
   var startModal = document.getElementById("startModal");
