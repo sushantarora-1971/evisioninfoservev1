@@ -2,11 +2,25 @@
 const Admin = (function () {
   const KEY = "evision_admin_token";
   const EMAIL = "evision_admin_email";
+  const ROLE = "evision_admin_role";
+  const NAME = "evision_admin_name";
 
   function token() { return localStorage.getItem(KEY); }
   function email() { return localStorage.getItem(EMAIL); }
+  function role() { return localStorage.getItem(ROLE) || "author"; }
+  function name() { return localStorage.getItem(NAME) || ""; }
+  function isAdmin() { return role() === "admin"; }
   function setToken(t, e) { localStorage.setItem(KEY, t); if (e) localStorage.setItem(EMAIL, e); }
-  function clear() { localStorage.removeItem(KEY); localStorage.removeItem(EMAIL); }
+  // Store the full session returned by /api/admin/login (token, email, role, name).
+  function setSession(d) {
+    localStorage.setItem(KEY, d.token);
+    localStorage.setItem(EMAIL, d.email || "");
+    localStorage.setItem(ROLE, d.role || "author");
+    localStorage.setItem(NAME, d.name || "");
+  }
+  function clear() {
+    [KEY, EMAIL, ROLE, NAME].forEach(k => localStorage.removeItem(k));
+  }
 
   // Authenticated JSON fetch. Redirects to login on 401.
   async function api(path, opts = {}) {
@@ -25,5 +39,5 @@ const Admin = (function () {
     return data;
   }
 
-  return { token, email, setToken, clear, api };
+  return { token, email, role, name, isAdmin, setToken, setSession, clear, api };
 })();

@@ -10,8 +10,51 @@
 
   let ENQUIRIES = [];
   let CLIENTS = [];
+  const IS_ADMIN = Admin.isAdmin();
 
-  $("#whoami").textContent = Admin.email() || "";
+  $("#whoami").textContent = (Admin.name() || Admin.email() || "") + (IS_ADMIN ? "" : " · author");
+  { const bs = document.getElementById("brandSub"); if (bs) bs.textContent = IS_ADMIN ? "Admin" : "Author"; }
+
+  // ── Settings: account profile card (name + bio, editable) ──
+  (function initProfile() {
+    const em = Admin.email() || "";
+    const initialsOf = (nm) => ((nm ? nm.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("")
+      : em.slice(0, 1)).toUpperCase() || "?");
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    function paintHeader(nm) {
+      set("setAvatar", initialsOf(nm));
+      set("setName", nm || em || "—");
+      set("setEmail", em);
+      const roleEl = document.getElementById("setRole");
+      if (roleEl) {
+        roleEl.textContent = IS_ADMIN ? "Main admin" : "Author";
+        roleEl.className = "pill " + (IS_ADMIN ? "pill-converted" : "pill-contacted");
+      }
+    }
+    paintHeader(Admin.name() || "");
+    const nameInp = document.getElementById("pfName"), bioInp = document.getElementById("pfBio");
+    if (nameInp) nameInp.value = Admin.name() || "";
+    // Pull the freshest name + bio from the server.
+    Admin.api("/api/admin/me").then(me => {
+      if (nameInp) nameInp.value = me.name || "";
+      if (bioInp) bioInp.value = me.bio || "";
+      paintHeader(me.name || "");
+    }).catch(() => {});
+    const form = document.getElementById("profileForm");
+    if (form) form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("pfMsg"); if (msg) { msg.textContent = ""; msg.className = "auth-err"; }
+      const name = (nameInp.value || "").trim(), bio = (bioInp.value || "").trim();
+      try {
+        const res = await Admin.api("/api/admin/profile", { method: "POST", body: JSON.stringify({ name, bio }) });
+        localStorage.setItem("evision_admin_name", res.name || "");   // byline default + sidebar
+        paintHeader(res.name || "");
+        $("#whoami").textContent = (res.name || em) + (IS_ADMIN ? "" : " · author");
+        if (msg) { msg.className = "auth-err ok"; msg.textContent = "Profile saved."; }
+        toast("Profile saved");
+      } catch (ex) { if (msg) msg.textContent = ex.message || "Save failed"; else toast(ex.message || "Save failed", "err"); }
+    });
+  })();
 
   // ── Toast ──
   let toastTimer;
@@ -386,6 +429,63 @@
 
   document.querySelector('[data-view="pricing"]').addEventListener("click", loadPricing);
 
+  // ───────────────── Authors & team (admin only) ─────────────────
+  let ACCOUNTS = [];
+  async function loadAccounts() {
+    if (!IS_ADMIN) return;
+    try { ACCOUNTS = await Admin.api("/api/admin/accounts"); renderAccounts(); }
+    catch (e) { /* handled by api() */ }
+  }
+  function renderAccounts() {
+    const wrap = $("#accountsWrap"); if (!wrap) return;
+    if (!ACCOUNTS.length) { wrap.innerHTML = empty("No accounts yet."); return; }
+    wrap.innerHTML = table(["Name", "Email", "Role", ""],
+      ACCOUNTS.map(a => `<tr>
+        <td style="white-space:nowrap"><b>${esc(a.name) || "—"}</b></td>
+        <td style="white-space:nowrap">${esc(a.email)}</td>
+        <td><span class="${a.role === "admin" ? "pill pill-converted" : "tag"}">${esc(a.role)}</span></td>
+        <td style="white-space:nowrap;text-align:right">${a.role === "admin" ? '<span class="muted">main account</span>'
+          : `<button class="link-btn" data-ac-pw="${a.id}">Reset password</button>
+             <button class="link-btn danger" data-ac-del="${a.id}" style="margin-left:10px">Delete</button>`}</td>
+      </tr>`).join(""));
+    $$("#accountsWrap [data-ac-del]").forEach(b => b.addEventListener("click", async () => {
+      if (!confirm("Delete this author account? Their posts stay, but they lose access.")) return;
+      try { await Admin.api("/api/admin/accounts/" + b.dataset.acDel, { method: "DELETE" }); toast("Author removed"); loadAccounts(); }
+      catch (ex) { toast(ex.message || "Delete failed", "err"); }
+    }));
+    $$("#accountsWrap [data-ac-pw]").forEach(b => b.addEventListener("click", async () => {
+      const pw = prompt("Set a new password for this author (min 8 characters):");
+      if (pw == null) return;
+      try { await Admin.api("/api/admin/accounts/" + b.dataset.acPw, { method: "PATCH", body: JSON.stringify({ password: pw }) }); toast("Password reset"); }
+      catch (ex) { toast(ex.message || "Reset failed", "err"); }
+    }));
+  }
+  const acForm = $("#acForm");
+  if (acForm) acForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = $("#acName").value.trim(), email = $("#acEmail").value.trim(), password = $("#acPass").value;
+    if (!name) { toast("Name is required", "err"); return; }
+    if (!email) { toast("Email is required", "err"); return; }
+    if ((password || "").length < 8) { toast("Password must be at least 8 characters", "err"); return; }
+    try {
+      await Admin.api("/api/admin/accounts", { method: "POST", body: JSON.stringify({ name, email, password }) });
+      $("#acName").value = ""; $("#acEmail").value = ""; $("#acPass").value = "";
+      toast("Author added"); loadAccounts();
+    } catch (ex) { toast(ex.message || "Could not add author", "err"); }
+  });
+
+  // ───────────────── Author panel: blog-only console ─────────────────
+  // Authors don't get access to enquiries, clients, pricing or team management.
+  if (!IS_ADMIN) {
+    const allowed = new Set(["blog", "settings"]);
+    // Hide (don't remove) so other scripts can still bind to these nav nodes.
+    $$(".nav-item").forEach(b => { if (!allowed.has(b.dataset.view)) b.style.display = "none"; });
+    $$(".view").forEach(v => v.classList.add("hidden"));
+    const teamCard = $("#teamCard"); if (teamCard) teamCard.style.display = "none";
+    // Land straight on the Blog view once every script has wired its handlers.
+    document.addEventListener("DOMContentLoaded", () => { $('[data-view="blog"]').click(); });
+  }
+
   // ───────────────── tiny view helpers ─────────────────
   function table(heads, bodyRows) {
     return `<table class="tbl"><thead><tr>${heads.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${bodyRows}</tbody></table>`;
@@ -394,6 +494,10 @@
 
   // ───────────────── init ─────────────────
   (async function init() {
+    // Authors have no access to enquiries/clients/stats — the blog list loads
+    // itself on tab open. Only the admin console loads the full dataset.
+    if (!IS_ADMIN) return;
     await Promise.all([loadStats(), loadEnquiries(), loadClients()]);
+    loadAccounts().catch(() => {});
   })();
 })();

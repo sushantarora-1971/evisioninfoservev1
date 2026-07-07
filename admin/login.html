@@ -52,7 +52,7 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Login failed");
-        Admin.setToken(data.token, data.email);
+        Admin.setSession(data);
         location.replace("index.html");
       } catch (ex) {
         err.textContent = ex.message;

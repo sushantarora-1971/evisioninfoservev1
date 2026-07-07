@@ -80,3 +80,4 @@
 .author-box .av { width: 60px; height: 60px; border-radius: 50%; background: var(--color-navy-800); color: var(--color-gold-500); display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; font-size: 20px; flex: none; }
 .author-box .an { font-family: var(--font-headline); font-weight: 600; font-size: 18px; color: var(--color-navy-800); }
 .author-box .ar { font-size: 13px; color: var(--color-blue-500); font-weight: 600; }
+.author-box .abio { margin: 9px 0 0; font-size: 14px; line-height: 1.6; color: var(--fg-muted-light); max-width: 62ch; }

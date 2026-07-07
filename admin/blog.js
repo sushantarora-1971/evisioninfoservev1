@@ -5,6 +5,7 @@
 (function () {
   if (!Admin.token()) return; // dashboard.js handles the redirect
 
+  const IS_ADMIN = Admin.isAdmin();
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -72,6 +73,25 @@
     return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
   }
 
+  // Status control: admins get the draft/publish select; authors can only save
+  // drafts (publishing is reserved for the main admin account). A post an admin
+  // already published stays published — authors just can't change that.
+  function statusFieldHtml(p) {
+    if (IS_ADMIN) {
+      return `<select id="be_status">
+            <option value="draft">Draft (hidden)</option>
+            <option value="published">Published (live)</option>
+          </select>`;
+    }
+    if (p && p.status === "published") {
+      return `<div><span class="pill pill-converted">published</span></div>
+          <input type="hidden" id="be_status" value="published">
+          <p class="muted" style="margin:8px 0 0">Live on the site. Contact your admin to make changes to a published post.</p>`;
+    }
+    return `<select id="be_status"><option value="draft">Draft</option></select>
+          <p class="muted" style="margin:8px 0 0">Only the admin can publish. Save your draft and an admin will review &amp; publish it.</p>`;
+  }
+
   function editorMarkup(p) {
     p = p || {};
     const v = (k) => esc(p[k]);
@@ -110,18 +130,17 @@
       <aside class="be-side">
         <div class="be-box">
           <label>Status</label>
-          <select id="be_status">
-            <option value="draft">Draft (hidden)</option>
-            <option value="published">Published (live)</option>
-          </select>
+          ${statusFieldHtml(p)}
           <label>Tag / category</label>
           <input id="be_tag" placeholder="e.g. AI Search" value="${v("tag")}">
           <div class="grid2">
-            <div><label>Author</label><input id="be_author" value="${v("author")}"></div>
+            <div><label>Author</label><input id="be_author" value="${esc(p.author || (IS_ADMIN ? "" : Admin.name()))}" ${IS_ADMIN ? "" : "readonly"}></div>
             <div><label>Read (min)</label><input id="be_read_min" type="number" min="1" value="${p.read_min != null ? p.read_min : 5}"></div>
           </div>
           <label>Author role</label>
           <input id="be_author_role" placeholder="e.g. Head of SEO Strategy" value="${v("author_role")}">
+          <label>Author bio <span class="muted">(optional — overrides your account bio for this post)</span></label>
+          <textarea id="be_author_bio" rows="3" placeholder="Leave blank to use your account bio (Settings → Your account).">${v("author_bio")}</textarea>
           <label>Excerpt <span class="muted">(card summary + meta fallback)</span></label>
           <textarea id="be_excerpt" rows="3">${v("excerpt")}</textarea>
           <label>Cover image</label>
@@ -225,6 +244,7 @@
       tag: $("#be_tag").value.trim(),
       author: $("#be_author").value.trim(),
       author_role: $("#be_author_role").value.trim(),
+      author_bio: $("#be_author_bio").value.trim(),
       read_min: Number($("#be_read_min").value || 5),
       excerpt: $("#be_excerpt").value.trim(),
       cover: getImg("be_cover"),
@@ -284,7 +304,7 @@
         if ($("#be_slug")) $("#be_slug").value = res.slug;
       }
       updateStatusPill();
-      toast(body.status === "published" ? "Post published" : "Draft saved");
+      toast(IS_ADMIN ? (body.status === "published" ? "Post published" : "Draft saved") : "Draft saved");
       loadPosts().catch(() => {});
       return current;
     } catch (ex) { toast(ex.message || "Save failed", "err"); return null; }

@@ -11,7 +11,7 @@
 <aside class="sidebar">
   <div class="side-brand">
     <div class="auth-logo sm">E</div>
-    <div><strong>Evision</strong><span>Admin</span></div>
+    <div><strong>Evision</strong><span id="brandSub">Admin</span></div>
   </div>
   <nav class="side-nav">
     <button class="nav-item active" data-view="dashboard">Dashboard</button>
@@ -148,16 +148,59 @@
   <!-- ░ SETTINGS ░ -->
   <section class="view hidden" id="view-settings">
     <header class="topbar"><h1>Settings</h1></header>
-    <div class="card narrow">
-      <h2 class="sec-title" style="margin-top:0">Change password</h2>
-      <form id="pwForm">
-        <label>Current password</label>
-        <input type="password" id="pwCurrent" required>
-        <label>New password (min 8 chars)</label>
-        <input type="password" id="pwNew" required>
-        <div class="auth-err" id="pwMsg"></div>
-        <button type="submit" class="btn-primary">Update password</button>
+
+    <!-- Your account -->
+    <h2 class="sec-title" style="margin-top:0">Your account</h2>
+    <div class="card set-card">
+      <div class="profile">
+        <div class="profile-av" id="setAvatar">–</div>
+        <div class="profile-meta">
+          <div class="profile-name" id="setName">—</div>
+          <div class="profile-email" id="setEmail">—</div>
+        </div>
+        <span class="pill pill-closed" id="setRole">—</span>
+      </div>
+      <form id="profileForm" class="set-form" style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
+        <label>Display name <span class="muted">(your byline on new posts)</span></label>
+        <input id="pfName" placeholder="e.g. Priya Sharma">
+        <label>Author bio <span class="muted">(shows under your name at the bottom of your posts)</span></label>
+        <textarea id="pfBio" rows="3" placeholder="A sentence or two about you — your role, focus and expertise."></textarea>
+        <div class="auth-err" id="pfMsg"></div>
+        <button type="submit" class="btn-primary sm">Save profile</button>
       </form>
+    </div>
+
+    <!-- Change password -->
+    <h2 class="sec-title" style="margin-top:28px">Change password</h2>
+    <div class="card set-card">
+      <form id="pwForm" class="set-form">
+        <div class="grid2">
+          <div><label>Current password</label><input type="password" id="pwCurrent" autocomplete="current-password" required></div>
+          <div><label>New password <span class="muted">(min 8 chars)</span></label><input type="password" id="pwNew" autocomplete="new-password" required></div>
+        </div>
+        <div class="auth-err" id="pwMsg"></div>
+        <button type="submit" class="btn-primary sm">Update password</button>
+      </form>
+    </div>
+
+    <!-- Authors & team (admin only) -->
+    <div id="teamCard">
+      <h2 class="sec-title" style="margin-top:28px">Authors &amp; team</h2>
+      <p class="set-hint">Create login accounts for your writers. Authors can write and edit their <b>own</b> blog posts and save drafts — but only you (the main admin) can publish a post live.</p>
+      <div class="card set-card tbl-card set-wide"><div id="accountsWrap" style="overflow-x:auto"></div></div>
+      <div class="card set-card" style="margin-top:14px">
+        <h3 class="be-box-h" style="margin:0 0 3px">Add an author</h3>
+        <p class="muted" style="margin:0">They'll sign in at this admin URL with the email and password you set.</p>
+        <form id="acForm" class="set-form">
+          <div class="grid2">
+            <div><label>Name</label><input id="acName" placeholder="e.g. Priya Sharma"></div>
+            <div><label>Email</label><input id="acEmail" type="email" placeholder="author@evisioninfoserve.com"></div>
+          </div>
+          <label>Temporary password <span class="muted">(min 8 chars)</span></label>
+          <input id="acPass" type="password" placeholder="••••••••" autocomplete="new-password">
+          <button class="btn-primary sm" id="acAdd" type="submit" style="margin-top:14px">+ Add author</button>
+        </form>
+      </div>
     </div>
   </section>
 </main>

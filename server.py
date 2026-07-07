@@ -112,6 +112,9 @@ def init_db():
             email TEXT UNIQUE NOT NULL,
             pw_hash TEXT NOT NULL,
             pw_salt TEXT NOT NULL,
+            name TEXT DEFAULT '',
+            role TEXT DEFAULT 'author',    -- 'admin' (can publish) | 'author' (drafts only)
+            bio TEXT DEFAULT '',           -- author bio shown under their posts
             created_at TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS enquiries (
@@ -188,6 +191,8 @@ def init_db():
             tag TEXT DEFAULT '',              -- category label, e.g. 'AI Search'
             author TEXT DEFAULT '',
             author_role TEXT DEFAULT '',
+            author_bio TEXT DEFAULT '',       -- short bio shown under the author on the post
+            author_email TEXT DEFAULT '',     -- owning account (for author panel + ownership)
             read_min INTEGER DEFAULT 5,       -- estimated read time (minutes)
             meta_title TEXT DEFAULT '',       -- <title> override (falls back to title)
             meta_desc TEXT DEFAULT '',        -- meta description (falls back to excerpt)
@@ -210,6 +215,32 @@ def init_db():
         if col not in existing_cols:
             c.execute(f"ALTER TABLE enquiries ADD COLUMN {ddl}")
     conn.commit()
+    # Add author-role columns to older admins tables (roles + display name).
+    admin_cols = {r["name"] for r in c.execute("PRAGMA table_info(admins)").fetchall()}
+    for col, ddl in (("name", "name TEXT DEFAULT ''"),
+                     ("role", "role TEXT DEFAULT 'author'"),
+                     ("bio", "bio TEXT DEFAULT ''")):
+        if col not in admin_cols:
+            c.execute(f"ALTER TABLE admins ADD COLUMN {ddl}")
+    # Track which account owns each post (author panel + publish gating) and the
+    # author's short bio shown under the post.
+    post_cols = {r["name"] for r in c.execute("PRAGMA table_info(posts)").fetchall()}
+    if "author_email" not in post_cols:
+        c.execute("ALTER TABLE posts ADD COLUMN author_email TEXT DEFAULT ''")
+    if "author_bio" not in post_cols:
+        c.execute("ALTER TABLE posts ADD COLUMN author_bio TEXT DEFAULT ''")
+    conn.commit()
+    # The main account is always an admin (can publish). Older DBs default new
+    # role columns to 'author', so promote the main account back to admin, and
+    # guarantee at least one admin exists.
+    c.execute("UPDATE admins SET role='admin' WHERE email=?", (SEED_EMAIL.lower(),))
+    c.execute("UPDATE admins SET name='Admin' WHERE email=? AND (name IS NULL OR name='')",
+              (SEED_EMAIL.lower(),))
+    if c.execute("SELECT COUNT(*) AS n FROM admins WHERE role='admin'").fetchone()["n"] == 0:
+        first = c.execute("SELECT id FROM admins ORDER BY id LIMIT 1").fetchone()
+        if first:
+            c.execute("UPDATE admins SET role='admin' WHERE id=?", (first["id"],))
+    conn.commit()
     # One-time data fix: rename the SEO service to match the rest of the site
     # (nav, services page). Only touches the row if it still has the original
     # seed label, so any custom name set in the admin panel is preserved.
@@ -229,8 +260,8 @@ def init_db():
     if existing == 0:
         h, s = hash_password(SEED_PASSWORD)
         c.execute(
-            "INSERT INTO admins (email, pw_hash, pw_salt, created_at) VALUES (?,?,?,?)",
-            (SEED_EMAIL.lower(), h, s, now_iso()),
+            "INSERT INTO admins (email, pw_hash, pw_salt, name, role, created_at) VALUES (?,?,?,?,?,?)",
+            (SEED_EMAIL.lower(), h, s, "Admin", "admin", now_iso()),
         )
         conn.commit()
         print(f"  -> Seeded admin account: {SEED_EMAIL}  (password: {SEED_PASSWORD})")
@@ -284,6 +315,16 @@ def session_email(token):
         SESSIONS.pop(token, None)
         return None
     return s["email"]
+
+
+def account_by_email(email):
+    """Full admins row (dict) for an email, or None. Used for role checks."""
+    if not email:
+        return None
+    conn = db()
+    row = conn.execute("SELECT * FROM admins WHERE email=?", (email,)).fetchone()
+    conn.close()
+    return dict(row) if row else None
 
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -593,10 +634,13 @@ def render_post_page(post):
     if post.get("author"):
         initials = "".join(w[0] for w in post["author"].split()[:2]).upper() or "E"
         role = post.get("author_role") or "Evision Infoserve"
+        bio_html = ('<p class="abio">' + e(post["author_bio"]) + '</p>') if post.get("author_bio") else ""
         author_box = (
             '<div class="author-box"><div class="av">' + e(initials) + '</div><div>'
             '<div class="an">' + e(post["author"]) + '</div>'
-            '<div class="ar">' + e(role) + '</div></div></div>'
+            '<div class="ar">' + e(role) + '</div>'
+            + bio_html +
+            '</div></div>'
         )
 
     og_img_tags = ""
@@ -625,7 +669,6 @@ def render_post_page(post):
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
-<meta name="robots" content="noindex, nofollow"><!-- DEV PHASE: remove before launch -->
 <title>{e(meta_title)}</title>
 <meta name="description" content="{e(meta_desc)}">
 <link rel="canonical" href="{e(url)}">
@@ -694,8 +737,6 @@ class Handler(SimpleHTTPRequestHandler):
         pass
 
     def end_headers(self):
-        # DEV PHASE — block all indexing until launch. Remove this header before going live.
-        self.send_header("X-Robots-Tag", "noindex, nofollow")
         # Tell browsers not to cache static assets, so edits show up on reload.
         p = self.path.split("?")[0]
         if not p.startswith("/api/") and (p.endswith((".html", ".js", ".css")) or p.endswith("/")):
@@ -735,6 +776,22 @@ class Handler(SimpleHTTPRequestHandler):
             return None
         return email
 
+    def _account(self):
+        """Current logged-in account row (dict) or None."""
+        return account_by_email(self._auth())
+
+    def _require_admin(self):
+        """Like _require_auth but restricts to the main admin account (role=admin).
+        Returns the admin's email, or None (after writing a 401/403) if not allowed."""
+        acc = self._account()
+        if not acc:
+            self._json({"error": "Unauthorized"}, 401)
+            return None
+        if (acc.get("role") or "author") != "admin":
+            self._json({"error": "This action is restricted to the main admin account."}, 403)
+            return None
+        return acc["email"]
+
     def _redirect301(self, location):
         self.send_response(301)
         self.send_header("Location", location)
@@ -772,12 +829,18 @@ class Handler(SimpleHTTPRequestHandler):
                 preview_tok = part[8:]
         conn = db()
         row = conn.execute("SELECT * FROM posts WHERE slug=?", (slug,)).fetchone()
+        post = dict(row) if row else None
+        # No per-post bio? Fall back to the owning author's account bio (set in Settings).
+        if post and not post.get("author_bio") and post.get("author_email"):
+            acc = conn.execute("SELECT bio FROM admins WHERE email=?", (post["author_email"],)).fetchone()
+            if acc and acc["bio"]:
+                post["author_bio"] = acc["bio"]
         conn.close()
         allowed = row and (row["status"] == "published" or (preview_tok and session_email(preview_tok)))
         if not allowed:
             self.send_error(404, "Post not found")
             return
-        body = render_post_page(dict(row)).encode("utf-8")
+        body = render_post_page(post).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
@@ -835,70 +898,87 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/services":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             rows = conn.execute("SELECT * FROM services ORDER BY sort, id").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/offers":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             rows = conn.execute("SELECT * FROM offers ORDER BY id DESC").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/enquiries":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             rows = conn.execute("SELECT * FROM enquiries ORDER BY id DESC").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/clients":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             rows = conn.execute("SELECT * FROM clients ORDER BY id DESC").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/testimonials":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             rows = conn.execute("SELECT * FROM testimonials ORDER BY sort, id").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/portfolio":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             rows = conn.execute("SELECT * FROM portfolio ORDER BY sort, id").fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         if path == "/api/admin/posts":
-            if not self._require_auth():
-                return
+            acc = self._account()
+            if not acc:
+                return self._json({"error": "Unauthorized"}, 401)
+            cols = """SELECT id,slug,title,excerpt,cover,tag,author,author_email,status,
+                             read_min,created_at,updated_at,published_at FROM posts"""
             conn = db()
-            rows = conn.execute(
-                """SELECT id,slug,title,excerpt,cover,tag,author,status,read_min,
-                          created_at,updated_at,published_at
-                   FROM posts ORDER BY id DESC"""
-            ).fetchall()
+            if (acc.get("role") or "author") == "admin":
+                rows = conn.execute(cols + " ORDER BY id DESC").fetchall()
+            else:
+                # Authors see only their own posts.
+                rows = conn.execute(cols + " WHERE author_email=? ORDER BY id DESC",
+                                    (acc["email"],)).fetchall()
             conn.close()
             return self._json([dict(r) for r in rows])
         m = re.match(r"^/api/admin/posts/(\d+)$", path)
         if m:
-            if not self._require_auth():
-                return
+            acc = self._account()
+            if not acc:
+                return self._json({"error": "Unauthorized"}, 401)
             conn = db()
             row = conn.execute("SELECT * FROM posts WHERE id=?", (int(m.group(1)),)).fetchone()
             conn.close()
             if not row:
                 return self._json({"error": "Post not found."}, 404)
+            # Authors may only open their own posts.
+            if (acc.get("role") or "author") != "admin" and (row["author_email"] or "") != acc["email"]:
+                return self._json({"error": "Not your post."}, 403)
             return self._json(dict(row))
+        if path == "/api/admin/accounts":
+            if not self._require_admin():
+                return
+            conn = db()
+            rows = conn.execute(
+                "SELECT id,email,name,role,created_at FROM admins ORDER BY id"
+            ).fetchall()
+            conn.close()
+            return self._json([dict(r) for r in rows])
         if path == "/api/admin/stats":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             stats = {
@@ -910,10 +990,11 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json(stats)
         if path == "/api/admin/me":
-            email = self._require_auth()
-            if not email:
-                return
-            return self._json({"email": email})
+            acc = self._account()
+            if not acc:
+                return self._json({"error": "Unauthorized"}, 401)
+            return self._json({"email": acc["email"], "role": acc.get("role") or "author",
+                               "name": acc.get("name") or "", "bio": acc.get("bio") or ""})
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: POST ─────────────
@@ -972,7 +1053,8 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             if not row or not verify_password(password, row["pw_hash"], row["pw_salt"]):
                 return self._json({"error": "Invalid email or password."}, 401)
-            return self._json({"token": new_token(email), "email": email})
+            return self._json({"token": new_token(email), "email": email,
+                               "role": row["role"] or "author", "name": row["name"] or ""})
 
         # Admin: logout
         if path == "/api/admin/logout":
@@ -1001,9 +1083,31 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True})
 
+        # Admin/author: update your own profile (display name + bio).
+        if path == "/api/admin/profile":
+            acc = self._account()
+            if not acc:
+                return self._json({"error": "Unauthorized"}, 401)
+            fields, vals = [], []
+            if "name" in data:
+                fields.append("name=?")
+                vals.append((data.get("name") or "").strip())
+            if "bio" in data:
+                fields.append("bio=?")
+                vals.append((data.get("bio") or "").strip())
+            if not fields:
+                return self._json({"error": "Nothing to update."}, 400)
+            vals.append(acc["email"])
+            conn = db()
+            conn.execute(f"UPDATE admins SET {','.join(fields)} WHERE email=?", vals)
+            conn.commit()
+            row = conn.execute("SELECT name,bio FROM admins WHERE email=?", (acc["email"],)).fetchone()
+            conn.close()
+            return self._json({"ok": True, "name": row["name"] or "", "bio": row["bio"] or ""})
+
         # Admin: add client
         if path == "/api/admin/clients":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             conn = db()
             cur = conn.execute(
@@ -1032,7 +1136,7 @@ class Handler(SimpleHTTPRequestHandler):
 
         # Admin: create a festival offer
         if path == "/api/admin/offers":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             name = (data.get("name") or "").strip()
             if not name:
@@ -1055,7 +1159,7 @@ class Handler(SimpleHTTPRequestHandler):
         # Admin: convert an enquiry into a client
         m = re.match(r"^/api/admin/enquiries/(\d+)/convert$", path)
         if m:
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             eid = int(m.group(1))
             conn = db()
@@ -1090,7 +1194,7 @@ class Handler(SimpleHTTPRequestHandler):
 
         # Admin: add a testimonial
         if path == "/api/admin/testimonials":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             name = (data.get("name") or "").strip()
             quote = (data.get("quote") or "").strip()
@@ -1111,7 +1215,7 @@ class Handler(SimpleHTTPRequestHandler):
 
         # Admin: add a portfolio item
         if path == "/api/admin/portfolio":
-            if not self._require_auth():
+            if not self._require_admin():
                 return
             title = (data.get("title") or "").strip()
             if not title:
@@ -1130,26 +1234,32 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True, "id": pid}, 201)
 
-        # Admin: create a blog post
+        # Admin/author: create a blog post. Authors can only save drafts — only
+        # the main admin account may publish (status forced to 'draft' otherwise).
         if path == "/api/admin/posts":
-            if not self._require_auth():
-                return
+            acc = self._account()
+            if not acc:
+                return self._json({"error": "Unauthorized"}, 401)
             title = (data.get("title") or "").strip()
             if not title:
                 return self._json({"error": "Title is required."}, 400)
-            status = "published" if (data.get("status") == "published") else "draft"
+            is_admin = (acc.get("role") or "author") == "admin"
+            status = "published" if (is_admin and data.get("status") == "published") else "draft"
+            # Byline defaults to the author's own name so it always shows on the post.
+            author = (data.get("author") or "").strip() or acc.get("name") or acc["email"]
             conn = db()
             slug = unique_slug(conn, data.get("slug") or title)
             now = now_iso()
             cur = conn.execute(
                 """INSERT INTO posts
-                   (slug,title,excerpt,cover,body,tag,author,author_role,read_min,
+                   (slug,title,excerpt,cover,body,tag,author,author_role,author_bio,author_email,read_min,
                     meta_title,meta_desc,og_title,og_desc,og_image,status,sort,
                     created_at,updated_at,published_at)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (slug, title, (data.get("excerpt") or "").strip(), (data.get("cover") or "").strip(),
                  data.get("body") or "", (data.get("tag") or "").strip(),
-                 (data.get("author") or "").strip(), (data.get("author_role") or "").strip(),
+                 author, (data.get("author_role") or "").strip(),
+                 (data.get("author_bio") or "").strip(), acc["email"],
                  int(data.get("read_min") or 5), (data.get("meta_title") or "").strip(),
                  (data.get("meta_desc") or "").strip(), (data.get("og_title") or "").strip(),
                  (data.get("og_desc") or "").strip(), (data.get("og_image") or "").strip(),
@@ -1159,16 +1269,45 @@ class Handler(SimpleHTTPRequestHandler):
             conn.commit()
             pid = cur.lastrowid
             conn.close()
-            return self._json({"ok": True, "id": pid, "slug": slug}, 201)
+            return self._json({"ok": True, "id": pid, "slug": slug, "status": status}, 201)
+
+        # Admin only: create an author login account (role is always 'author').
+        if path == "/api/admin/accounts":
+            if not self._require_admin():
+                return
+            email = (data.get("email") or "").strip().lower()
+            name = (data.get("name") or "").strip()
+            password = data.get("password") or ""
+            if not EMAIL_RE.match(email):
+                return self._json({"error": "Please enter a valid email."}, 400)
+            if len(password) < 8:
+                return self._json({"error": "Password must be at least 8 characters."}, 400)
+            conn = db()
+            if conn.execute("SELECT id FROM admins WHERE email=?", (email,)).fetchone():
+                conn.close()
+                return self._json({"error": "An account with that email already exists."}, 409)
+            h, s = hash_password(password)
+            cur = conn.execute(
+                "INSERT INTO admins (email,pw_hash,pw_salt,name,role,created_at) VALUES (?,?,?,?,?,?)",
+                (email, h, s, name, "author", now_iso()),
+            )
+            conn.commit()
+            aid = cur.lastrowid
+            conn.close()
+            return self._json({"ok": True, "id": aid}, 201)
 
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: PATCH ─────────────
     def api_patch(self):
-        email = self._require_auth()
-        if not email:
-            return
+        acc = self._account()
+        if not acc:
+            return self._json({"error": "Unauthorized"}, 401)
+        is_admin = (acc.get("role") or "author") == "admin"
         data = self._body()
+        # Authors may only edit their own blog posts; everything else is admin-only.
+        if not is_admin and not re.match(r"^/api/admin/posts/\d+$", self.path):
+            return self._json({"error": "This action is restricted to the main admin account."}, 403)
 
         m = re.match(r"^/api/admin/enquiries/(\d+)$", self.path)
         if m:
@@ -1294,21 +1433,28 @@ class Handler(SimpleHTTPRequestHandler):
             if not row:
                 conn.close()
                 return self._json({"error": "Post not found."}, 404)
+            # Authors may only edit their own posts.
+            if not is_admin and (row["author_email"] or "") != acc["email"]:
+                conn.close()
+                return self._json({"error": "Not your post."}, 403)
             allowed = ("title", "excerpt", "cover", "body", "tag", "author", "author_role",
-                       "read_min", "meta_title", "meta_desc", "og_title", "og_desc",
-                       "og_image", "status", "sort")
+                       "author_bio", "read_min", "meta_title", "meta_desc", "og_title",
+                       "og_desc", "og_image", "status", "sort")
             ints = {"read_min", "sort"}
             fields, vals = [], []
             for k in allowed:
                 if k in data:
+                    # Only the admin can change publish status; authors keep it as-is.
+                    if k == "status" and not is_admin:
+                        continue
                     fields.append(f"{k}=?")
                     vals.append(int(data[k] or 0) if k in ints else data[k])
             # Slug: only regenerate when explicitly provided (keeps existing URLs stable).
             if data.get("slug"):
                 fields.append("slug=?")
                 vals.append(unique_slug(conn, data["slug"], exclude_id=pid))
-            # Stamp published_at the first time a post goes live.
-            if data.get("status") == "published" and not row["published_at"]:
+            # Stamp published_at the first time a post goes live (admin only).
+            if is_admin and data.get("status") == "published" and not row["published_at"]:
                 fields.append("published_at=?")
                 vals.append(now_iso())
             if not fields:
@@ -1323,12 +1469,46 @@ class Handler(SimpleHTTPRequestHandler):
             conn.close()
             return self._json({"ok": True, "slug": new_slug})
 
+        # Admin only: rename an author or reset their password.
+        m = re.match(r"^/api/admin/accounts/(\d+)$", self.path)
+        if m:
+            aid = int(m.group(1))
+            conn = db()
+            row = conn.execute("SELECT * FROM admins WHERE id=?", (aid,)).fetchone()
+            if not row:
+                conn.close()
+                return self._json({"error": "Account not found."}, 404)
+            fields, vals = [], []
+            if "name" in data:
+                fields.append("name=?")
+                vals.append((data.get("name") or "").strip())
+            if data.get("password"):
+                if len(data["password"]) < 8:
+                    conn.close()
+                    return self._json({"error": "Password must be at least 8 characters."}, 400)
+                h, s = hash_password(data["password"])
+                fields += ["pw_hash=?", "pw_salt=?"]
+                vals += [h, s]
+            if not fields:
+                conn.close()
+                return self._json({"error": "Nothing to update."}, 400)
+            vals.append(aid)
+            conn.execute(f"UPDATE admins SET {','.join(fields)} WHERE id=?", vals)
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+
         return self._json({"error": "Not found"}, 404)
 
     # ───────────── API: DELETE ─────────────
     def api_delete(self):
-        if not self._require_auth():
-            return
+        acc = self._account()
+        if not acc:
+            return self._json({"error": "Unauthorized"}, 401)
+        is_admin = (acc.get("role") or "author") == "admin"
+        # Authors may only delete their own blog posts; everything else is admin-only.
+        if not is_admin and not re.match(r"^/api/admin/posts/\d+$", self.path):
+            return self._json({"error": "This action is restricted to the main admin account."}, 403)
         m = re.match(r"^/api/admin/enquiries/(\d+)$", self.path)
         if m:
             conn = db()
@@ -1366,8 +1546,33 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"ok": True})
         m = re.match(r"^/api/admin/posts/(\d+)$", self.path)
         if m:
+            pid = int(m.group(1))
             conn = db()
-            conn.execute("DELETE FROM posts WHERE id=?", (int(m.group(1)),))
+            if not is_admin:
+                row = conn.execute("SELECT author_email FROM posts WHERE id=?", (pid,)).fetchone()
+                if row and (row["author_email"] or "") != acc["email"]:
+                    conn.close()
+                    return self._json({"error": "Not your post."}, 403)
+            conn.execute("DELETE FROM posts WHERE id=?", (pid,))
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True})
+        # Admin only: delete an author account (never yourself or another admin).
+        m = re.match(r"^/api/admin/accounts/(\d+)$", self.path)
+        if m:
+            aid = int(m.group(1))
+            conn = db()
+            row = conn.execute("SELECT * FROM admins WHERE id=?", (aid,)).fetchone()
+            if not row:
+                conn.close()
+                return self._json({"error": "Account not found."}, 404)
+            if row["email"] == acc["email"]:
+                conn.close()
+                return self._json({"error": "You can't delete your own account."}, 400)
+            if (row["role"] or "author") == "admin":
+                conn.close()
+                return self._json({"error": "You can't delete an admin account."}, 400)
+            conn.execute("DELETE FROM admins WHERE id=?", (aid,))
             conn.commit()
             conn.close()
             return self._json({"ok": True})
