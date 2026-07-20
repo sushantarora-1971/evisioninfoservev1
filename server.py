@@ -726,6 +726,66 @@ def render_post_page(post):
 </html>"""
 
 
+# ───────────────────────── sitemap & robots ─────────────────────────
+
+# Pages that exist but should stay out of the sitemap:
+#   /pricing – deliberately hidden site-wide;  /service – generic template page.
+SITEMAP_EXCLUDE = {"/pricing", "/service"}
+
+
+def build_sitemap():
+    """Generate sitemap.xml from the public clean-URL map + every published blog
+    post, so new posts appear automatically. URLs use SITE_URL (the canonical
+    domain)."""
+    e = html.escape
+    conn = db()
+    posts = conn.execute(
+        "SELECT slug, published_at, updated_at, created_at FROM posts WHERE status='published'"
+    ).fetchall()
+    conn.close()
+
+    entries = []  # (loc, lastmod, priority)
+    for fname, clean in FILE_TO_CLEAN.items():
+        if clean in SITEMAP_EXCLUDE:
+            continue
+        loc = SITE_URL + ("/" if clean == "/" else clean)
+        try:
+            lastmod = datetime.fromtimestamp(
+                os.path.getmtime(os.path.join(ROOT, fname)), timezone.utc).strftime("%Y-%m-%d")
+        except OSError:
+            lastmod = ""
+        pr = "1.0" if clean == "/" else ("0.8" if clean.count("/") == 1 else "0.6")
+        entries.append((loc, lastmod, pr))
+    for p in posts:
+        loc = f"{SITE_URL}/blog/{p['slug']}"
+        lastmod = (p["published_at"] or p["updated_at"] or p["created_at"] or "")[:10]
+        entries.append((loc, lastmod, "0.6"))
+
+    seen, urls = set(), []
+    for loc, lastmod, pr in entries:
+        if loc in seen:
+            continue
+        seen.add(loc)
+        u = f"  <url>\n    <loc>{e(loc)}</loc>\n"
+        if lastmod:
+            u += f"    <lastmod>{e(lastmod)}</lastmod>\n"
+        u += f"    <changefreq>weekly</changefreq>\n    <priority>{pr}</priority>\n  </url>"
+        urls.append(u)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + "\n".join(urls) + "\n</urlset>\n")
+
+
+def build_robots():
+    """robots.txt: allow the public site, keep bots out of the admin panel/API,
+    and point crawlers at the sitemap."""
+    return ("User-agent: *\n"
+            "Allow: /\n"
+            "Disallow: /admin/\n"
+            "Disallow: /api/\n\n"
+            f"Sitemap: {SITE_URL}/sitemap.xml\n")
+
+
 # ───────────────────────── request handler ─────────────────────────
 
 class Handler(SimpleHTTPRequestHandler):
@@ -799,10 +859,22 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     # ---- dispatch ----
+    def _send_text(self, text, content_type):
+        body = text.encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_GET(self):
         raw = self.path.split("?")[0]
         if raw.startswith("/api/"):
             return self.api_get()
+        if raw == "/sitemap.xml":
+            return self._send_text(build_sitemap(), "application/xml; charset=utf-8")
+        if raw == "/robots.txt":
+            return self._send_text(build_robots(), "text/plain; charset=utf-8")
         # Old .html URL → 301 to the clean URL.
         fname = raw[1:] if raw.startswith("/") else raw
         if fname in FILE_TO_CLEAN:
