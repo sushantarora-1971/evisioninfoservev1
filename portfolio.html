@@ -3,90 +3,224 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
-<title>Portfolio &amp; Case Studies | Evision Infoserve</title>
-<meta name="description" content="Evision Infoserve portfolio and case studies — real results from SEO, AI search, content and paid campaigns.">
-<link rel="stylesheet" href="/assets/tokens.css?v=4">
-<link rel="stylesheet" href="/assets/site.css?v=4">
-<link rel="stylesheet" href="/assets/chrome.css?v=4">
-<link rel="stylesheet" href="/assets/service.css">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
+<title>Portfolio — Websites, Web Apps &amp; SEO Case Studies | Evision Infoserve</title>
+<meta name="description" content="Our portfolio — website design &amp; development, e-commerce, web apps, student projects and SEO case studies. Real work by Evision Infoserve, Greater Noida.">
+<link rel="stylesheet" href="/assets/tokens.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/chrome.css?v=5">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
-  @media (max-width: 900px){ .work-grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 620px){ .work-grid { grid-template-columns: 1fr; } }
-  .work-card { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
-  .work-media { position: relative; aspect-ratio: 16/10; background: var(--bg-subtle) center/cover no-repeat; }
-  .work-metric { position: absolute; left: 12px; bottom: 12px; background: var(--color-navy-800); color: var(--color-gold-500);
-    font-family: var(--font-headline); font-weight: 700; font-size: 14px; padding: 6px 12px; border-radius: var(--radius-pill); }
-  .work-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-  .work-cat { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--color-blue-500); }
-  .work-card h3 { font-size: 18px; color: var(--color-navy-800); margin: 0; }
-  .work-client { font-size: 13px; color: var(--fg-muted-light); margin-top: -4px; }
-  .work-card p { font-size: 14px; color: var(--fg-muted-light); line-height: 1.55; margin: 4px 0 0; }
-  .work-link { margin-top: auto; padding-top: 10px; font-weight: 600; font-size: 14px; color: var(--color-blue-500); display: inline-flex; align-items: center; gap: 6px; }
-  .work-link .ic { width: 16px; height: 16px; }
+  /* ── Hero ── */
+  .pf-hero { background:
+    radial-gradient(760px 440px at 84% -16%, rgba(109,94,251,.28), transparent 60%),
+    radial-gradient(600px 400px at 8% 10%, rgba(245,182,43,.12), transparent 60%),
+    var(--color-navy-900); color:#fff; position:relative; overflow:hidden; }
+  .pf-hero::before { content:""; position:absolute; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size:26px 26px;
+    mask-image: radial-gradient(760px 520px at 78% 0%, #000, transparent 74%); }
+  .pf-hero-inner { position:relative; z-index:1; padding: 40px 0 60px; max-width: 840px; }
+  .pf-hero h1 { font-size: clamp(36px,5.2vw,62px); line-height:1.02; letter-spacing:-0.035em; margin: 16px 0 16px; }
+  .pf-hero .lead { color: var(--fg-muted-dark); }
+  .pf-stats { display:flex; gap:34px; flex-wrap:wrap; margin-top:30px; }
+  .pf-stat b { font-family: var(--font-headline); font-weight:700; font-size:30px; color:#fff; letter-spacing:-0.02em; display:block; line-height:1; }
+  .pf-stat span { font-size:13px; color: var(--fg-muted-dark); }
+
+  /* ── Filter tabs ── */
+  .pf-filters { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .pf-tab { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border:1.5px solid var(--border-light);
+    border-radius:999px; background:#fff; font-family: var(--font-headline); font-weight:600; font-size:14.5px;
+    color: var(--color-navy-800); cursor:pointer; transition: all .15s; }
+  .pf-tab:hover { border-color: var(--color-blue-500); color: var(--color-blue-500); }
+  .pf-tab.active { background: var(--color-navy-800); border-color: var(--color-navy-800); color:#fff; }
+  .pf-tab .n { font-size:11.5px; font-weight:700; background: var(--bg-subtle); color: var(--color-navy-700); padding:1px 8px; border-radius:999px; }
+  .pf-tab.active .n { background: rgba(255,255,255,.2); color:#fff; }
+
+  /* ── Grid + cards (openxcell-style large project cards) ── */
+  .pf-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  @media (max-width: 760px){ .pf-grid { grid-template-columns: 1fr; } }
+  .pf-card { border-radius: var(--radius-xl); overflow:hidden; background:#fff; border:1px solid var(--border-light);
+    box-shadow: var(--shadow-card); display:flex; flex-direction:column; transition: transform .22s, box-shadow .22s, border-color .22s; }
+  .pf-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(109,94,251,.35); }
+
+  /* Mockup header (browser frame) */
+  .pf-shot { position:relative; aspect-ratio: 16/10; overflow:hidden; background: var(--color-navy-800); }
+  .pf-shot img { width:100%; height:100%; object-fit:cover; display:block; }
+  .pf-mock { position:absolute; inset:0; display:flex; flex-direction:column; }
+  .pf-mock-bar { display:flex; align-items:center; gap:6px; padding:11px 14px; background: rgba(255,255,255,.06); }
+  .pf-mock-bar i { width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .pf-mock-url { flex:1; margin-left:8px; height:16px; border-radius:999px; background: rgba(255,255,255,.10); }
+  .pf-mock-body { flex:1; position:relative; display:flex; flex-direction:column; justify-content:center; gap:12px; padding: 26px 30px; }
+  .pf-mock-body::before { content:""; position:absolute; inset:0; opacity:.9;
+    background: radial-gradient(420px 220px at 15% 10%, rgba(109,94,251,.5), transparent 60%),
+               radial-gradient(360px 220px at 95% 100%, rgba(245,182,43,.28), transparent 60%); }
+  .pf-mock.seo .pf-mock-body::before { background: radial-gradient(420px 220px at 15% 10%, rgba(245,182,43,.4), transparent 60%), radial-gradient(360px 220px at 95% 100%, rgba(109,94,251,.4), transparent 60%); }
+  .pf-mock.student .pf-mock-body::before { background: radial-gradient(420px 220px at 15% 10%, rgba(34,199,224,.4), transparent 60%), radial-gradient(360px 220px at 95% 100%, rgba(109,94,251,.42), transparent 60%); }
+  .pf-mock-title { position:relative; font-family: var(--font-headline); font-weight:700; font-size: clamp(20px,2.6vw,27px);
+    color:#fff; letter-spacing:-0.025em; line-height:1.12; max-width: 18ch; }
+  .pf-mock-lines { position:relative; display:flex; flex-direction:column; gap:7px; }
+  .pf-mock-lines span { height:8px; border-radius:999px; background: rgba(255,255,255,.22); }
+  .pf-mock-lines span:nth-child(1){ width:70%; } .pf-mock-lines span:nth-child(2){ width:52%; }
+  .pf-tagchip { position:relative; align-self:flex-start; display:inline-flex; align-items:center; gap:6px; font-family: var(--font-mono);
+    font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:#fff;
+    background: rgba(255,255,255,.16); padding:5px 10px; border-radius:999px; }
+  .pf-metric { position:absolute; left:14px; bottom:14px; background: var(--color-navy-900); color: var(--color-gold-400);
+    font-family: var(--font-headline); font-weight:700; font-size:13.5px; padding:6px 12px; border-radius:999px; box-shadow: var(--shadow-md); z-index:2; }
+
+  .pf-body { padding: 22px 24px 24px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .pf-cat { font-family: var(--font-mono); font-size:11.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color: var(--color-blue-500); }
+  .pf-body h3 { font-size:20px; color: var(--color-navy-800); letter-spacing:-0.02em; line-height:1.2; }
+  .pf-client { font-size:13px; color: var(--fg-muted-light); margin-top:-3px; }
+  .pf-body p { font-size:14px; color: var(--fg-muted-light); line-height:1.55; margin:4px 0 0; }
+  .pf-link { margin-top:auto; padding-top:12px; font-weight:600; font-size:14px; color: var(--color-blue-500); display:inline-flex; align-items:center; gap:6px; }
+  .pf-link .ic { width:16px; height:16px; transition: transform .15s; }
+  .pf-card:hover .pf-link .ic { transform: translate(2px,-2px); }
+  .pf-empty { grid-column:1/-1; text-align:center; padding:60px 20px; color: var(--fg-muted-light); }
+
+  /* Student-help band */
+  .stu-band { background: var(--pillar-design-soft); border:1px solid rgba(109,94,251,.18); border-radius: var(--radius-xl);
+    padding: 34px 34px; display:flex; align-items:center; justify-content:space-between; gap:28px; flex-wrap:wrap; }
+  .stu-band h2 { font-size: clamp(22px,2.6vw,30px); color: var(--color-navy-800); letter-spacing:-0.025em; max-width: 26ch; }
+  .stu-band p { font-size:15px; color: var(--fg-muted-light); margin-top:8px; max-width: 52ch; line-height:1.55; }
 </style>
 </head>
 <body data-page="">
 
-<section class="svc-hero">
-  <div class="container svc-hero-inner">
-    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-gold-500)">Portfolio &amp; Case Studies</span></nav>
-    <span class="eyebrow on-dark" style="margin-top:18px">Our work</span>
-    <h1>Portfolio &amp; Case Studies</h1>
-    <p class="lead">A selection of results we've delivered across SEO, AI search, content and paid media.</p>
+<!-- ░░ HERO ░░ -->
+<section class="pf-hero">
+  <div class="container pf-hero-inner">
+    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-blue-300)">Portfolio</span></nav>
+    <span class="pillar-chip design" style="margin-top:18px"><span class="dot"></span>Our work</span>
+    <h1>Websites, web apps &amp; search results we're proud of</h1>
+    <p class="lead">A selection of design &amp; development builds, e-commerce stores, student projects and SEO case studies — real work, real outcomes.</p>
+    <div class="pf-stats">
+      <div class="pf-stat"><b>320+</b><span>Websites shipped</span></div>
+      <div class="pf-stat"><b>12+ yrs</b><span>In business</span></div>
+      <div class="pf-stat"><b>98/100</b><span>Avg. speed score</span></div>
+      <div class="pf-stat"><b>4.7★</b><span>Google rating</span></div>
+    </div>
   </div>
 </section>
 
-<section class="section">
+<!-- ░░ WORK ░░ -->
+<section class="section" style="padding-top:56px">
   <div class="container">
-    <div class="work-grid reveal" id="pWrap">
-      <p class="muted" style="grid-column:1/-1">Loading our work…</p>
+    <div class="pf-filters reveal" id="pfFilters"></div>
+    <div class="pf-grid reveal" id="pWrap">
+      <p class="pf-empty">Loading our work…</p>
     </div>
-    <p style="margin-top:30px;color:var(--fg-muted-light)">Want the full case study for your industry? <a href="/contact.html" data-audit-open>Ask us for relevant examples</a> and we'll share detailed results.</p>
+    <p style="margin-top:30px;text-align:center;color:var(--fg-muted-light)">Want the full case study for your industry? <a href="/contact.html" data-audit-open class="text-violet" style="font-weight:600">Ask us for relevant examples →</a></p>
+  </div>
+</section>
+
+<!-- ░░ STUDENT HELP BAND ░░ -->
+<section class="section-sm">
+  <div class="container">
+    <div class="stu-band reveal">
+      <div>
+        <span class="pillar-chip design"><span class="dot"></span>For students</span>
+        <h2 style="margin-top:12px">Final-year web development project? We'll help you build it.</h2>
+        <p>From idea and SRS to a deployed, viva-ready project with clean code and documentation — full builds, guidance or a pre-submission review.</p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get project help</a>
+        <a href="/blog/web-development-project-ideas-for-students-2026" class="btn btn-ghost-light btn-lg">50 project ideas</a>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ░░ CTA BAND ░░ -->
 <section class="cta-band">
   <div class="container cta-inner">
-    <div><h2 class="h-lg" style="color:#fff;max-width:22ch">Ready to grow with Evision?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Book a free audit this week — no obligation.</p></div>
-    <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
+    <div><h2 class="h-lg" style="color:#fff;max-width:22ch">Let's build your next project.</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Website, web app or SEO — free quote and a plan within 24 hours.</p></div>
+    <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Start a project</a>
   </div>
 </section>
 
-<script src="/assets/site.js?v=4"></script>
-<script src="/assets/chrome.js?v=4"></script>
-<script src="/assets/pricing.js?v=4"></script>
+<script src="/assets/site.js?v=5"></script>
+<script src="/assets/chrome.js?v=5"></script>
+<script src="/assets/pricing.js?v=5"></script>
 <script>
 /* Portfolio items are managed from the admin panel (Portfolio tab). */
 (function () {
   var wrap = document.getElementById("pWrap");
+  var filters = document.getElementById("pfFilters");
   if (!wrap) return;
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
-  function card(w) {
-    var media = '<div class="work-media" style="' + (w.image ? "background-image:url('" + esc(w.image) + "')" : "") + '">'
-      + (w.metric ? '<span class="work-metric">' + esc(w.metric) + '</span>' : "") + '</div>';
-    var link = w.url ? '<a class="work-link" href="' + esc(w.url) + '" target="_blank" rel="noopener">View case study <i data-lucide="arrow-up-right" class="ic"></i></a>' : "";
-    return '<article class="card lift work-card">' + media
-      + '<div class="work-body">'
-      + (w.category ? '<span class="work-cat">' + esc(w.category) + '</span>' : "")
-      + '<h3>' + esc(w.title) + '</h3>'
-      + (w.client ? '<div class="work-client">' + esc(w.client) + '</div>' : "")
-      + (w.summary ? '<p>' + esc(w.summary) + '</p>' : "")
-      + link
-      + '</div></article>';
+
+  // Map a free-text category to a filter group + a mockup accent class.
+  function group(cat) {
+    var c = (cat || "").toLowerCase();
+    if (c.indexOf("student") > -1) return "student";
+    if (c.indexOf("web design") > -1 || c === "design") return "design";
+    if (c.indexOf("web development") > -1 || c.indexOf("web app") > -1) return "dev";
+    if (c.indexOf("commerce") > -1) return "ecom";
+    return "seo";
   }
+  var GROUP_LABEL = { all: "All work", design: "Web Design", dev: "Web Development", ecom: "E-commerce", student: "Student Projects", seo: "SEO & Growth" };
+  var GROUP_ORDER = ["all", "design", "dev", "ecom", "student", "seo"];
+  var MOCK_CLASS = { student: "student", seo: "seo", ecom: "", design: "", dev: "" };
+
+  function card(w) {
+    var g = group(w.category);
+    var shot;
+    if (w.image) {
+      shot = '<img src="' + esc(w.image) + '" alt="' + esc(w.title) + '" loading="lazy">';
+    } else {
+      shot = '<div class="pf-mock ' + (MOCK_CLASS[g] || "") + '">' +
+        '<div class="pf-mock-bar"><i style="background:#FF6A57"></i><i style="background:#FFC53D"></i><i style="background:#2ECC71"></i><span class="pf-mock-url"></span></div>' +
+        '<div class="pf-mock-body">' +
+          (w.category ? '<span class="pf-tagchip">' + esc(w.category) + '</span>' : "") +
+          '<div class="pf-mock-title">' + esc(w.title) + '</div>' +
+          '<div class="pf-mock-lines"><span></span><span></span></div>' +
+        '</div></div>';
+    }
+    var metric = w.metric ? '<span class="pf-metric">' + esc(w.metric) + '</span>' : "";
+    var link = w.url
+      ? '<a class="pf-link" href="' + esc(w.url) + '" target="_blank" rel="noopener">View project <i data-lucide="arrow-up-right" class="ic"></i></a>'
+      : '<a class="pf-link" href="/contact.html" data-audit-open>Discuss a project like this <i data-lucide="arrow-up-right" class="ic"></i></a>';
+    return '<article class="pf-card" data-group="' + g + '">' +
+      '<div class="pf-shot">' + shot + metric + '</div>' +
+      '<div class="pf-body">' +
+        (w.category ? '<span class="pf-cat">' + esc(w.category) + '</span>' : "") +
+        '<h3>' + esc(w.title) + '</h3>' +
+        (w.client ? '<div class="pf-client">' + esc(w.client) + '</div>' : "") +
+        (w.summary ? '<p>' + esc(w.summary) + '</p>' : "") +
+        link +
+      '</div></article>';
+  }
+
+  function buildFilters(list) {
+    var counts = { all: list.length };
+    list.forEach(function (w) { var g = group(w.category); counts[g] = (counts[g] || 0) + 1; });
+    var html = GROUP_ORDER.filter(function (g) { return g === "all" || counts[g]; }).map(function (g) {
+      return '<button class="pf-tab' + (g === "all" ? " active" : "") + '" data-filter="' + g + '">' +
+        GROUP_LABEL[g] + ' <span class="n">' + (counts[g] || 0) + '</span></button>';
+    }).join("");
+    filters.innerHTML = html;
+    filters.querySelectorAll(".pf-tab").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        filters.querySelectorAll(".pf-tab").forEach(function (t) { t.classList.remove("active"); });
+        tab.classList.add("active");
+        var f = tab.dataset.filter;
+        wrap.querySelectorAll(".pf-card").forEach(function (c) {
+          c.style.display = (f === "all" || c.dataset.group === f) ? "" : "none";
+        });
+      });
+    });
+  }
+
   fetch("/api/portfolio").then(function (r) { return r.json(); }).then(function (list) {
     if (!Array.isArray(list) || !list.length) {
-      wrap.innerHTML = '<p class="muted" style="grid-column:1/-1">Case studies coming soon. <a href="/contact.html" data-audit-open>Ask us</a> for relevant examples.</p>';
+      wrap.innerHTML = '<p class="pf-empty">Case studies coming soon. <a href="/contact.html" data-audit-open>Ask us</a> for relevant examples.</p>';
       return;
     }
+    buildFilters(list);
     wrap.innerHTML = list.map(card).join("");
     if (window.lucide) lucide.createIcons();
   }).catch(function () {
-    wrap.innerHTML = '<p class="muted" style="grid-column:1/-1">Could not load portfolio right now.</p>';
+    wrap.innerHTML = '<p class="pf-empty">Could not load portfolio right now.</p>';
   });
 })();
 </script>

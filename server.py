@@ -298,6 +298,35 @@ def init_db():
              p["og_title"], p["og_desc"], p["og_image"], now_iso(), now_iso(), now_iso()),
         )
         conn.commit()
+    # Seed the lead-magnet posts idempotently (INSERT OR IGNORE on the unique
+    # slug). Runs every startup so they survive DB resets and are always live,
+    # yet stay fully editable in the admin CMS. sort=10+ keeps them after the
+    # first featured post but they publish immediately.
+    for i, p in enumerate(LEAD_MAGNET_POSTS):
+        c.execute(
+            """INSERT OR IGNORE INTO posts
+               (slug,title,excerpt,cover,body,tag,author,author_role,read_min,
+                meta_title,meta_desc,og_title,og_desc,og_image,status,sort,
+                created_at,updated_at,published_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'published',?,?,?,?)""",
+            (p["slug"], p["title"], p["excerpt"], p.get("cover", ""), p["body"], p["tag"],
+             p["author"], p["author_role"], p["read_min"], p["meta_title"], p["meta_desc"],
+             p["og_title"], p["og_desc"], p.get("og_image", ""), 10 + i,
+             now_iso(), now_iso(), now_iso()),
+        )
+    conn.commit()
+    # Seed extra portfolio items (web design/dev + student projects) idempotently
+    # — only inserts an item if no row with the same title exists, so it's safe
+    # to run repeatedly and won't duplicate or clobber admin-managed items.
+    for i, (title, client, cat, image, summary, metric, url) in enumerate(PORTFOLIO_EXTRA):
+        exists = c.execute("SELECT 1 FROM portfolio WHERE title=? LIMIT 1", (title,)).fetchone()
+        if not exists:
+            c.execute(
+                """INSERT INTO portfolio (title,client,category,image,summary,metric,url,sort,active,created_at)
+                   VALUES (?,?,?,?,?,?,?,?,1,?)""",
+                (title, client, cat, image, summary, metric, url, -100 + i, now_iso()),
+            )
+    conn.commit()
     conn.close()
 
 
@@ -338,6 +367,8 @@ _SEO_CHILDREN = ["ai-seo", "llm-optimization", "agentic-ai-seo", "enterprise-seo
 _CONTENT_CHILDREN = ["content-writing", "guest-posting", "digital-pr"]
 FILE_TO_CLEAN = {
     "index.html": "/",
+    "web-design.html": "/services/web-design",
+    "web-development.html": "/services/web-development",
     "seo.html": "/services/seo",
     "content-marketing.html": "/services/content-marketing",
     "social-media.html": "/services/social-media",
@@ -435,6 +466,28 @@ PORTFOLIO_SEED = [
      "Restructured paid campaigns to cut cost-per-lead while scaling volume.", "−38% CPL", ""),
 ]
 
+# Web design / development + student-project work. Seeded idempotently (by
+# title) so the portfolio leads with build work, not just SEO case studies.
+# image='' → the portfolio page renders a styled browser-mockup placeholder.
+PORTFOLIO_EXTRA = [
+    ("Modern D2C brand website", "D2C skincare", "Web Design", "",
+     "A premium, conversion-focused storefront designed and built from scratch — fast, mobile-first and SEO-ready.", "98/100 speed", ""),
+    ("Real-estate listing platform", "Property developer", "Web Development", "",
+     "A custom property portal with search, filters, map view and enquiry capture, built to scale.", "3.2s → 0.9s", ""),
+    ("Restaurant online ordering", "Multi-outlet F&B", "E-commerce", "",
+     "Online ordering with menu management and WhatsApp checkout across multiple outlets.", "+140% orders", ""),
+    ("Corporate website revamp", "B2B services", "Web Design", "",
+     "A dated corporate site redesigned for speed, mobile and lead generation — without losing rankings.", "+68% leads", ""),
+    ("SaaS marketing site + CMS", "B2B SaaS", "Web Development", "",
+     "A headless marketing site with a self-serve CMS so the team ships pages without a developer.", "Next.js", ""),
+    ("College fest event portal", "Final-year student", "Student Project", "",
+     "An event registration and pass-generation system built with the student, documented and deployed live for the viva.", "Live demo", ""),
+    ("Job & internship portal", "Final-year student", "Student Project", "",
+     "A full-stack MERN job portal with resume upload and an admin dashboard — report and viva ready.", "MERN stack", ""),
+    ("Doctor appointment system", "Final-year student", "Student Project", "",
+     "A Django appointment-booking project with role-based access, reports and clean documentation.", "Django", ""),
+]
+
 # First blog post — seeded once so the Blog is never empty. Fully editable in admin.
 POST_SEED = {
     "slug": "geo-vs-seo-ai-search-2026",
@@ -479,6 +532,324 @@ POST_SEED = {
 <h3>4. Open the door for AI crawlers</h3>
 <p>An llms.txt file plus access for GPTBot, ClaudeBot and PerplexityBot tells the engines where your best, most citable content lives.</p>""",
 }
+
+
+# ── Lead-magnet blog posts ─────────────────────────────────────────────────
+# Five gated-content articles. Each embeds an inline lead-capture form
+# (.lm-form, wired up in assets/site.js) that posts to /api/enquiry with
+# type='lead-magnet', so downloads land in the admin panel as enquiries.
+# Seeded idempotently by slug on every startup, so they survive DB resets and
+# stay editable in the admin CMS.
+
+def _lm(magnet, headline, sub, benes, cta, slug):
+    """Return the HTML for an inline lead-magnet capture card."""
+    lis = "".join(
+        f'<li><i data-lucide="check-circle-2" class="ic"></i><span>{b}</span></li>' for b in benes)
+    return (
+        '<div class="lead-magnet"><div class="lm-inner">'
+        '<div class="lm-copy">'
+        '<span class="lm-badge"><i data-lucide="download"></i> Free download</span>'
+        f'<h3>{headline}</h3><p>{sub}</p>'
+        f'<ul class="lm-benes">{lis}</ul>'
+        '</div>'
+        f'<form class="lm-form" data-magnet="{html.escape(magnet, quote=True)}" data-source="{slug}">'
+        '<input type="text" name="name" placeholder="Full name *" autocomplete="name">'
+        '<input type="email" name="email" placeholder="Email *" autocomplete="email">'
+        '<input type="tel" name="phone" placeholder="Phone / WhatsApp *" autocomplete="tel">'
+        '<label class="lm-consent"><input type="checkbox" name="consent"> '
+        'Email me this resource &amp; the occasional tip. I agree to the '
+        '<a href="/privacy-policy.html">privacy policy</a>.</label>'
+        '<div class="lm-msg"></div>'
+        f'<button type="submit" class="btn btn-primary btn-block">{cta} '
+        '<i data-lucide="arrow-right" class="ic"></i></button>'
+        '</form></div></div>'
+    )
+
+
+LEAD_MAGNET_POSTS = [
+    {
+        "slug": "web-development-project-ideas-for-students-2026",
+        "title": "50 Web Development Project Ideas for Final-Year Students (2026)",
+        "tag": "Student Projects",
+        "author": "Evision Infoserve",
+        "author_role": "Web Development Studio · Greater Noida",
+        "read_min": 9,
+        "excerpt": "A curated list of final-year web development project ideas across beginner, "
+                   "intermediate and advanced levels — with the right tech stack for each and a free downloadable idea pack.",
+        "cover": "",
+        "meta_title": "50 Web Development Project Ideas for Final-Year Students (2026) | Evision Infoserve",
+        "meta_desc": "Final-year web development project ideas for students — beginner to advanced, with tech "
+                     "stacks, features and a free downloadable idea pack. We also help students build their projects.",
+        "og_title": "50 Web Development Project Ideas for Final-Year Students (2026)",
+        "og_desc": "Beginner to advanced final-year web dev project ideas — with tech stacks and a free idea pack.",
+        "body": (
+            '<p>Choosing the right final-year project decides how much you learn — and how good your resume looks. '
+            'The best student web development projects solve a real problem, use a modern stack, and are small enough to actually finish. '
+            'This guide gives you 50 ideas grouped by difficulty, the tech to build each one, and a free downloadable pack with the full list, feature checklists and a report structure.</p>'
+            '<h2 id="how-to-choose">How to pick a project that scores well</h2>'
+            '<p>Examiners reward a working demo, clean code and a clear problem statement. Pick something you can host live, explain in a viva, and extend if you have time. Avoid ideas that are either trivial (a static portfolio) or impossibly large (a full social network).</p>'
+            '<ul>'
+            '<li><strong>Solves a real problem</strong> — something you or your college actually needs.</li>'
+            '<li><strong>Has a database</strong> — CRUD, auth and real data beat static pages.</li>'
+            '<li><strong>Is demoable</strong> — deploy it so the panel can click through a live URL.</li>'
+            '</ul>'
+            '<h2 id="beginner">Beginner projects (HTML, CSS, JS + a simple backend)</h2>'
+            '<ul>'
+            '<li>College event registration &amp; pass generator</li>'
+            '<li>Personal finance / expense tracker</li>'
+            '<li>Notes &amp; to-do app with login</li>'
+            '<li>Recipe finder using a public API</li>'
+            '<li>Weather + air-quality dashboard</li>'
+            '<li>Quiz app with a scoreboard</li>'
+            '</ul>'
+            '<h2 id="intermediate">Intermediate projects (React/Node or Django)</h2>'
+            '<ul>'
+            '<li>Job / internship portal with resume upload</li>'
+            '<li>E-commerce store with cart and payment sandbox</li>'
+            '<li>Blogging platform with an admin CMS</li>'
+            '<li>Hostel / library management system</li>'
+            '<li>Doctor appointment booking system</li>'
+            '<li>Real-time chat app with sockets</li>'
+            '</ul>'
+            '<h2 id="advanced">Advanced projects (full-stack + something extra)</h2>'
+            '<ul>'
+            '<li>AI resume analyzer / ATS score checker</li>'
+            '<li>Learning management system (LMS) with video</li>'
+            '<li>Multi-vendor marketplace with dashboards</li>'
+            '<li>Crowdfunding / donation platform</li>'
+            '<li>SaaS analytics dashboard with charts</li>'
+            '<li>AI chatbot for a college website</li>'
+            '</ul>'
+            + _lm(
+                "50 Web Dev Project Ideas Pack (PDF)",
+                "Get all 50 project ideas — free",
+                "A ready-to-use PDF with the full list, recommended tech stack for each, feature checklists and a project-report structure your panel will love.",
+                ["All 50 ideas, sorted by difficulty",
+                 "Tech stack + feature list for each",
+                 "Report + viva-preparation structure"],
+                "Send me the idea pack",
+                "web-development-project-ideas-for-students-2026",
+            ) +
+            '<h2 id="we-help">Need help building yours?</h2>'
+            '<p>We help students turn any of these ideas into a finished, deployed project — with clean code you can understand and defend, proper documentation and a live demo link. Whether you want full development, guidance, or just a code review before submission, we can help. Grab the idea pack above and our team will reach out to see if you need a hand.</p>'
+        ),
+    },
+    {
+        "slug": "final-year-project-checklist-report-viva-ready",
+        "title": "The Final-Year Project Checklist: Report & Viva Ready",
+        "tag": "Student Projects",
+        "author": "Evision Infoserve",
+        "author_role": "Web Development Studio · Greater Noida",
+        "read_min": 8,
+        "excerpt": "Everything your final-year web project needs before submission — from problem statement to "
+                   "deployment, documentation and viva prep. Download the full printable checklist.",
+        "cover": "",
+        "meta_title": "Final-Year Project Checklist (Report + Viva Ready) | Evision Infoserve",
+        "meta_desc": "A complete checklist for final-year web development projects — SRS, database design, "
+                     "deployment, report and viva prep. Free printable download. We also build student projects.",
+        "og_title": "The Final-Year Project Checklist: Report & Viva Ready",
+        "og_desc": "From problem statement to viva prep — the complete student project checklist, free.",
+        "body": (
+            '<p>Most marks are lost not on the code, but on the things around it — a vague problem statement, a thin report, a demo that breaks on the day. '
+            'This checklist walks through every stage of a final-year web development project so nothing slips. Download the printable version and tick your way to submission.</p>'
+            '<h2 id="planning">1. Planning &amp; documentation</h2>'
+            '<ul>'
+            '<li>Clear problem statement and objective (one paragraph)</li>'
+            '<li>Scope: what is and is not included</li>'
+            '<li>Software Requirements Specification (SRS)</li>'
+            '<li>Technology stack justification</li>'
+            '</ul>'
+            '<h2 id="design">2. Design</h2>'
+            '<ul>'
+            '<li>ER diagram / database schema</li>'
+            '<li>Use-case and data-flow diagrams (DFD)</li>'
+            '<li>Wireframes for the key screens</li>'
+            '</ul>'
+            '<h2 id="build">3. Build &amp; test</h2>'
+            '<ul>'
+            '<li>Authentication and role-based access</li>'
+            '<li>CRUD for every core entity</li>'
+            '<li>Input validation and error handling</li>'
+            '<li>Responsive on mobile and desktop</li>'
+            '<li>A basic test pass on every feature</li>'
+            '</ul>'
+            '<h2 id="deploy">4. Deploy &amp; demo</h2>'
+            '<ul>'
+            '<li>Live hosted URL (so the panel can click it)</li>'
+            '<li>Seed data so the demo looks real</li>'
+            '<li>A backup plan if the internet fails (local + video)</li>'
+            '</ul>'
+            + _lm(
+                "Final-Year Project Checklist (PDF)",
+                "Download the printable checklist",
+                "The complete, stage-by-stage checklist — planning, SRS, database design, build, deployment, report and viva questions — in one printable PDF.",
+                ["Every stage from idea to viva",
+                 "Report chapter-by-chapter outline",
+                 "20 common viva questions to prepare"],
+                "Send me the checklist",
+                "final-year-project-checklist-report-viva-ready",
+            ) +
+            '<h2 id="report">5. Report &amp; viva</h2>'
+            '<p>Your report should mirror your build: introduction, literature/existing-system review, requirements, design, implementation, testing, screenshots, conclusion and future scope. For the viva, be ready to explain <em>why</em> you chose your stack, how your database is structured, and one thing you would improve with more time.</p>'
+            '<p><strong>Stuck or short on time?</strong> We help students finish, polish and deploy their web projects — with documentation and a demo that holds up in front of the panel. Download the checklist and we\'ll check in to see if you need support.</p>'
+        ),
+    },
+    {
+        "slug": "website-launch-checklist-40-point",
+        "title": "Website Launch Checklist: 40 Things to Check Before You Go Live",
+        "tag": "Web Development",
+        "author": "Evision Infoserve",
+        "author_role": "Web Design & Development · Greater Noida",
+        "read_min": 7,
+        "excerpt": "Don't launch a website with broken links, missing schema or a slow mobile score. "
+                   "This 40-point pre-launch checklist covers performance, SEO, security and content. Free download.",
+        "cover": "",
+        "meta_title": "Website Launch Checklist: 40 Things to Check Before Go-Live | Evision Infoserve",
+        "meta_desc": "A 40-point website launch checklist — performance, SEO, security, analytics and content — "
+                     "so your site goes live clean and ready to rank. Free downloadable PDF.",
+        "og_title": "Website Launch Checklist: 40 Things to Check Before You Go Live",
+        "og_desc": "Performance, SEO, security and content — the 40-point pre-launch checklist, free.",
+        "body": (
+            '<p>Launch day is the worst time to discover a broken contact form or a 40/100 mobile score. A pre-launch checklist turns a stressful go-live into a calm one. '
+            'Here are the essentials we run on every Evision Infoserve build before it ships — grab the full 40-point version below.</p>'
+            '<h2 id="performance">Performance &amp; Core Web Vitals</h2>'
+            '<ul>'
+            '<li>Images compressed and lazy-loaded</li>'
+            '<li>Largest Contentful Paint under 2.5s on mobile</li>'
+            '<li>No layout shift (CLS) on load</li>'
+            '<li>Caching and a CDN enabled</li>'
+            '</ul>'
+            '<h2 id="seo">SEO &amp; structured data</h2>'
+            '<ul>'
+            '<li>Unique title and meta description on every page</li>'
+            '<li>One H1 per page, ordered headings</li>'
+            '<li>JSON-LD schema (Organization, WebSite, Breadcrumb)</li>'
+            '<li>XML sitemap and robots.txt live</li>'
+            '<li>Descriptive, keyword-aware image alt text</li>'
+            '</ul>'
+            '<h2 id="security">Security &amp; reliability</h2>'
+            '<ul>'
+            '<li>SSL certificate and HTTPS redirect</li>'
+            '<li>Forms protected against spam</li>'
+            '<li>Automated backups configured</li>'
+            '<li>404 page and broken-link check</li>'
+            '</ul>'
+            + _lm(
+                "40-Point Website Launch Checklist (PDF)",
+                "Get the full 40-point checklist",
+                "The complete pre-launch checklist — performance, SEO, security, analytics, accessibility and content — so nothing gets missed on go-live day.",
+                ["Performance, SEO, security &amp; content",
+                 "Printable — tick as you go",
+                 "The exact list our team uses"],
+                "Send me the checklist",
+                "website-launch-checklist-40-point",
+            ) +
+            '<h2 id="analytics">Analytics &amp; tracking</h2>'
+            '<p>Before you announce the launch, confirm analytics and search tools are recording data: Google Analytics 4, Google Search Console (with the sitemap submitted), conversion tracking on your forms, and a quick test enquiry to make sure leads actually reach your inbox.</p>'
+            '<p>Launching a new site soon? We design, build and launch fast, SEO-ready websites — and run this exact checklist before every go-live. <a href="/web-development.html">See our web development service</a> or download the checklist above.</p>'
+        ),
+    },
+    {
+        "slug": "website-brief-requirements-template",
+        "title": "How to Write a Website Brief (Free Requirements Template)",
+        "tag": "Web Design",
+        "author": "Evision Infoserve",
+        "author_role": "Web Design & Development · Greater Noida",
+        "read_min": 6,
+        "excerpt": "A clear website brief gets you a better site, faster, at a fixed price. Here's exactly what to "
+                   "include — plus a free fill-in-the-blanks requirements template.",
+        "cover": "",
+        "meta_title": "How to Write a Website Brief — Free Requirements Template | Evision Infoserve",
+        "meta_desc": "Learn how to write a website brief that gets accurate quotes and a better result — with a "
+                     "free downloadable website requirements template for your next project.",
+        "og_title": "How to Write a Website Brief (Free Requirements Template)",
+        "og_desc": "Get accurate quotes and a better website — here's the brief to write, with a free template.",
+        "body": (
+            '<p>The difference between a website project that goes smoothly and one that drags on is usually the brief. A clear brief gets you accurate quotes, a fixed timeline, and a result that actually matches what you pictured. Here\'s what to include — and a template you can fill in tonight.</p>'
+            '<h2 id="goals">1. Business goals &amp; audience</h2>'
+            '<p>Start with <em>why</em>. What should the website achieve — leads, sales, bookings, credibility? Who is it for, and what do you want them to do? One or two sentences here shapes every design decision that follows.</p>'
+            '<h2 id="pages">2. Pages &amp; features</h2>'
+            '<ul>'
+            '<li>Sitemap: every page you need</li>'
+            '<li>Must-have features (forms, booking, payments, blog, multi-language)</li>'
+            '<li>Any integrations (CRM, WhatsApp, payment gateway)</li>'
+            '</ul>'
+            '<h2 id="look">3. Look &amp; feel</h2>'
+            '<ul>'
+            '<li>Two or three websites you like, and why</li>'
+            '<li>Your logo, colours and fonts (or a note that you need branding)</li>'
+            '<li>Photos and content — ready, or do you need help?</li>'
+            '</ul>'
+            + _lm(
+                "Website Requirements Template",
+                "Get the fill-in-the-blanks template",
+                "A simple website brief template — goals, sitemap, features, content and budget — so you get accurate quotes and a website that matches your vision.",
+                ["Fill it in in 15 minutes",
+                 "Get accurate, comparable quotes",
+                 "Works for any web designer or agency"],
+                "Send me the template",
+                "website-brief-requirements-template",
+            ) +
+            '<h2 id="budget">4. Budget &amp; timeline</h2>'
+            '<p>Sharing a budget range isn\'t giving away your hand — it lets a studio recommend the right scope instead of guessing. Note any hard deadline (an event, a campaign) so the timeline is realistic from day one.</p>'
+            '<p>Ready to brief your project? Fill in the template above and <a href="/contact.html" data-audit-open>send it to us</a> for a fixed quote within 24 hours — website design and development, SEO-ready from day one.</p>'
+        ),
+    },
+    {
+        "slug": "seo-starter-kit-rank-new-website-90-days",
+        "title": "The SEO Starter Kit: Rank Your New Website in 90 Days",
+        "tag": "SEO",
+        "author": "Evision Infoserve",
+        "author_role": "SEO & Search Growth · Greater Noida",
+        "read_min": 10,
+        "excerpt": "A brand-new website won't rank on its own. This 90-day SEO starter plan covers the technical "
+                   "foundations, content and links that get you found — with a free downloadable roadmap.",
+        "cover": "",
+        "meta_title": "SEO Starter Kit: Rank Your New Website in 90 Days | Evision Infoserve",
+        "meta_desc": "A 90-day SEO plan for new websites — technical setup, keyword and content foundations, and "
+                     "links. Free downloadable roadmap. We also run SEO for businesses across India.",
+        "og_title": "The SEO Starter Kit: Rank Your New Website in 90 Days",
+        "og_desc": "Technical setup, content and links — the 90-day plan to get a new website found. Free roadmap.",
+        "body": (
+            '<p>Launching a website is the start, not the finish. Google needs time and signals before it trusts a new domain. This 90-day starter plan is the exact sequence we use to move a fresh site from invisible to found — download the roadmap and follow along.</p>'
+            '<h2 id="days-1-30">Days 1–30: Technical foundations</h2>'
+            '<ul>'
+            '<li>Verify Google Search Console and submit your sitemap</li>'
+            '<li>Fix crawl and indexation issues</li>'
+            '<li>Nail Core Web Vitals (speed, stability)</li>'
+            '<li>Add JSON-LD schema and a clean heading structure</li>'
+            '<li>Set up a Google Business Profile for local reach</li>'
+            '</ul>'
+            '<h2 id="days-31-60">Days 31–60: Keywords &amp; content</h2>'
+            '<ul>'
+            '<li>Map keywords to pages (intent, not just volume)</li>'
+            '<li>Write answer-first content for each core page</li>'
+            '<li>Publish two to four helpful articles in a topic cluster</li>'
+            '<li>Interlink pages so authority flows</li>'
+            '</ul>'
+            '<h2 id="days-61-90">Days 61–90: Authority &amp; AI visibility</h2>'
+            '<ul>'
+            '<li>Earn a handful of relevant, quality backlinks</li>'
+            '<li>Get listed in trusted local and industry directories</li>'
+            '<li>Add an llms.txt file so AI engines find your best content</li>'
+            '<li>Track rankings, traffic and AI citations</li>'
+            '</ul>'
+            + _lm(
+                "90-Day SEO Roadmap (PDF)",
+                "Get the 90-day SEO roadmap",
+                "A week-by-week plan to get a new website ranking — technical setup, keyword mapping, content and links — in one printable roadmap.",
+                ["Week-by-week actions for 90 days",
+                 "Beginner-friendly, no jargon",
+                 "Works alongside any website"],
+                "Send me the roadmap",
+                "seo-starter-kit-rank-new-website-90-days",
+            ) +
+            '<h2 id="keep-going">After 90 days</h2>'
+            '<p>SEO compounds. Keep publishing, keep earning links, and keep improving the pages that are close to page one. Most sites see meaningful movement in three to six months of consistent work.</p>'
+            '<p>Want it handled for you? We run SEO — technical, content, local and AI search — for businesses across India. <a href="/seo.html">See our SEO service</a> or grab the roadmap above to start yourself.</p>'
+        ),
+    },
+]
 
 # ── Image uploads (admin) ──────────────────────────────────────────────────
 UPLOAD_DIR = os.path.join(ROOT, "uploads")
@@ -668,7 +1039,7 @@ def render_post_page(post):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
 <title>{e(meta_title)}</title>
 <meta name="description" content="{e(meta_desc)}">
 <link rel="canonical" href="{e(url)}">
@@ -682,10 +1053,10 @@ def render_post_page(post):
 <meta name="twitter:title" content="{e(og_title)}">
 <meta name="twitter:description" content="{e(og_desc)}">
 <script type="application/ld+json">{json.dumps(ld)}</script>
-<link rel="stylesheet" href="/assets/tokens.css?v=4">
-<link rel="stylesheet" href="/assets/site.css?v=4">
-<link rel="stylesheet" href="/assets/chrome.css?v=4">
-<link rel="stylesheet" href="/assets/blog.css?v=1">
+<link rel="stylesheet" href="/assets/tokens.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/chrome.css?v=5">
+<link rel="stylesheet" href="/assets/blog.css?v=2">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body data-page="blog">
@@ -715,13 +1086,13 @@ def render_post_page(post):
 
 <section class="cta-band">
   <div class="container cta-inner">
-    <div><h2 class="h-lg" style="color:#fff;max-width:20ch">Want results like this for your brand?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Get a free SEO + AI-visibility audit and see where you stand today.</p></div>
-    <a href="/contact.html" class="btn btn-primary btn-lg">Get a Free Audit</a>
+    <div><h2 class="h-lg" style="color:#fff;max-width:22ch">Need a website, SEO, or a hand with your project?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Tell us what you're building — we'll send a free quote and a plan within 24 hours.</p></div>
+    <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a free quote</a>
   </div>
 </section>
 
-<script src="/assets/site.js?v=4"></script>
-<script src="/assets/chrome.js?v=4"></script>
+<script src="/assets/site.js?v=5"></script>
+<script src="/assets/chrome.js?v=5"></script>
 </body>
 </html>"""
 

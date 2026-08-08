@@ -3,25 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
-<title>Digital Marketing Services | Evision Infoserve</title>
-<meta name="description" content="Explore Evision Infoserve's full range of digital marketing services — SEO, content marketing, social media, PPC, ORM, AI marketing and more. Data-driven strategies built to rank on Google and get cited by AI search.">
-<link rel="stylesheet" href="/assets/tokens.css?v=4">
-<link rel="stylesheet" href="/assets/site.css?v=4">
-<link rel="stylesheet" href="/assets/chrome.css?v=4">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
+<title>Web Design, Development &amp; SEO Services | Evision Infoserve</title>
+<meta name="description" content="Explore Evision Infoserve's services across two pillars — website design &amp; development, and SEO &amp; search growth. Custom websites, e-commerce, technical &amp; local SEO, AI search, content and more.">
+<link rel="stylesheet" href="/assets/tokens.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/chrome.css?v=5">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
   .svcx-hero { background:
-    radial-gradient(700px 420px at 88% -20%, rgba(26,95,200,.4), transparent 60%),
-    var(--bg-dark); color: #fff; position: relative; overflow: hidden; }
+    radial-gradient(760px 440px at 84% -16%, rgba(109,94,251,.28), transparent 60%),
+    radial-gradient(600px 400px at 8% 10%, rgba(245,182,43,.12), transparent 60%),
+    var(--color-navy-900); color: #fff; position: relative; overflow: hidden; }
   .svcx-hero::before { content:""; position:absolute; inset:0;
-    background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-    background-size: 48px 48px; mask-image: radial-gradient(700px 480px at 85% 0%, #000, transparent 70%); }
-  .svcx-hero-inner { position: relative; padding: 40px 0 64px; max-width: 820px; }
-  .svcx-hero h1 { font-size: clamp(34px,5vw,56px); line-height: 1.04; letter-spacing:-0.015em; margin: 16px 0 18px; }
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size: 26px 26px;
+    mask-image: radial-gradient(720px 500px at 78% 0%, #000, transparent 74%); }
+  .svcx-hero-inner { position: relative; z-index:1; padding: 40px 0 66px; max-width: 840px; }
+  .svcx-hero h1 { font-size: clamp(36px,5.2vw,60px); line-height: 1.02; letter-spacing:-0.035em; margin: 16px 0 18px; }
+  .svcx-hero .lead { color: var(--fg-muted-dark); }
   .svcx-cat { margin-top: 14px; }
   .svcx-cat .sec-head { margin-bottom: 30px; }
   .svc-link { margin-top: auto; }
+  /* Rank & Grow pillar → amber icons */
+  #seo .svc-ic, #content .svc-ic, #more .svc-ic {
+    background: linear-gradient(145deg, rgba(245,182,43,.18), rgba(245,182,43,.05));
+    color: var(--color-gold-600); border-color: rgba(245,182,43,.24);
+  }
 </style>
 </head>
 <body data-page="services">
@@ -29,13 +36,16 @@
 <!-- ░░ HERO ░░ -->
 <section class="svcx-hero">
   <div class="container svcx-hero-inner">
-    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-gold-500)">Services</span></nav>
-    <span class="eyebrow on-dark" style="margin-top:18px">Our Services</span>
-    <h1>Data-driven digital marketing services</h1>
-    <p class="lead">From SEO and content to paid ads, social and AI-search optimisation — Evision Infoserve runs the full funnel. Every service is engineered to increase visibility, generate qualified leads and drive measurable, ROI-focused growth.</p>
+    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-blue-300)">Services</span></nav>
+    <div class="hero-dual" style="display:inline-flex;gap:8px;margin-top:18px">
+      <span class="pillar-chip design"><span class="dot"></span>Design &amp; Build</span>
+      <span class="pillar-chip seo"><span class="dot"></span>Rank &amp; Grow</span>
+    </div>
+    <h1>Design, build &amp; rank — all under one roof</h1>
+    <p class="lead">Two co-equal pillars, one team. We design and develop fast, beautiful websites, then run the SEO that makes them rank on Google and get cited by AI search. Take one pillar or both.</p>
     <div class="hero-ctas" style="margin:26px 0 0;display:flex;gap:14px;flex-wrap:wrap">
-      <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
-      <a href="/pricing.html" class="btn btn-outline-white btn-lg">View Pricing</a>
+      <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a free quote</a>
+      <a href="/pricing.html" class="btn btn-outline-white btn-lg">View packages</a>
     </div>
   </div>
 </section>
@@ -43,15 +53,34 @@
 <!-- ░░ INTRO ░░ -->
 <section class="section-sm" style="background:var(--bg-subtle)">
   <div class="container" style="max-width:880px">
-    <p class="lead" style="margin:0">In today's competitive online landscape, a website alone isn't enough. We combine search, content, social, paid media and AI-search optimisation into customised strategies that establish a strong online presence while maximising return on investment — for startups, local businesses, institutions, healthcare providers and enterprises alike.</p>
+    <p class="lead" style="margin:0">A great website and strong search visibility work best when they're built together. We combine web design, development, e-commerce, SEO, content, social and paid media into customised strategies that establish a premium online presence while maximising return on investment — for startups, local businesses, institutions and enterprises alike.</p>
+  </div>
+</section>
+
+<!-- ░░ DESIGN & BUILD ░░ -->
+<section class="section svcx-cat" id="design">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Pillar 01 · Design &amp; Build</span>
+      <h2 class="h-lg">Website design &amp; development</h2>
+      <p class="lead">Custom, responsive, conversion-focused websites — designed to look premium and coded to perform, with SEO-ready structure baked in.</p>
+    </div>
+    <div class="grid cols-3 reveal" style="margin-top:36px">
+      <a href="/web-design.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="pen-tool" class="ic"></i></div><h3>Website Design</h3><p>Custom UI/UX, brand-led design and conversion-focused layouts that feel premium.</p><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-development.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="code-2" class="ic"></i></div><h3>Web Development</h3><p>Clean, fast, secure builds — WordPress, headless and fully custom.</p><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-development.html#ecommerce" class="card lift svc-card"><div class="svc-ic"><i data-lucide="shopping-cart" class="ic"></i></div><h3>E-commerce Development</h3><p>Shopify, WooCommerce and custom stores with fast, frictionless checkouts.</p><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-design.html#redesign" class="card lift svc-card"><div class="svc-ic"><i data-lucide="refresh-cw" class="ic"></i></div><h3>Website Redesign</h3><p>Modernise a dated site for speed, mobile and conversions — without losing rankings.</p><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-development.html#apps" class="card lift svc-card"><div class="svc-ic"><i data-lucide="app-window" class="ic"></i></div><h3>Web Apps &amp; CMS</h3><p>Custom portals, dashboards, booking systems and headless CMS builds.</p><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-development.html#care" class="card lift svc-card"><div class="svc-ic"><i data-lucide="life-buoy" class="ic"></i></div><h3>Maintenance &amp; Support</h3><p>Care plans for updates, edits, monitoring and fixes so your site runs smoothly.</p><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+    </div>
   </div>
 </section>
 
 <!-- ░░ SEO ░░ -->
-<section class="section svcx-cat" id="seo">
+<section class="section section-subtle svcx-cat" id="seo">
   <div class="container">
     <div class="sec-head reveal">
-      <span class="eyebrow">SEO Services</span>
+      <span class="eyebrow gold">Pillar 02 · Rank &amp; Grow (SEO)</span>
       <h2 class="h-lg">Rank on Google &amp; get cited by AI</h2>
       <p class="lead">Full-funnel SEO — technical health, on-page content, local signals, links and structured data — built to rank on Google and be quoted by ChatGPT, Gemini and Perplexity.</p>
     </div>
@@ -74,10 +103,10 @@
 </section>
 
 <!-- ░░ CONTENT MARKETING ░░ -->
-<section class="section section-subtle svcx-cat" id="content">
+<section class="section svcx-cat" id="content">
   <div class="container">
     <div class="sec-head reveal">
-      <span class="eyebrow">Content Marketing</span>
+      <span class="eyebrow gold">Content Marketing</span>
       <h2 class="h-lg">Content that earns authority &amp; citations</h2>
       <p class="lead">Blogs, articles, landing pages and off-site content built to rank, build topical authority and nurture customers across the funnel.</p>
     </div>
@@ -91,10 +120,10 @@
 </section>
 
 <!-- ░░ MORE SERVICES ░░ -->
-<section class="section svcx-cat" id="more">
+<section class="section section-subtle svcx-cat" id="more">
   <div class="container">
     <div class="sec-head reveal">
-      <span class="eyebrow">More Services</span>
+      <span class="eyebrow gold">More Services</span>
       <h2 class="h-lg">Social, paid, reputation &amp; AI marketing</h2>
       <p class="lead">Beyond search — the channels and programmes that round out a complete, growth-focused digital strategy.</p>
     </div>
@@ -119,7 +148,7 @@
       <h2 class="h-lg">Frequently asked questions</h2>
     </div>
     <div class="faq reveal" style="margin-top:28px">
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q1</span>What digital marketing services does Evision Infoserve offer?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">We provide SEO, Social Media (SMO), PPC advertising, Content Marketing, Online Reputation Management (ORM), AI Digital Marketing, Affiliate Marketing, YouTube Marketing, Email Marketing, Mobile App Marketing, ASO and CRO services.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q1</span>What services does Evision Infoserve offer?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">We work across two pillars. <b>Design &amp; Build:</b> website design, UI/UX, web development, e-commerce, web apps, redesign and maintenance. <b>Rank &amp; Grow:</b> SEO, AI search (AEO/GEO/LLMO), content marketing, PPC, social media, ORM and more. You can take a single service or a combined website + SEO package.</div></div></div>
       <div class="faq-item"><button class="faq-q"><span class="faq-num">Q2</span>How can SEO help my business?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">SEO improves your search rankings, increases organic traffic and online visibility, and helps attract qualified customers who are actively searching for your products or services.</div></div></div>
       <div class="faq-item"><button class="faq-q"><span class="faq-num">Q3</span>Which platforms do you manage for social media marketing?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">We manage Facebook, Instagram, LinkedIn, X, YouTube and other major platforms — building brand awareness, engaging audiences and generating leads.</div></div></div>
       <div class="faq-item"><button class="faq-q"><span class="faq-num">Q4</span>How do PPC campaigns generate leads?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">PPC campaigns target specific keywords and audiences across platforms like Google Ads, so your business reaches potential customers quickly and drives measurable lead generation.</div></div></div>
@@ -132,13 +161,13 @@
 <!-- ░░ CTA BAND ░░ -->
 <section class="cta-band">
   <div class="container cta-inner">
-    <div><h2 class="h-lg" style="color:#fff;max-width:22ch">Not sure which service you need?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Get a free audit and we'll recommend the right mix for your goals.</p></div>
-    <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a Free Audit</a>
+    <div><h2 class="h-lg" style="color:#fff;max-width:22ch">Not sure which service you need?</h2><p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Tell us your goals and we'll recommend the right mix — website, SEO, or both.</p></div>
+    <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get a free quote</a>
   </div>
 </section>
 
-<script src="/assets/site.js?v=4"></script>
-<script src="/assets/chrome.js?v=4"></script>
-<script src="/assets/pricing.js?v=4"></script>
+<script src="/assets/site.js?v=5"></script>
+<script src="/assets/chrome.js?v=5"></script>
+<script src="/assets/pricing.js?v=5"></script>
 </body>
 </html>

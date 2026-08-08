@@ -111,6 +111,58 @@
     sections.forEach(function (s) { if (s) spy.observe(s); });
   }
 
+  // ── Lead-magnet capture forms (inside blog posts) ──
+  // Posts to /api/enquiry with type=lead-magnet, then reveals a success state
+  // with the promised resource + a pre-filled WhatsApp shortcut.
+  document.querySelectorAll(".lm-form").forEach(function (form) {
+    var msg = form.querySelector(".lm-msg");
+    form.querySelectorAll("input").forEach(function (inp) {
+      inp.addEventListener("input", function () { inp.classList.remove("lm-bad"); if (msg) msg.textContent = ""; });
+    });
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var name = form.querySelector('[name=name]');
+      var email = form.querySelector('[name=email]');
+      var phone = form.querySelector('[name=phone]');
+      var consent = form.querySelector('[name=consent]');
+      var ok = true;
+      function bad(el) { if (el) { el.classList.add("lm-bad"); ok = false; } }
+      if (!name || !name.value.trim()) bad(name);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) bad(email);
+      if (!phone || phone.value.replace(/\D/g, "").length < 8) bad(phone);
+      if (consent && !consent.checked) { ok = false; if (msg) msg.textContent = "Please accept to receive your download."; }
+      if (!ok) { if (msg && !msg.textContent) msg.textContent = "Please fill in your name, a valid email and phone."; return; }
+
+      var magnet = form.getAttribute("data-magnet") || "Lead magnet";
+      var slug = form.getAttribute("data-source") || (location.pathname.split("/").pop() || "blog");
+      var payload = {
+        name: name.value.trim(), email: email.value.trim(), phone: phone.value.trim(),
+        service: magnet, message: "Requested resource: " + magnet,
+        type: "lead-magnet", source: slug, consent: 1, marketing: consent && consent.checked ? 1 : 0
+      };
+      var btn = form.querySelector("button[type=submit]");
+      if (btn) { btn.disabled = true; btn.dataset.label = btn.innerHTML; btn.textContent = "Sending…"; }
+
+      var box = form.closest(".lead-magnet");
+      var wa = "https://wa.me/919811722064?text=" + encodeURIComponent("Hi Evision! Please send me the free resource: " + magnet);
+      function done() {
+        if (box) {
+          box.classList.add("done");
+          box.innerHTML =
+            '<div class="lm-done">' +
+              '<div class="lm-tick"><i data-lucide="check"></i></div>' +
+              '<h3>Check your inbox &amp; WhatsApp 🎉</h3>' +
+              '<p>Thanks, ' + payload.name.split(" ")[0].replace(/[<>&"]/g, "") + '! We\'re sending <b>' + magnet.replace(/[<>&"]/g, "") + '</b> to your email now. Want it instantly?</p>' +
+              '<a href="' + wa + '" class="btn btn-secondary btn-lg" target="_blank" rel="noopener"><i data-lucide="message-circle" class="ic"></i>Get it on WhatsApp</a>' +
+            '</div>';
+          if (window.lucide) window.lucide.createIcons();
+        }
+      }
+      fetch("/api/enquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+        .then(done).catch(done);
+    });
+  });
+
   // ── service tabs (optional) ──
   document.querySelectorAll("[data-tabs]").forEach(function (wrap) {
     var btns = wrap.querySelectorAll("[data-tab]");

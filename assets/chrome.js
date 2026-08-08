@@ -14,7 +14,8 @@
     "technical-seo", "local-seo", "multilingual-seo", "link-building", "white-label-seo", "seo-audit", "industry-seo"];
   var _CONTC = ["content-writing", "guest-posting", "digital-pr"];
   var CLEAN = {
-    "index.html": "/", "seo.html": "/services/seo", "content-marketing.html": "/services/content-marketing",
+    "index.html": "/", "web-design.html": "/services/web-design", "web-development.html": "/services/web-development",
+    "seo.html": "/services/seo", "content-marketing.html": "/services/content-marketing",
     "social-media.html": "/services/social-media", "ppc.html": "/services/ppc", "orm.html": "/services/orm",
     "ai-marketing.html": "/services/ai-digital-marketing", "affiliate-marketing.html": "/services/affiliate-marketing",
     "youtube-marketing.html": "/services/youtube-marketing", "email-marketing.html": "/services/email-marketing",
@@ -33,36 +34,38 @@
   }
 
   var MARK = '<svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">' +
-    '<rect width="36" height="36" rx="9" fill="#0B1930"/>' +
-    '<rect x="9" y="20" width="4.6" height="7" rx="1.4" fill="#6FA3F5"/>' +
-    '<rect x="15.7" y="15" width="4.6" height="12" rx="1.4" fill="#1A5FC8"/>' +
-    '<rect x="22.4" y="9" width="4.6" height="18" rx="1.4" fill="#F5C400"/>' +
+    '<rect width="36" height="36" rx="9" fill="#0A0E1C"/>' +
+    '<rect x="9" y="20" width="4.6" height="7" rx="1.4" fill="#B7ADFF"/>' +
+    '<rect x="15.7" y="15" width="4.6" height="12" rx="1.4" fill="#6D5EFB"/>' +
+    '<rect x="22.4" y="9" width="4.6" height="18" rx="1.4" fill="#F5B62B"/>' +
     '</svg>';
 
   var BRAND = '<a href="' + P + 'index.html" class="brand" aria-label="Evision Infoserve home">' + MARK +
     '<div><div class="brand-name">Evision<span>Infoserve</span></div>' +
-    '<div class="brand-sub">Digital Marketing Agency</div></div></a>';
+    '<div class="brand-sub">Web Design · Development · SEO</div></div></a>';
 
+  // Service options for the Free Quote / Audit modal dropdown.
   var SERVICES = [
-    ["SEO Services", "Technical, local, LLMO &amp; AEO", "search", "seo.html"],
-    ["Social Media (SMO)", "Organic growth &amp; community", "thumbs-up", "social-media.html"],
-    ["PPC &amp; Paid Ads", "Google, Meta &amp; LinkedIn ROI", "target", "ppc.html"],
-    ["Content Marketing", "Blogs, topic clusters, video", "pen-tool", "content-marketing.html"],
-    ["ORM &amp; Reputation", "Reviews &amp; brand defense", "shield-check", "orm.html"],
-    ["AI Digital Marketing", "GEO, automation &amp; analytics", "sparkles", "ai-marketing.html"]
+    ["Website Design", "", "", ""], ["Website Development", "", "", ""],
+    ["E-commerce Website", "", "", ""], ["Website Redesign", "", "", ""],
+    ["SEO Services", "", "", ""], ["Local SEO", "", "", ""],
+    ["AI SEO / LLMO", "", "", ""], ["Content Marketing", "", "", ""],
+    ["PPC & Paid Ads", "", "", ""], ["Social Media (SMO)", "", "", ""],
+    ["Website + SEO Package", "", "", ""], ["Not sure — need advice", "", "", ""]
   ];
 
-  var SEO_SUB = [["AI SEO", "ai-seo.html"], ["LLM Optimization", "llm-optimization.html"],
-    ["Agentic AI SEO", "agentic-ai-seo.html"], ["Enterprise SEO", "enterprise-seo.html"], ["Ecommerce SEO", "ecommerce-seo.html"],
-    ["Technical SEO", "technical-seo.html"], ["Local SEO", "local-seo.html"], ["Multilingual SEO", "multilingual-seo.html"],
-    ["Link Building", "link-building.html"], ["White Label SEO", "white-label-seo.html"], ["SEO Audit", "seo-audit.html"],
-    ["Industry-Based SEO", "industry-seo.html"]];
-  var CONTENT_SUB = [["Content Writing", "content-writing.html"],
-    ["Guest Posting", "guest-posting.html"], ["Digital PR", "digital-pr.html"]];
-  var OTHER_SUB = [["Social Media (SMO)", "social-media.html"], ["PPC & Paid Ads", "ppc.html"],
+  // ── Two co-equal pillars: Design & Build (violet) · Rank & Grow / SEO (amber) ──
+  var DESIGN_SUB = [["Website Design", "web-design.html"], ["UI/UX Design", "web-design.html#ux"],
+    ["Website Redesign", "web-design.html#redesign"], ["Landing Pages", "web-design.html#landing"],
+    ["Web Development", "web-development.html"], ["E-commerce Development", "web-development.html#ecommerce"],
+    ["Web Apps & CMS", "web-development.html#apps"], ["Maintenance & Support", "web-development.html#care"]];
+  var SEO_SUB = [["SEO Services", "seo.html"], ["Technical SEO", "technical-seo.html"],
+    ["Local SEO", "local-seo.html"], ["AI SEO / LLMO", "ai-seo.html"], ["Ecommerce SEO", "ecommerce-seo.html"],
+    ["Link Building", "link-building.html"], ["SEO Audit", "seo-audit.html"], ["Content Marketing", "content-marketing.html"]];
+  var OTHER_SUB = [["PPC & Paid Ads", "ppc.html"], ["Social Media (SMO)", "social-media.html"],
     ["ORM & Reputation", "orm.html"], ["AI Digital Marketing", "ai-marketing.html"],
-    ["Affiliate Marketing", "affiliate-marketing.html"], ["YouTube Video Marketing", "youtube-marketing.html"],
-    ["Email Marketing", "email-marketing.html"], ["Mobile App Marketing", "mobile-app-marketing.html"]];
+    ["Content Writing", "content-writing.html"], ["Email Marketing", "email-marketing.html"],
+    ["YouTube Marketing", "youtube-marketing.html"], ["Mobile App Marketing", "mobile-app-marketing.html"]];
   function megaCol(title, items, href) {
     var head = href
       ? '<a class="mega-h mega-h-link" href="' + P + href + '">' + title + ' <i data-lucide="arrow-right" class="mega-h-ar"></i></a>'
@@ -70,12 +73,11 @@
     return '<div class="mega-col">' + head +
       items.map(function (s) { return '<a href="' + P + s[1] + '">' + s[0] + '</a>'; }).join("") + '</div>';
   }
-  // Parent service page is the column header; its child pages are listed under it.
-  var MEGA = megaCol("SEO Services", SEO_SUB, "seo.html") +
-    megaCol("Content Marketing", CONTENT_SUB, "content-marketing.html") +
-    megaCol("More Services", OTHER_SUB);
-  var ALL_SUB = [["SEO Services", "seo.html"]].concat(SEO_SUB,
-    [["Content Marketing", "content-marketing.html"]], CONTENT_SUB, OTHER_SUB);
+  var MEGA = megaCol("Design &amp; Build", DESIGN_SUB, "web-design.html") +
+    megaCol("Rank &amp; Grow (SEO)", SEO_SUB, "seo.html") +
+    megaCol("Marketing &amp; More", OTHER_SUB);
+  var ALL_SUB = [["— Design & Build —", "web-design.html"]].concat(DESIGN_SUB,
+    [["— Rank & Grow (SEO) —", "seo.html"]], SEO_SUB, OTHER_SUB);
 
   function navItem(href, label, key) {
     return '<a href="' + P + href + '" class="nav-link' + (page === key ? " active" : "") + '">' + label + '</a>';
@@ -89,8 +91,8 @@
         '<div class="nav-dd"><a href="' + P + 'services.html" class="nav-link' + (page === "services" ? " active" : "") + '">Services ' +
           '<i data-lucide="chevron-down" class="caret"></i></a>' +
           '<div class="dd-panel mega">' + MEGA +
-            '<div class="dd-foot"><span>Not sure what you need? <b class="text-gold">Get a free audit.</b></span>' +
-            '<a href="' + P + 'contact.html" data-audit-open class="btn btn-secondary btn-sm">Free Audit</a></div>' +
+            '<div class="dd-foot"><span>Need a website, SEO, or both? <b class="text-gold">Get a free quote.</b></span>' +
+            '<a href="' + P + 'contact.html" data-audit-open class="btn btn-secondary btn-sm">Free Quote</a></div>' +
           '</div></div>' +
         navItem("blog.html", "Blog", "blog") +
         navItem("about.html", "About", "about") +
@@ -127,7 +129,7 @@
   var FOOTER =
     '<footer class="site-footer"><div class="container"><div class="foot-top">' +
       '<div class="foot-brand">' + BRAND.replace('class="brand"', 'class="brand foot-brand-link"') +
-        '<p class="foot-about">A digital marketing agency engineered for the AI-search era — we build sites that rank on Google and get cited by ChatGPT, Gemini &amp; Perplexity.</p>' +
+        '<p class="foot-about">A web design, development &amp; SEO studio in Greater Noida. We design and build fast, beautiful websites — then engineer them to rank on Google and get cited by AI search.</p>' +
         '<div class="foot-socials">' +
           '<a href="https://www.linkedin.com/company/evisioninfoserve/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21h-4z"/></svg></a>' +
           '<a href="https://www.instagram.com/evisioninfoserve/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>' +
@@ -135,13 +137,20 @@
           '<a href="https://www.facebook.com/EvisionInfoservepvtltd/" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>' +
         '</div>' +
       '</div>' +
-      '<div class="foot-col"><h4>Services</h4>' +
+      '<div class="foot-col"><h4>Design &amp; Build</h4>' +
+        '<a href="' + P + 'web-design.html">Website Design</a>' +
+        '<a href="' + P + 'web-development.html">Web Development</a>' +
+        '<a href="' + P + 'web-development.html#ecommerce">E-commerce Development</a>' +
+        '<a href="' + P + 'web-design.html#redesign">Website Redesign</a>' +
+        '<a href="' + P + 'web-development.html#care">Maintenance &amp; Support</a>' +
+        '<a href="' + P + 'pricing.html">Packages &amp; Pricing</a></div>' +
+      '<div class="foot-col"><h4>Rank &amp; Grow</h4>' +
         '<a href="' + P + 'seo.html">SEO Services</a>' +
-        '<a href="' + P + 'social-media.html">Social Media</a>' +
-        '<a href="' + P + 'ppc.html">PPC &amp; Paid Ads</a>' +
+        '<a href="' + P + 'ai-seo.html">AI SEO / LLMO</a>' +
         '<a href="' + P + 'content-marketing.html">Content Marketing</a>' +
-        '<a href="' + P + 'orm.html">ORM</a>' +
-        '<a href="' + P + 'ai-marketing.html">AI Digital Marketing</a></div>' +
+        '<a href="' + P + 'ppc.html">PPC &amp; Paid Ads</a>' +
+        '<a href="' + P + 'social-media.html">Social Media</a>' +
+        '<a href="' + P + 'orm.html">ORM &amp; Reputation</a></div>' +
       '<div class="foot-col"><h4>Company</h4>' +
         '<a href="' + P + 'about.html">About Us</a>' +
         '<a href="' + P + 'blog.html">Blog</a>' +
@@ -158,7 +167,7 @@
       '</div>' +
     '</div>' +
     '<div class="foot-bottom"><div class="copy">© 2026 Evision Infoserve. All rights reserved.</div>' +
-      '<div class="foot-layers"><i data-lucide="sparkles" style="width:15px;height:15px"></i>Built for <b>SEO · AEO · GEO · LLMO</b></div>' +
+      '<div class="foot-layers"><i data-lucide="sparkles" style="width:15px;height:15px"></i>Design &amp; build · <b>SEO · AEO · GEO · LLMO</b></div>' +
       '<div class="legal"><a href="' + P + 'privacy-policy.html">Privacy</a><a href="' + P + 'terms.html">Terms</a><a href="' + P + 'refund-policy.html">Refund</a></div>' +
     '</div></div></footer>';
 
@@ -167,10 +176,11 @@
       '<div class="chat-ava">Ei</div><div><div class="t">Evision Assistant</div><div class="s">Typically replies in a minute</div></div>' +
       '<span class="x" id="chatClose"><i data-lucide="x"></i></span></div>' +
       '<div class="chat-body" id="chatBody">' +
-        '<div class="bubble bot">Hi 👋 Welcome to Evision Infoserve! Looking to rank higher on Google — or get cited by AI search? How can we help?</div>' +
+        '<div class="bubble bot">Hi 👋 Welcome to Evision Infoserve! Need a new website, SEO, or a combined package? Tell us what you\'re after.</div>' +
       '</div>' +
       '<div class="chat-quick" id="chatQuick">' +
-        '<button data-q="I want an SEO audit">Get an SEO audit</button>' +
+        '<button data-q="I need a new website designed and developed">I need a website</button>' +
+        '<button data-q="I want an SEO / website audit">Get a free audit</button>' +
         '<button data-q="I would like to talk to your team">Talk to our team</button>' +
         '<button data-q="Tell me about AI search (GEO/LLMO)">AI search (GEO/LLMO)</button>' +
       '</div>' +
@@ -198,9 +208,9 @@
       '<div class="audit-dialog" role="dialog" aria-modal="true" aria-labelledby="auditTitle">' +
         '<button class="audit-x" data-audit-close aria-label="Close">&times;</button>' +
         '<div id="auditFormWrap">' +
-          '<span class="audit-eyebrow"><i data-lucide="sparkles"></i> Free SEO + AI Visibility Audit</span>' +
-          '<h3 id="auditTitle">Get your free audit report</h3>' +
-          '<p class="audit-sub">Tell us where to send it. A strategist emails you a 12-point audit within <b>24 hours</b> — no cost, no obligation.</p>' +
+          '<span class="audit-eyebrow"><i data-lucide="sparkles"></i> Free Website + SEO Consult</span>' +
+          '<h3 id="auditTitle">Get your free quote &amp; audit</h3>' +
+          '<p class="audit-sub">Tell us what you need — a new website, SEO, or both. A strategist sends you a tailored quote and a 12-point audit within <b>24 hours</b> — no cost, no obligation.</p>' +
           '<form id="auditForm" novalidate>' +
             '<div class="audit-row">' +
               '<input type="text" name="name" placeholder="Full name *" autocomplete="name">' +
@@ -210,11 +220,11 @@
               '<input type="tel" name="phone" placeholder="Phone / WhatsApp *" autocomplete="tel">' +
               '<input type="text" name="website" placeholder="Website URL">' +
             '</div>' +
-            '<select name="service"><option value="">Service you want audited…</option>' + auditOpts + '</select>' +
+            '<select name="service"><option value="">What are you looking for?…</option>' + auditOpts + '</select>' +
             '<label class="audit-consent"><input type="checkbox" id="auditConsent">' +
               '<span>I accept the <a href="' + P + 'contact.html" data-audit-noop>Terms &amp; Conditions</a> and agree to receive my audit report and marketing emails from Evision Infoserve.</span></label>' +
             '<div class="audit-err" id="auditErr"></div>' +
-            '<button type="submit" class="btn btn-primary btn-block btn-lg">Send me my free audit <i data-lucide="arrow-right" class="ic"></i></button>' +
+            '<button type="submit" class="btn btn-primary btn-block btn-lg">Get my free quote &amp; audit <i data-lucide="arrow-right" class="ic"></i></button>' +
             '<p class="audit-fine">We respect your inbox — unsubscribe anytime.</p>' +
           '</form>' +
         '</div>' +

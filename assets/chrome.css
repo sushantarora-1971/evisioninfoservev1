@@ -43,7 +43,7 @@
 .nav-dd:hover .nav-link .caret { transform: rotate(180deg); }
 .dd-item { display: flex; gap: 12px; padding: 11px 13px; border-radius: var(--radius-md); transition: background .15s; }
 .dd-item:hover { background: var(--bg-subtle); }
-.dd-ic { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(26,95,200,.1); color: var(--color-blue-500); flex: none; }
+.dd-ic { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(109,94,251,.1); color: var(--color-blue-500); flex: none; }
 .dd-ic .ic { width: 19px; height: 19px; }
 .dd-item:hover .dd-ic { background: var(--color-navy-800); color: var(--color-gold-500); }
 .dd-t { font-family: var(--font-headline); font-weight: 600; font-size: 15px; color: var(--color-navy-800); }
@@ -89,15 +89,19 @@
 .m-sublink { display: block; padding: 10px 8px 10px 20px; font-size: 14.5px; color: var(--color-gray-800); }
 
 /* ── CTA band (pre-footer) ─────────────────────────────────── */
-.cta-band { background: var(--color-navy-800); color: #fff; position: relative; overflow: hidden; }
+.cta-band { background: var(--color-navy-900); color: #fff; position: relative; overflow: hidden; }
 .cta-band::after { content: ""; position: absolute; inset: 0; background:
-  radial-gradient(640px 320px at 88% -10%, rgba(26,95,200,.4), transparent 70%),
-  radial-gradient(420px 280px at 10% 120%, rgba(245,196,0,.16), transparent 70%); pointer-events: none; }
-.cta-inner { position: relative; padding: 72px 0; display: flex; align-items: center; justify-content: space-between; gap: 36px; flex-wrap: wrap; }
+  radial-gradient(640px 360px at 82% -12%, rgba(109,94,251,.42), transparent 66%),
+  radial-gradient(520px 320px at 10% 120%, rgba(245,182,43,.20), transparent 66%); pointer-events: none; }
+.cta-band::before { content:""; position:absolute; inset:0; pointer-events:none;
+  background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size: 26px 26px;
+  mask-image: radial-gradient(680px 460px at 70% 0%, #000, transparent 78%); }
+.cta-inner { position: relative; z-index:1; padding: 84px 0; display: flex; align-items: center; justify-content: space-between; gap: 36px; flex-wrap: wrap; }
 
 /* ── Footer ────────────────────────────────────────────────── */
 .site-footer { background: var(--color-navy-900); color: var(--fg-muted-dark); }
-.foot-top { padding: 64px 0 48px; display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.4fr; gap: 40px; }
+.foot-top { padding: 64px 0 48px; display: grid; grid-template-columns: 1.7fr 1fr 1fr 1fr 1.3fr; gap: 36px; }
+@media (max-width: 1080px){ .foot-top { grid-template-columns: 1fr 1fr 1fr; gap: 32px; } }
 @media (max-width: 920px){ .foot-top { grid-template-columns: 1fr 1fr; gap: 32px; } }
 @media (max-width: 560px){ .foot-top { grid-template-columns: 1fr; } }
 .foot-brand .brand-name { color: #fff; }
@@ -150,7 +154,7 @@
 .bubble.me { background: var(--color-blue-500); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
 .chat-quick { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 18px 12px; background: var(--bg-subtle); }
 .chat-quick button { font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--color-blue-500);
-  background: #fff; border: 1px solid rgba(26,95,200,.3); border-radius: var(--radius-pill); padding: 7px 13px; cursor: pointer; transition: all .15s; }
+  background: #fff; border: 1px solid rgba(109,94,251,.3); border-radius: var(--radius-pill); padding: 7px 13px; cursor: pointer; transition: all .15s; }
 .chat-quick button:hover { background: var(--color-blue-500); color: #fff; }
 .chat-foot { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--border-light); background: #fff; }
 .chat-foot input { flex: 1; border: 1px solid var(--border-light); border-radius: var(--radius-pill); padding: 10px 15px; font-family: var(--font-body); font-size: 14px; }
@@ -190,12 +194,12 @@
 @keyframes auditIn { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
 .audit-x { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 30px; line-height: 1; color: #94a0b3; cursor: pointer; }
 .audit-x:hover { color: var(--color-navy-800, #0b1930); }
-.audit-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--color-blue-500, #1a5fc8); background: rgba(26,95,200,.1); padding: 6px 12px; border-radius: 999px; }
+.audit-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--color-blue-500, #1a5fc8); background: rgba(109,94,251,.1); padding: 6px 12px; border-radius: 999px; }
 .audit-eyebrow svg { width: 14px; height: 14px; }
 .audit-dialog h3 { font-size: 25px; color: var(--color-navy-800, #0b1930); margin: 14px 0 6px; line-height: 1.15; }
 .audit-sub { font-size: 14.5px; color: #5b6677; margin-bottom: 20px; line-height: 1.5; }
 #auditForm input[type="text"], #auditForm input[type="email"], #auditForm input[type="tel"], #auditForm select { width: 100%; padding: 12px 14px; border: 1px solid #e1e6ef; border-radius: 10px; font-size: 14.5px; font-family: inherit; background: #fff; margin-bottom: 12px; color: var(--color-navy-800, #0b1930); }
-#auditForm input[type="text"]:focus, #auditForm input[type="email"]:focus, #auditForm input[type="tel"]:focus, #auditForm select:focus { outline: none; border-color: var(--color-blue-500, #1a5fc8); box-shadow: 0 0 0 3px rgba(26,95,200,.12); }
+#auditForm input[type="text"]:focus, #auditForm input[type="email"]:focus, #auditForm input[type="tel"]:focus, #auditForm select:focus { outline: none; border-color: var(--color-blue-500, #1a5fc8); box-shadow: 0 0 0 3px rgba(109,94,251,.12); }
 .audit-row { display: flex; gap: 12px; }
 .audit-row input { flex: 1; }
 @media (max-width: 480px){ .audit-row { flex-direction: column; gap: 0; } }
@@ -213,5 +217,5 @@
 /* Get Started modal form */
 #startForm input[type="text"], #startForm input[type="email"], #startForm input[type="tel"], #startForm textarea { width: 100%; padding: 12px 14px; border: 1px solid #e1e6ef; border-radius: 10px; font-size: 14.5px; font-family: inherit; background: #fff; margin-bottom: 12px; color: var(--color-navy-800, #0b1930); }
 #startForm textarea { resize: vertical; min-height: 60px; }
-#startForm input:focus, #startForm textarea:focus { outline: none; border-color: var(--color-blue-500, #1a5fc8); box-shadow: 0 0 0 3px rgba(26,95,200,.12); }
-.start-svc-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(26,95,200,.1); color: var(--color-blue-500, #1a5fc8); font-weight: 700; font-size: 13px; padding: 7px 12px; border-radius: 999px; margin-bottom: 14px; }
+#startForm input:focus, #startForm textarea:focus { outline: none; border-color: var(--color-blue-500, #1a5fc8); box-shadow: 0 0 0 3px rgba(109,94,251,.12); }
+.start-svc-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(109,94,251,.1); color: var(--color-blue-500, #1a5fc8); font-weight: 700; font-size: 13px; padding: 7px 12px; border-radius: 999px; margin-bottom: 14px; }

@@ -3,102 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=1">
-<title>Evision Infoserve — Digital Marketing Agency Built for Google &amp; AI Search</title>
-<meta name="description" content="Evision Infoserve is a Greater Noida digital marketing agency engineering SEO, AEO, GEO &amp; LLMO so your brand ranks on Google and gets cited by ChatGPT, Gemini &amp; Perplexity.">
-<link rel="stylesheet" href="/assets/tokens.css?v=4">
-<link rel="stylesheet" href="/assets/site.css?v=4">
-<link rel="stylesheet" href="/assets/chrome.css?v=4">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
+<title>Evision Infoserve — Website Design, Development &amp; SEO Packages</title>
+<meta name="description" content="Evision Infoserve is a Greater Noida web design, development &amp; SEO studio. We design and build fast, beautiful websites — then engineer them to rank on Google and get cited by AI search. Combined website + SEO packages.">
+<link rel="stylesheet" href="/assets/tokens.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/chrome.css?v=5">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  /* ── Home-only styles ── */
+  /* ── Home-only styles (2026 revamp) ── */
   .hero { position: relative; overflow: hidden; background:
-    radial-gradient(900px 520px at 78% -8%, rgba(26,95,200,.10), transparent 65%),
-    linear-gradient(180deg, var(--bg-subtle), #fff 88%); }
+    radial-gradient(1000px 560px at 82% -12%, rgba(109,94,251,.12), transparent 62%),
+    radial-gradient(760px 520px at 6% 8%, rgba(245,182,43,.09), transparent 60%),
+    linear-gradient(180deg, var(--bg-subtle), #fff 78%); }
   .hero::before { content: ""; position: absolute; inset: 0;
-    background-image: linear-gradient(rgba(11,25,48,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(11,25,48,.035) 1px, transparent 1px);
-    background-size: 46px 46px; mask-image: radial-gradient(900px 600px at 75% 0%, #000, transparent 70%); }
-  .hero-grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding-top: 78px; padding-bottom: 90px; }
-  @media (max-width: 980px){ .hero-grid { grid-template-columns: 1fr; gap: 44px; padding-top: 52px; padding-bottom: 64px; } }
-  .hero h1 { font-size: clamp(38px, 5.4vw, 68px); line-height: 1.02; letter-spacing: -0.018em; color: var(--color-navy-800); }
-  .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin: 30px 0 26px; }
-  .hero-trust { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    background-image: linear-gradient(rgba(10,14,28,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(10,14,28,.03) 1px, transparent 1px);
+    background-size: 48px 48px; mask-image: radial-gradient(960px 620px at 72% 0%, #000, transparent 72%); }
+  .hero-grid { position: relative; display: grid; grid-template-columns: 1.02fr .98fr; gap: 56px; align-items: center; padding-top: 76px; padding-bottom: 92px; }
+  @media (max-width: 980px){ .hero-grid { grid-template-columns: 1fr; gap: 46px; padding-top: 48px; padding-bottom: 62px; } }
+  .hero h1 { font-size: clamp(40px, 5.6vw, 74px); line-height: 1.0; letter-spacing: -0.035em; color: var(--color-navy-800); }
+  .hero-dual { display: inline-flex; gap: 8px; margin-top: 18px; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin: 30px 0 24px; }
+  .hero-trust { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
   .hero-rating { display: flex; align-items: center; gap: 9px; }
   .stars { color: var(--color-gold-500); display: inline-flex; gap: 1px; }
   .stars .ic { width: 16px; height: 16px; fill: currentColor; }
   .hero-rating b { color: var(--color-navy-800); }
   .hero-rating small { color: var(--fg-muted-light); font-size: 13px; }
 
-  /* AI overview card */
-  .ai-card { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; }
-  .ai-card-top { display: flex; align-items: center; gap: 9px; padding: 13px 18px; border-bottom: 1px solid var(--border-light); }
-  .ai-dots { display: flex; gap: 6px; }
-  .ai-dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
-  .ai-url { font-family: var(--font-mono); font-size: 12px; color: var(--color-gray-400); background: var(--bg-subtle); padding: 5px 12px; border-radius: var(--radius-pill); flex: 1; }
-  .ai-body { padding: 22px; }
-  .ai-q { display: flex; align-items: center; gap: 9px; font-size: 14px; color: var(--fg-muted-light); margin-bottom: 16px; }
-  .ai-q .mag { width: 16px; height: 16px; color: var(--color-blue-500); }
-  .ai-overview { background: linear-gradient(180deg, rgba(26,95,200,.05), rgba(245,196,0,.04)); border: 1px solid rgba(26,95,200,.14); border-radius: var(--radius-lg); padding: 16px 18px; }
-  .ai-ov-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: var(--color-blue-500); margin-bottom: 10px; letter-spacing: .02em; }
-  .ai-ov-head .ic { width: 17px; height: 17px; }
-  .ai-overview p { font-size: 14.5px; line-height: 1.6; color: var(--color-gray-800); }
-  .ai-overview .cite { color: var(--color-blue-500); font-weight: 600; }
-  .ai-sources { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-  .ai-src { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-pill); padding: 5px 11px; color: var(--color-navy-700); }
-  .ai-src.lead { border-color: var(--color-gold-500); background: rgba(245,196,0,.1); }
-  .ai-src .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-blue-500); }
-  .ai-src.lead .dot { background: var(--color-gold-500); }
-  .ai-float { position: absolute; right: -14px; bottom: 38px; background: var(--color-navy-800); color: #fff; border-radius: var(--radius-lg); padding: 12px 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 11px; }
-  .ai-float .ic { width: 22px; height: 22px; color: var(--color-gold-500); }
-  .ai-float b { font-family: var(--font-headline); font-size: 19px; display: block; line-height: 1; }
-  .ai-float span { font-size: 11.5px; color: var(--color-blue-300); }
-  @media (max-width: 980px){ .ai-float { right: 10px; } }
-  .ai-wrap { position: relative; }
+  /* Hero visual — stacked browser + rank cards */
+  .hv { position: relative; }
+  .browser { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .browser-top { display: flex; align-items: center; gap: 9px; padding: 12px 16px; border-bottom: 1px solid var(--border-light); background: var(--bg-subtle); }
+  .browser-dots { display: flex; gap: 6px; }
+  .browser-dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .browser-url { font-family: var(--font-mono); font-size: 11.5px; color: var(--color-gray-400); background: #fff; padding: 5px 12px; border-radius: var(--radius-pill); flex: 1; border: 1px solid var(--border-light); }
+  .browser-body { padding: 0; }
+  .bb-hero { padding: 22px; background: linear-gradient(135deg, #0A0E1C, #1a1147); color: #fff; }
+  .bb-hero .k { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-blue-300); }
+  .bb-hero h4 { font-size: 22px; margin: 8px 0 10px; line-height: 1.1; letter-spacing: -0.02em; }
+  .bb-hero .row { display: flex; gap: 8px; }
+  .bb-btn { font-size: 11px; font-weight: 700; padding: 7px 13px; border-radius: var(--radius-pill); }
+  .bb-btn.v { background: var(--color-blue-500); color: #fff; }
+  .bb-btn.g { background: rgba(255,255,255,.14); color: #fff; }
+  .bb-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 16px; }
+  .bb-tile { height: 46px; border-radius: 8px; background: var(--bg-subtle); border: 1px solid var(--border-light); }
+  .bb-tile:nth-child(1){ background: rgba(109,94,251,.1); }
+  .bb-tile:nth-child(5){ background: rgba(245,182,43,.14); }
+  .hv-rank { position: absolute; right: -16px; bottom: -22px; width: 260px; background: #fff; border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 15px 16px; }
+  @media (max-width: 400px){ .hv-rank { right: 0; } }
+  .hv-rank .rk-head { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; color: var(--color-blue-500); margin-bottom: 10px; }
+  .hv-rank .rk-head .ic { width: 15px; height: 15px; }
+  .hv-rank .rk { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--border-light); font-size: 12.5px; }
+  .hv-rank .rk:last-child { border: none; }
+  .hv-rank .rk .pos { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; font-size: 12px; flex: none; }
+  .hv-rank .rk.top .pos { background: var(--color-green-100); color: #15803D; }
+  .hv-rank .rk .pos { background: var(--bg-subtle); color: var(--color-navy-700); }
+  .hv-rank .rk .kw { color: var(--color-navy-800); font-weight: 500; }
+  .hv-rank .rk .up { margin-left: auto; color: var(--color-green-500); font-weight: 700; font-size: 11.5px; display: inline-flex; align-items: center; gap: 2px; }
+  .hv-float { position: absolute; left: -18px; bottom: 42px; background: var(--color-navy-800); color: #fff; border-radius: var(--radius-md); padding: 11px 15px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 11px; }
+  .hv-float .ic { width: 22px; height: 22px; color: var(--color-gold-400); }
+  .hv-float b { font-family: var(--font-headline); font-size: 18px; display: block; line-height: 1; }
+  .hv-float span { font-size: 11px; color: var(--color-blue-300); }
+  @media (max-width: 980px){ .hv-float { left: 4px; } }
 
   /* trust strip */
   .trust-strip { border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); background: #fff; }
-  .trust-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; flex-wrap: wrap; }
+  .trust-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 0; flex-wrap: wrap; }
   .trust-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--color-navy-700); font-weight: 600; }
   .trust-item .ic { width: 20px; height: 20px; color: var(--color-blue-500); }
   .trust-item .rate { font-family: var(--font-headline); font-size: 20px; color: var(--color-navy-800); }
 
-  /* layer cards */
-  .layer-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-lg); padding: 26px 24px; transition: border-color .2s, transform .2s, background .2s; }
-  .layer-card:hover { border-color: var(--color-blue-400); transform: translateY(-4px); background: rgba(26,95,200,.1); }
-  .layer-abbr { font-family: var(--font-headline); font-weight: 700; font-size: 30px; color: var(--color-gold-500); letter-spacing: .01em; }
-  .layer-card h3 { font-size: 17px; color: #fff; margin: 8px 0 8px; font-weight: 600; }
-  .layer-card p { font-size: 13.5px; color: var(--fg-muted-dark); line-height: 1.55; }
-  .layer-card .num { font-family: var(--font-mono); font-size: 12px; color: var(--color-blue-300); }
+  .sec-head { max-width: 720px; }
+  .sec-head .h-lg { margin: 14px 0 14px; color: var(--color-navy-800); }
+  .section-ink .sec-head .h-lg, .section-navy .sec-head .h-lg, .section-dark .sec-head .h-lg { color: #fff; }
 
-  /* process */
-  .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 22px; counter-reset: s; }
-  @media (max-width: 880px){ .steps { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 520px){ .steps { grid-template-columns: 1fr; } }
-  .step { position: relative; padding-top: 26px; }
-  .step .n { font-family: var(--font-mono); font-size: 13px; color: var(--color-blue-500); font-weight: 600; }
-  .step h3 { font-size: 20px; color: var(--color-navy-800); margin: 10px 0 8px; }
-  .step p { font-size: 14px; color: var(--fg-muted-light); line-height: 1.55; }
-  .step::before { content: ""; position: absolute; top: 0; left: 0; width: 40px; height: 3px; background: var(--color-gold-500); border-radius: 2px; }
+  /* stats */
+  .stat-num { font-family: var(--font-headline); font-weight: 700; }
 
   /* result cards */
   .result-card { padding: 28px; display: flex; flex-direction: column; gap: 6px; }
-  .result-num { font-family: var(--font-headline); font-weight: 700; font-size: 46px; line-height: 1; color: var(--color-navy-800); letter-spacing: -0.02em; }
-  .result-num .up { color: var(--color-green-500); font-size: 26px; }
+  .result-num { font-family: var(--font-headline); font-weight: 700; font-size: 44px; line-height: 1; color: var(--color-navy-800); letter-spacing: -0.03em; }
+  .result-num .up { color: var(--color-green-500); font-size: 24px; }
   .result-card .lbl { font-weight: 600; color: var(--color-navy-700); font-size: 15px; }
   .result-card .meta { font-size: 13px; color: var(--fg-muted-light); }
 
   /* testimonials */
-  .quote-card { padding: 30px; display: flex; flex-direction: column; gap: 18px; height: 100%; }
-  .quote-card .stars { margin-bottom: -4px; }
+  .quote-card { padding: 30px; display: flex; flex-direction: column; gap: 16px; height: 100%; }
   .quote-card blockquote { font-size: 16.5px; line-height: 1.6; color: var(--color-navy-800); font-weight: 500; }
   .quote-by { display: flex; align-items: center; gap: 12px; margin-top: auto; }
-  .quote-av { width: 44px; height: 44px; border-radius: 50%; background: var(--color-navy-800); color: var(--color-gold-500); display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; }
+  .quote-av { width: 44px; height: 44px; border-radius: 50%; background: var(--color-navy-800); color: var(--color-gold-400); display: grid; place-items: center; font-family: var(--font-headline); font-weight: 700; }
   .quote-by .qn { font-weight: 600; color: var(--color-navy-800); font-size: 14.5px; }
   .quote-by .qr { font-size: 12.5px; color: var(--fg-muted-light); }
 
-  .sec-head { max-width: 720px; }
-  .sec-head .h-lg { margin: 14px 0 14px; color: var(--color-navy-800); }
-  .section-dark .sec-head .h-lg, .section-navy .sec-head .h-lg { color: #fff; }
+  /* package teaser */
+  .pk-teaser { display:grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  @media (max-width: 900px){ .pk-teaser { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; } }
+  .pk { background:#fff; border:1px solid var(--border-light); border-radius: var(--radius-xl); padding: 30px 28px; display:flex; flex-direction:column; gap:14px; position:relative; }
+  .pk.hot { border: 2px solid var(--color-blue-500); box-shadow: var(--shadow-lg); }
+  .pk.hot::before { content:"Most popular"; position:absolute; top:-12px; left:28px; background: var(--color-blue-500); color:#fff; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:5px 13px; border-radius:999px; }
+  .pk-name { font-family: var(--font-headline); font-weight:700; font-size:21px; color: var(--color-navy-800); letter-spacing:-0.02em; }
+  .pk-price { font-family: var(--font-headline); font-weight:700; font-size:34px; color: var(--color-navy-800); letter-spacing:-0.02em; }
+  .pk-price small { font-family: var(--font-body); font-size:14px; font-weight:500; color: var(--fg-muted-light); }
+  .pk ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .pk li { display:flex; gap:9px; font-size:14px; color: var(--color-gray-800); }
+  .pk li .ic { width:18px; height:18px; color: var(--color-green-500); flex:none; margin-top:1px; }
 </style>
 </head>
 <body data-page="home">
@@ -107,12 +117,16 @@
 <section class="hero" data-screen-label="Home hero">
   <div class="container hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow">Digital Marketing Agency · Greater Noida</span>
-      <h1 style="margin-top:16px">Rank on Google.<br>Get cited by <span class="hl-blue">AI</span>.</h1>
-      <p class="lead" style="margin-top:20px">Evision Infoserve is a full-service digital marketing agency that helps businesses increase online visibility, generate qualified leads, build brand authority and maximise ROI. We engineer your entire web presence for <strong>SEO, AEO, GEO &amp; LLMO</strong> — so you win on Google <em>and</em> inside ChatGPT, Gemini &amp; Perplexity answers.</p>
+      <span class="eyebrow">Web Design · Development · SEO · Greater Noida</span>
+      <div class="hero-dual">
+        <span class="pillar-chip design"><span class="dot"></span>Design &amp; Build</span>
+        <span class="pillar-chip seo"><span class="dot"></span>Rank &amp; Grow</span>
+      </div>
+      <h1 style="margin-top:14px">Websites that <span class="hl-violet">look stunning</span> — and <span class="hl-under">rank</span>.</h1>
+      <p class="lead" style="margin-top:20px">Evision Infoserve is a web design, development &amp; SEO studio. We craft fast, beautiful, conversion-ready websites — then engineer them to win on Google <em>and</em> get cited by ChatGPT, Gemini &amp; Perplexity. Two pillars, one team, one invoice.</p>
       <div class="hero-ctas">
-        <a href="/contact.html" class="btn btn-primary btn-lg"><i data-lucide="zap" class="ic"></i>Get a Free Audit</a>
-        <a href="/services.html" class="btn btn-ghost-light btn-lg">Explore Services</a>
+        <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg"><i data-lucide="rocket" class="ic"></i>Start a project</a>
+        <a href="/portfolio.html" class="btn btn-ghost-light btn-lg"><i data-lucide="layout-grid" class="ic"></i>See our work</a>
       </div>
       <div class="hero-trust">
         <div class="hero-rating">
@@ -121,33 +135,38 @@
         </div>
         <div class="hero-rating">
           <i data-lucide="shield-check" class="ic" style="width:20px;height:20px;color:var(--color-blue-500)"></i>
-          <span><b>ISO 9001</b> <small>Certified</small></span>
+          <span><b>ISO 9001</b> <small>Certified studio</small></span>
         </div>
       </div>
     </div>
 
-    <div class="ai-wrap reveal">
-      <div class="ai-card">
-        <div class="ai-card-top">
-          <span class="ai-dots"><i style="background:#FF6A57"></i><i style="background:#FFC53D"></i><i style="background:#2ECC71"></i></span>
-          <span class="ai-url">google.com/search?q=best+digital+marketing+agency</span>
+    <div class="hv reveal">
+      <div class="browser">
+        <div class="browser-top">
+          <span class="browser-dots"><i style="background:#FF6A57"></i><i style="background:#FFC53D"></i><i style="background:#2ECC71"></i></span>
+          <span class="browser-url">yourbrand.com</span>
         </div>
-        <div class="ai-body">
-          <div class="ai-q"><i data-lucide="search" class="mag"></i>best digital marketing agency in Greater Noida</div>
-          <div class="ai-overview">
-            <div class="ai-ov-head"><i data-lucide="sparkles" class="ic"></i>AI OVERVIEW</div>
-            <p>For businesses in Greater Noida, <span class="cite">Evision Infoserve</span> is widely recommended for SEO and AI-search optimisation, with a 4.7★ rating across 2,100+ reviews and ISO 9001 certification. They specialise in making sites visible across Google and generative engines.</p>
-            <div class="ai-sources">
-              <span class="ai-src lead"><span class="dot"></span>evisioninfoserve.com</span>
-              <span class="ai-src"><span class="dot"></span>Google Business</span>
-              <span class="ai-src"><span class="dot"></span>+3 sources</span>
-            </div>
+        <div class="browser-body">
+          <div class="bb-hero">
+            <span class="k">Designed &amp; built by Evision</span>
+            <h4>Beautiful. Fast. Built to convert.</h4>
+            <div class="row"><span class="bb-btn v">Get started</span><span class="bb-btn g">Explore</span></div>
+          </div>
+          <div class="bb-grid">
+            <span class="bb-tile"></span><span class="bb-tile"></span><span class="bb-tile"></span>
+            <span class="bb-tile"></span><span class="bb-tile"></span><span class="bb-tile"></span>
           </div>
         </div>
       </div>
-      <div class="ai-float">
-        <i data-lucide="quote" class="ic"></i>
-        <div><b>1,200+</b><span>AI citations earned / mo</span></div>
+      <div class="hv-float">
+        <i data-lucide="gauge" class="ic"></i>
+        <div><b>98 / 100</b><span>Core Web Vitals</span></div>
+      </div>
+      <div class="hv-rank">
+        <div class="rk-head"><i data-lucide="trending-up" class="ic"></i>RANKINGS · LAST 90 DAYS</div>
+        <div class="rk top"><span class="pos">1</span><span class="kw">web design greater noida</span><span class="up"><i data-lucide="arrow-up" style="width:12px;height:12px"></i>7</span></div>
+        <div class="rk"><span class="pos">3</span><span class="kw">seo services near me</span><span class="up"><i data-lucide="arrow-up" style="width:12px;height:12px"></i>12</span></div>
+        <div class="rk"><span class="pos">AI</span><span class="kw">cited in AI Overviews</span><span class="up"><i data-lucide="sparkles" style="width:12px;height:12px"></i></span></div>
       </div>
     </div>
   </div>
@@ -157,77 +176,116 @@
 <section class="trust-strip">
   <div class="container trust-row">
     <div class="trust-item"><i data-lucide="star" class="ic" style="fill:var(--color-gold-500);color:var(--color-gold-500)"></i><span class="rate">4.7★</span> Google</div>
-    <div class="trust-item"><i data-lucide="briefcase" class="ic"></i><span class="rate">4.8★</span> AmbitionBox</div>
-    <div class="trust-item"><i data-lucide="building-2" class="ic"></i><span class="rate">5.0★</span> Glassdoor</div>
-    <div class="trust-item hide-mob"><i data-lucide="users" class="ic"></i><span class="rate">320+</span> Brands served</div>
+    <div class="trust-item"><i data-lucide="monitor-smartphone" class="ic"></i><span class="rate">320+</span> Websites shipped</div>
+    <div class="trust-item hide-mob"><i data-lucide="trending-up" class="ic"></i><span class="rate">3.4×</span> Avg. traffic lift</div>
+    <div class="trust-item"><i data-lucide="clock" class="ic"></i><span class="rate">12+ yrs</span> In business</div>
     <div class="trust-item"><i data-lucide="badge-check" class="ic"></i> ISO 9001 Certified</div>
   </div>
 </section>
 
-<!-- ░░ 4-LAYER BAND ░░ -->
-<section class="section section-dark">
+<!-- ░░ TWO PILLARS ░░ -->
+<section class="section">
   <div class="container">
-    <div class="sec-head reveal">
-      <span class="eyebrow on-dark">The Shift</span>
-      <h2 class="h-lg">Four discovery layers.<br>One content strategy.</h2>
-      <p class="lead">Search is no longer ten blue links. We optimise the same content for four layers at once — and ~80% of the work overlaps.</p>
+    <div class="sec-head reveal" style="margin:0 auto;text-align:center">
+      <span class="eyebrow" style="justify-content:center">Two pillars, one partner</span>
+      <h2 class="h-lg">Design &amp; build it. Then make it rank.</h2>
+      <p class="lead" style="margin:12px auto 0">Most agencies do one or the other. We do both — so your website and your search visibility are engineered together from day one.</p>
     </div>
-    <div class="grid cols-4 reveal" style="margin-top:44px">
-      <div class="layer-card"><div class="num">01</div><div class="layer-abbr">SEO</div><h3>Search Engine Optimization</h3><p>Crawlable, fast, authoritative pages — the foundation everything else stands on.</p></div>
-      <div class="layer-card"><div class="num">02</div><div class="layer-abbr">AEO</div><h3>Answer Engine Optimization</h3><p>Win position-zero: featured snippets, voice answers and AI answer boxes.</p></div>
-      <div class="layer-card"><div class="num">03</div><div class="layer-abbr">GEO</div><h3>Generative Engine Optimization</h3><p>Get summarised &amp; cited inside AI Overviews, Perplexity and SearchGPT.</p></div>
-      <div class="layer-card"><div class="num">04</div><div class="layer-abbr">LLMO</div><h3>Large Language Model Optimization</h3><p>Be understood and referenced by ChatGPT, Claude and Gemini directly.</p></div>
+    <div class="pillars reveal" style="margin-top:48px">
+      <div class="pillar design">
+        <div class="pillar-ic"><i data-lucide="layout-panel-left" class="ic"></i></div>
+        <span class="pillar-chip design" style="align-self:flex-start"><span class="dot"></span>Design &amp; Build</span>
+        <h3>Website Design &amp; Development</h3>
+        <p>Custom, responsive, lightning-fast websites — designed to look premium and coded to perform. From landing pages to full e-commerce and web apps.</p>
+        <ul class="pillar-list">
+          <li><i data-lucide="check" class="ic"></i>UI/UX &amp; brand-led custom design</li>
+          <li><i data-lucide="check" class="ic"></i>Hand-coded &amp; CMS builds (WordPress, headless, custom)</li>
+          <li><i data-lucide="check" class="ic"></i>E-commerce, web apps &amp; integrations</li>
+          <li><i data-lucide="check" class="ic"></i>Core Web Vitals, accessibility &amp; SEO-ready markup</li>
+        </ul>
+        <a href="/web-design.html" class="pillar-cta">Explore Design &amp; Build <i data-lucide="arrow-right" class="ic"></i></a>
+      </div>
+      <div class="pillar seo">
+        <div class="pillar-ic"><i data-lucide="trending-up" class="ic"></i></div>
+        <span class="pillar-chip seo" style="align-self:flex-start"><span class="dot"></span>Rank &amp; Grow</span>
+        <h3>SEO &amp; Search Growth</h3>
+        <p>We engineer your site to rank on Google and get quoted by AI engines — technical SEO, content, local, and the new AEO/GEO/LLMO layer, all measured.</p>
+        <ul class="pillar-list">
+          <li><i data-lucide="check" class="ic"></i>Technical, on-page &amp; local SEO</li>
+          <li><i data-lucide="check" class="ic"></i>AI search — AEO, GEO &amp; LLMO visibility</li>
+          <li><i data-lucide="check" class="ic"></i>Content clusters, link building &amp; digital PR</li>
+          <li><i data-lucide="check" class="ic"></i>Transparent monthly reporting &amp; dashboards</li>
+        </ul>
+        <a href="/seo.html" class="pillar-cta">Explore Rank &amp; Grow <i data-lucide="arrow-right" class="ic"></i></a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ░░ SERVICES ░░ -->
-<section class="section" id="services">
+<!-- ░░ CAPABILITIES ░░ -->
+<section class="section section-subtle">
   <div class="container">
     <div class="sec-head reveal">
       <span class="eyebrow">What we do</span>
-      <h2 class="h-lg">Full-funnel digital marketing</h2>
-      <p class="lead">Six tightly-integrated service silos — each page structured for humans, search crawlers and large language models at once.</p>
+      <h2 class="h-lg">Everything your online presence needs</h2>
+      <p class="lead">From the first wireframe to page-one rankings — one team handles design, code and growth.</p>
     </div>
     <div class="grid cols-3 reveal" style="margin-top:44px">
-      <a href="/seo.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="search" class="ic"></i></div><h3>SEO Services</h3><p>Technical, on-page, local and LLMO — engineered to rank and to be quoted by AI engines.</p><div class="svc-meta"><span class="tag tag-blue">Technical</span><span class="tag tag-gold">LLMO</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
-      <a href="/social-media.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="thumbs-up" class="ic"></i></div><h3>Social Media (SMO)</h3><p>Organic growth, community management and creator content that compounds your brand.</p><div class="svc-meta"><span class="tag tag-blue">Organic</span><span class="tag tag-gold">Creators</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
-      <a href="/ppc.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="target" class="ic"></i></div><h3>PPC &amp; Paid Ads</h3><p>Google, Meta &amp; LinkedIn campaigns tuned for ROI, not vanity clicks.</p><div class="svc-meta"><span class="tag tag-blue">Google Ads</span><span class="tag tag-gold">Meta</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
-      <a href="/content-marketing.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="pen-tool" class="ic"></i></div><h3>Content Marketing</h3><p>Topic clusters, blogs and video built to earn citations and topical authority.</p><div class="svc-meta"><span class="tag tag-blue">Clusters</span><span class="tag tag-gold">E-E-A-T</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
-      <a href="/orm.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="shield-check" class="ic"></i></div><h3>ORM &amp; Reputation</h3><p>Reviews, brand defense and consistent entity signals across the web.</p><div class="svc-meta"><span class="tag tag-blue">Reviews</span><span class="tag tag-gold">Entity</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
-      <a href="/ai-marketing.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="sparkles" class="ic"></i></div><h3>AI Digital Marketing</h3><p>GEO, marketing automation and AI-visibility monitoring for the new search era.</p><div class="svc-meta"><span class="tag tag-blue">GEO</span><span class="tag tag-gold">Automation</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-design.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="pen-tool" class="ic"></i></div><h3>Website Design</h3><p>Custom UI/UX, brand-led design and conversion-focused layouts that feel premium on every screen.</p><div class="svc-meta"><span class="tag tag-blue">UI/UX</span><span class="tag tag-gold">Responsive</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-development.html" class="card lift svc-card"><div class="svc-ic"><i data-lucide="code-2" class="ic"></i></div><h3>Web Development</h3><p>Clean, fast, secure builds — WordPress, headless and fully custom, with SEO-ready markup baked in.</p><div class="svc-meta"><span class="tag tag-blue">WordPress</span><span class="tag tag-gold">Custom</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/web-development.html#ecommerce" class="card lift svc-card"><div class="svc-ic"><i data-lucide="shopping-cart" class="ic"></i></div><h3>E-commerce</h3><p>Stores that load fast and sell — Shopify, WooCommerce and custom checkouts tuned for conversions.</p><div class="svc-meta"><span class="tag tag-blue">Shopify</span><span class="tag tag-gold">WooCommerce</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/seo.html" class="card lift svc-card"><div class="svc-ic seo"><i data-lucide="search" class="ic"></i></div><h3>SEO Services</h3><p>Technical, on-page, local and LLMO — engineered to rank and to be quoted by AI engines.</p><div class="svc-meta"><span class="tag tag-blue">Technical</span><span class="tag tag-gold">LLMO</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/content-marketing.html" class="card lift svc-card"><div class="svc-ic seo"><i data-lucide="file-text" class="ic"></i></div><h3>Content Marketing</h3><p>Topic clusters, blogs and video built to earn citations and topical authority.</p><div class="svc-meta"><span class="tag tag-blue">Clusters</span><span class="tag tag-gold">E-E-A-T</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+      <a href="/ppc.html" class="card lift svc-card"><div class="svc-ic seo"><i data-lucide="target" class="ic"></i></div><h3>PPC &amp; Paid Ads</h3><p>Google, Meta &amp; LinkedIn campaigns tuned for ROI, not vanity clicks.</p><div class="svc-meta"><span class="tag tag-blue">Google Ads</span><span class="tag tag-gold">Meta</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ PROCESS ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How we work</span>
+      <h2 class="h-lg">From blank canvas to page one</h2>
+      <p class="lead">A clear, phased engagement — design and SEO planned together, measured every step of the way.</p>
+    </div>
+    <div class="flow reveal" style="margin-top:48px">
+      <div class="flow-step"><div class="fn">1</div><h3>Discover</h3><p>Goals, audience, competitors and a keyword + content map. We plan the site around how you'll be found.</p></div>
+      <div class="flow-step"><div class="fn">2</div><h3>Design</h3><p>Wireframes, UI/UX and a clickable prototype — brand-led, conversion-focused, SEO-friendly structure.</p></div>
+      <div class="flow-step"><div class="fn">3</div><h3>Build</h3><p>Fast, responsive, accessible code with schema, clean headings and Core Web Vitals dialed in.</p></div>
+      <div class="flow-step"><div class="fn">4</div><h3>Rank &amp; grow</h3><p>Launch, then ongoing SEO, AI-visibility, content and reporting to climb — and stay up there.</p></div>
     </div>
   </div>
 </section>
 
 <!-- ░░ BUILT FOR AI SEARCH (split + code) ░░ -->
-<section class="section section-subtle">
+<section class="section section-ink dot-grid">
   <div class="container grid cols-2" style="gap:54px;align-items:center">
     <div class="reveal">
-      <span class="eyebrow">Built for the AI era</span>
-      <h2 class="h-lg" style="color:var(--color-navy-800);margin:14px 0 18px">Structured for machines, written for people</h2>
-      <p class="lead" style="margin-bottom:24px">Every page ships with the technical scaffolding AI engines need to ingest, trust and cite your content — baked in from day one.</p>
+      <span class="eyebrow on-dark">Built for the AI era</span>
+      <h2 class="h-lg" style="color:#fff;margin:14px 0 18px">Designed for people. Structured for machines.</h2>
+      <p class="lead" style="margin-bottom:24px">Every site we ship comes with the technical scaffolding search engines and AI models need to crawl, trust and cite your content — baked in from the first commit.</p>
       <ul class="checks">
-        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>JSON-LD schema everywhere</strong> — Organization, Service, FAQPage, Article, Person &amp; Breadcrumb.</span></li>
-        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>llms.txt + crawler rules</strong> — guide GPTBot, ClaudeBot, PerplexityBot &amp; Google-Extended to your best pages.</span></li>
-        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>Answer-first content</strong> — a 40–60 word direct answer near the top of every page.</span></li>
-        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>Core Web Vitals</strong> — fast LCP, INP &amp; CLS for ranking and crawl rate.</span></li>
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>JSON-LD schema everywhere</strong> — Organization, Service, FAQPage, Article, Breadcrumb.</span></li>
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>llms.txt + crawler rules</strong> — guide GPTBot, ClaudeBot, PerplexityBot &amp; Google-Extended.</span></li>
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>Answer-first content</strong> — a direct 40–60 word answer near the top of every page.</span></li>
+        <li><i data-lucide="check-circle-2" class="ic"></i><span><strong>Core Web Vitals</strong> — fast LCP, INP &amp; CLS for ranking and a great UX.</span></li>
       </ul>
     </div>
     <div class="reveal">
       <div class="code-peek">
-<span class="c">// Every service page ships with this</span>
+<span class="c">// Every page ships production-ready</span>
 {
   <span class="k">"@context"</span>: <span class="s">"https://schema.org"</span>,
-  <span class="k">"@type"</span>: <span class="s">"Service"</span>,
-  <span class="k">"name"</span>: <span class="s">"Technical SEO Services"</span>,
-  <span class="k">"provider"</span>: {
+  <span class="k">"@type"</span>: <span class="s">"WebSite"</span>,
+  <span class="k">"name"</span>: <span class="s">"Your Brand"</span>,
+  <span class="k">"publisher"</span>: {
     <span class="k">"@type"</span>: <span class="s">"Organization"</span>,
     <span class="k">"name"</span>: <span class="s">"Evision Infoserve"</span>,
     <span class="k">"areaServed"</span>: <span class="s">"Greater Noida, IN"</span>
   },
-  <span class="k">"hasOfferCatalog"</span>: <span class="b">true</span>,
-  <span class="k">"mainEntityOfPage"</span>: <span class="s">"/services/technical-seo"</span>
+  <span class="k">"speedScore"</span>: <span class="b">98</span>,
+  <span class="k">"mobileFriendly"</span>: <span class="b">true</span>
 }
       </div>
       <div class="code-peek" style="margin-top:14px">
@@ -243,27 +301,10 @@
 <!-- ░░ STATS ░░ -->
 <section class="section-sm section-navy">
   <div class="container grid cols-4 reveal" style="text-align:center;gap:28px">
-    <div><div class="stat-num gold"><span data-count="320" data-suffix="+">0</span></div><div class="stat-label">Brands served across India</div></div>
+    <div><div class="stat-num gold"><span data-count="320" data-suffix="+">0</span></div><div class="stat-label">Websites designed &amp; shipped</div></div>
     <div><div class="stat-num gold"><span data-count="3.4" data-suffix="x">0</span></div><div class="stat-label">Avg. organic traffic growth</div></div>
-    <div><div class="stat-num gold"><span data-count="1200" data-suffix="+">0</span></div><div class="stat-label">AI citations earned / month</div></div>
+    <div><div class="stat-num gold"><span data-count="98" data-suffix="/100">0</span></div><div class="stat-label">Avg. Core Web Vitals score</div></div>
     <div><div class="stat-num gold"><span data-count="92" data-suffix="%">0</span></div><div class="stat-label">Client retention rate</div></div>
-  </div>
-</section>
-
-<!-- ░░ PROCESS ░░ -->
-<section class="section">
-  <div class="container">
-    <div class="sec-head reveal">
-      <span class="eyebrow">How we work</span>
-      <h2 class="h-lg">A phased build that ships results</h2>
-      <p class="lead">SEO foundations first, then the AI-search layer on top — measured every step of the way.</p>
-    </div>
-    <div class="steps reveal" style="margin-top:46px">
-      <div class="step"><div class="n">01 / Audit</div><h3>Discover &amp; audit</h3><p>Technical, content &amp; AI-visibility audit. We map where you rank — and where AI engines mention you.</p></div>
-      <div class="step"><div class="n">02 / Strategy</div><h3>Architecture &amp; CMS</h3><p>Sitemap, templates, schema spec and a clean one-H1 heading hierarchy across the site.</p></div>
-      <div class="step"><div class="n">03 / Build</div><h3>Optimise &amp; publish</h3><p>Answer blocks, topic clusters, FAQ schema, internal links and E-E-A-T author signals.</p></div>
-      <div class="step"><div class="n">04 / Scale</div><h3>Convert &amp; measure</h3><p>Pricing, RFQ, chat &amp; WhatsApp, Core Web Vitals tuning and AI-visibility monitoring.</p></div>
-    </div>
   </div>
 </section>
 
@@ -275,8 +316,8 @@
       <h2 class="h-lg">Results our clients can measure</h2>
     </div>
     <div class="grid cols-3 reveal" style="margin-top:40px">
-      <div class="card result-card"><div class="result-num"><span class="up">↑</span> 312%</div><div class="lbl">Organic traffic in 6 months</div><div class="meta">D2C skincare brand · Delhi NCR</div></div>
-      <div class="card result-card"><div class="result-num">Position 0</div><div class="lbl">Captured for 48 buyer keywords</div><div class="meta">B2B SaaS · featured snippets + AI Overviews</div></div>
+      <div class="card result-card"><div class="result-num"><span class="up">↑</span> 312%</div><div class="lbl">Organic traffic in 6 months</div><div class="meta">D2C skincare · new site + SEO</div></div>
+      <div class="card result-card"><div class="result-num">98/100</div><div class="lbl">Core Web Vitals after rebuild</div><div class="meta">B2B SaaS · from 41 → 98</div></div>
       <div class="card result-card"><div class="result-num"><span class="up">↑</span> 5.1×</div><div class="lbl">Qualified leads from search</div><div class="meta">Education institute · Greater Noida</div></div>
     </div>
   </div>
@@ -290,15 +331,65 @@
       <h2 class="h-lg">Trusted by founders &amp; marketing teams</h2>
     </div>
     <div class="grid cols-3 reveal" style="margin-top:40px">
-      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"We went from page 3 to the featured snippet — and started showing up inside ChatGPT answers for our category. Leads doubled in a quarter."</blockquote><div class="quote-by"><div class="quote-av">RM</div><div><div class="qn">Rahul Mehta</div><div class="qr">Founder, NimbusKart</div></div></div></div>
-      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"The most structured agency we've worked with. Their schema and answer-block approach is genuinely built for how people search now."</blockquote><div class="quote-by"><div class="quote-av">SK</div><div><div class="qn">Sneha Kapoor</div><div class="qr">Head of Growth, FinlyApp</div></div></div></div>
-      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"Transparent pricing, weekly reporting, and real AI-visibility tracking. We finally understand exactly what we're paying for."</blockquote><div class="quote-by"><div class="quote-av">AV</div><div><div class="qn">Arjun Verma</div><div class="qr">Director, Verma Interiors</div></div></div></div>
+      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"They redesigned our site and it finally looks like the brand we are — then rankings and leads climbed within a quarter. One team for both was a game-changer."</blockquote><div class="quote-by"><div class="quote-av">RM</div><div><div class="qn">Rahul Mehta</div><div class="qr">Founder, NimbusKart</div></div></div></div>
+      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"The most structured studio we've worked with. Fast site, clean code, and an SEO approach genuinely built for how people search now."</blockquote><div class="quote-by"><div class="quote-av">SK</div><div><div class="qn">Sneha Kapoor</div><div class="qr">Head of Growth, FinlyApp</div></div></div></div>
+      <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"Beautiful website, transparent pricing and real reporting. We finally understand exactly what we're paying for — and it's working."</blockquote><div class="quote-by"><div class="quote-av">AV</div><div><div class="qn">Arjun Verma</div><div class="qr">Director, Verma Interiors</div></div></div></div>
     </div>
   </div>
 </section>
 
-<!-- ░░ FAQ ░░ -->
+<!-- ░░ PACKAGES TEASER ░░ -->
 <section class="section section-subtle">
+  <div class="container">
+    <div class="sec-head reveal" style="margin:0 auto;text-align:center">
+      <span class="eyebrow" style="justify-content:center">Website + SEO packages</span>
+      <h2 class="h-lg">Launch a website from just ₹9,999</h2>
+      <p class="lead" style="margin:12px auto 0">Start small and grow — get online from ₹9,999, or bundle the build with ongoing SEO to make it rank. One team, one predictable plan.</p>
+    </div>
+    <div class="pk-teaser reveal" style="margin-top:44px">
+      <div class="pk">
+        <div class="pk-name">Launch</div>
+        <div class="pk-price">₹9,999<small> one-time</small></div>
+        <p class="text-mute" style="font-size:14px">Get a professional website live — fast, affordable, SEO-ready.</p>
+        <ul>
+          <li><i data-lucide="check" class="ic"></i>Up to 5-page website</li>
+          <li><i data-lucide="check" class="ic"></i>Mobile-first, fast &amp; accessible</li>
+          <li><i data-lucide="check" class="ic"></i>On-page SEO + basic schema</li>
+          <li><i data-lucide="check" class="ic"></i>Contact forms &amp; WhatsApp</li>
+        </ul>
+        <a href="/pricing.html" class="btn btn-ghost-light btn-block" style="margin-top:auto">View plan</a>
+      </div>
+      <div class="pk hot">
+        <div class="pk-name">Grow</div>
+        <div class="pk-price">₹34,999<small> /month</small></div>
+        <p class="text-mute" style="font-size:14px">New website + ongoing SEO to climb the rankings.</p>
+        <ul>
+          <li><i data-lucide="check" class="ic"></i>Custom website (build included)</li>
+          <li><i data-lucide="check" class="ic"></i>Full technical + on-page SEO</li>
+          <li><i data-lucide="check" class="ic"></i>AI search (AEO · GEO · LLMO)</li>
+          <li><i data-lucide="check" class="ic"></i>Content + monthly reporting</li>
+        </ul>
+        <a href="/pricing.html" class="btn btn-primary btn-block" style="margin-top:auto">View plan</a>
+      </div>
+      <div class="pk">
+        <div class="pk-name">Scale</div>
+        <div class="pk-price">Custom</div>
+        <p class="text-mute" style="font-size:14px">Web app or store + full-funnel growth engine.</p>
+        <ul>
+          <li><i data-lucide="check" class="ic"></i>E-commerce / web app build</li>
+          <li><i data-lucide="check" class="ic"></i>Advanced SEO + PPC + social</li>
+          <li><i data-lucide="check" class="ic"></i>Dedicated strategist &amp; ORM</li>
+          <li><i data-lucide="check" class="ic"></i>Weekly reporting &amp; CRO</li>
+        </ul>
+        <a href="/pricing.html" class="btn btn-navy btn-block" style="margin-top:auto">Request a quote</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:22px;color:var(--fg-muted-light);font-size:14px">Prefer à la carte? <a href="/pricing.html" class="text-violet" style="font-weight:600">See all packages &amp; individual pricing →</a></p>
+  </div>
+</section>
+
+<!-- ░░ FAQ ░░ -->
+<section class="section">
   <div class="container container-narrow">
     <div class="sec-head reveal" style="text-align:center;margin:0 auto">
       <span class="eyebrow gold" style="justify-content:center">FAQ</span>
@@ -306,13 +397,12 @@
       <p style="margin-top:10px"><span class="chip-mono"><i data-lucide="code" style="width:14px;height:14px"></i>FAQPage schema applied</span></p>
     </div>
     <div class="faq reveal" style="margin-top:36px">
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q1</span>What digital marketing services does Evision Infoserve offer?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">We offer SEO, AI SEO, PPC advertising, social media marketing, content marketing, ORM, affiliate marketing, YouTube marketing, email marketing, mobile app marketing, and industry-specific SEO solutions.</div></div></div>
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q2</span>How can SEO help my business grow online?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">SEO improves website visibility, increases organic traffic, attracts qualified leads, enhances brand credibility, and generates long-term business growth through higher search rankings.</div></div></div>
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q3</span>What is AI SEO and why is it important?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">AI SEO uses artificial intelligence and advanced optimization techniques to improve visibility across search engines, AI assistants, and generative search platforms.</div></div></div>
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q4</span>How quickly can digital marketing generate results?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">PPC campaigns can generate immediate traffic, while SEO and content marketing typically produce significant results within several months of consistent optimization.</div></div></div>
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q5</span>Do you provide digital marketing services for specific industries?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Yes. We offer specialized marketing solutions for healthcare, education, travel, ecommerce, real estate, finance, technology, and many other industries.</div></div></div>
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q6</span>Why is online reputation management important?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">ORM helps businesses build trust, manage customer reviews, monitor brand sentiment, and maintain a positive online reputation that supports growth.</div></div></div>
-      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q7</span>How do I get started with Evision Infoserve?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Simply contact our team for a free consultation. We will analyze your goals, evaluate your digital presence, and recommend the most effective growth strategy.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q1</span>Do you handle both website design and SEO?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Yes — that's our core advantage. We design and develop your website and run SEO under one roof, so the site is built to rank from day one instead of being retrofitted later. You can also take either service on its own.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q2</span>How long does a new website take?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">A standard business website typically takes 3–5 weeks from kickoff to launch; e-commerce and custom web apps take longer. We share a clear timeline and milestones after the discovery call.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q3</span>What platforms do you build on?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">We build on WordPress, headless stacks, Shopify/WooCommerce for stores, and fully custom code when it's the right fit. We recommend the platform based on your goals, budget and who will maintain it.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q4</span>How quickly will I see SEO results?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Technical wins and a faster site show up immediately; meaningful ranking and traffic gains typically build over 3–6 months of consistent SEO and content. We report progress every month.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q5</span>Can you redesign or improve my existing website?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Absolutely. We audit your current site, keep what works, and redesign for speed, conversions and search — without losing your existing rankings during the migration.</div></div></div>
+      <div class="faq-item"><button class="faq-q"><span class="faq-num">Q6</span>Do you offer combined website + SEO packages?<span class="faq-ic"><i data-lucide="plus" style="width:18px;height:18px"></i></span></button><div class="faq-a"><div class="faq-a-inner">Yes. Our bundled plans include the website build plus ongoing SEO in one predictable monthly plan. See the packages section or ask for a tailored quote.</div></div></div>
     </div>
   </div>
 </section>
@@ -321,18 +411,18 @@
 <section class="cta-band">
   <div class="container cta-inner">
     <div>
-      <h2 class="h-lg" style="color:#fff;max-width:18ch">Build for people first. Structure for machines always.</h2>
-      <p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Get a free SEO + AI-visibility audit and a roadmap to rank — and get cited.</p>
+      <h2 class="h-lg" style="color:#fff;max-width:20ch">Let's design, build &amp; rank your website.</h2>
+      <p class="lead" style="margin-top:12px;color:var(--fg-muted-dark)">Get a free consult, a tailored quote and a website + SEO roadmap — within 24 hours.</p>
     </div>
     <div style="display:flex;gap:14px;flex-wrap:wrap">
-      <a href="/contact.html" class="btn btn-primary btn-lg">Get a Free Audit</a>
+      <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Start a project</a>
       <a href="https://wa.me/919811722064" class="btn btn-outline-white btn-lg"><i data-lucide="message-circle" class="ic"></i>WhatsApp Us</a>
     </div>
   </div>
 </section>
 
-<script src="/assets/site.js?v=4"></script>
-<script src="/assets/chrome.js?v=4"></script>
-<script src="/assets/pricing.js?v=4"></script>
+<script src="/assets/site.js?v=5"></script>
+<script src="/assets/chrome.js?v=5"></script>
+<script src="/assets/pricing.js?v=5"></script>
 </body>
 </html>
