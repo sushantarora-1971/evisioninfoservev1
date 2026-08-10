@@ -470,6 +470,19 @@ PORTFOLIO_SEED = [
 # title) so the portfolio leads with build work, not just SEO case studies.
 # image='' → the portfolio page renders a styled browser-mockup placeholder.
 PORTFOLIO_EXTRA = [
+    # ── Live client websites (real screenshots in /assets/portfolio) ──
+    ("Astro Annie — Astrology & Tarot", "Astro Annie · Astrologer", "Web Design · Astrology",
+     "/assets/portfolio/astro-annie.jpg",
+     "A design-led astrology & tarot website with an animated three-card reading experience and online booking.",
+     "Animated UI", "https://astroanjilina.com/"),
+    ("Aurum & Co. — Real Estate", "Aurum & Co. · Noida", "Web Development · Real Estate",
+     "/assets/portfolio/aurum-co.jpg",
+     "A premium real-estate consulting site with verified property listings, live activity stats and consultation booking.",
+     "Listings portal", "https://ivory-llama-587747.hostingersite.com/"),
+    ("Sri Siddhivinayak Enterprises", "Sri Siddhivinayak · Dhanbad", "Web Development · IT Services",
+     "/assets/portfolio/sri-siddhivinayak.jpg",
+     "A conversion-focused website for an IT, CCTV & AMC company — services, products and a live service dashboard.",
+     "Live dashboard", "https://papayawhip-echidna-100598.hostingersite.com/"),
     ("Modern D2C brand website", "D2C skincare", "Web Design", "",
      "A premium, conversion-focused storefront designed and built from scratch — fast, mobile-first and SEO-ready.", "98/100 speed", ""),
     ("Real-estate listing platform", "Property developer", "Web Development", "",
@@ -1091,8 +1104,8 @@ def render_post_page(post):
   </div>
 </section>
 
-<script src="/assets/site.js?v=5"></script>
-<script src="/assets/chrome.js?v=5"></script>
+<script src="/assets/site.js?v=6"></script>
+<script src="/assets/chrome.js?v=6"></script>
 </body>
 </html>"""
 
@@ -1100,8 +1113,94 @@ def render_post_page(post):
 # ───────────────────────── sitemap & robots ─────────────────────────
 
 # Pages that exist but should stay out of the sitemap:
-#   /pricing – deliberately hidden site-wide;  /service – generic template page.
-SITEMAP_EXCLUDE = {"/pricing", "/service"}
+#   /service – generic template page (noindexed). /pricing is now a real,
+#   indexable selling page and is included.
+SITEMAP_EXCLUDE = {"/service"}
+
+# ── SEO / AEO: brand facts used across meta tags, JSON-LD and llms.txt ──
+BRAND_NAME = "Evision Infoserve"
+BRAND_PHONE = "+91 93112 21517"
+BRAND_TEL = "+919311221517"
+BRAND_EMAIL = "info@evisioninfoserve.com"
+BRAND_STREET = "Gaur City Mall, Greater Noida West"
+BRAND_LOCALITY = "Greater Noida"
+BRAND_REGION = "Uttar Pradesh"
+BRAND_POSTAL = "201009"
+BRAND_GEO = (28.6045, 77.4270)   # Greater Noida West (approx)
+BRAND_SAMEAS = [
+    "https://www.linkedin.com/company/evisioninfoserve/",
+    "https://www.instagram.com/evisioninfoserve/",
+    "https://www.youtube.com/@evisioninfoserve",
+    "https://www.facebook.com/EvisionInfoservepvtltd/",
+]
+OG_IMAGE = "/assets/og-default.png"
+
+# Human-readable labels for clean-URL segments (breadcrumbs + AEO).
+_SEG_LABEL = {
+    "services": "Services", "web-design": "Website Design", "web-development": "Web Development",
+    "seo": "SEO Services", "content-marketing": "Content Marketing", "social-media": "Social Media",
+    "ppc": "PPC & Paid Ads", "orm": "ORM & Reputation", "ai-digital-marketing": "AI Digital Marketing",
+    "affiliate-marketing": "Affiliate Marketing", "youtube-marketing": "YouTube Marketing",
+    "email-marketing": "Email Marketing", "mobile-app-marketing": "Mobile App Marketing",
+    "ai-seo": "AI SEO / LLMO", "llm-optimization": "LLM Optimization", "agentic-ai-seo": "Agentic AI SEO",
+    "enterprise-seo": "Enterprise SEO", "ecommerce-seo": "Ecommerce SEO", "technical-seo": "Technical SEO",
+    "local-seo": "Local SEO", "multilingual-seo": "Multilingual SEO", "link-building": "Link Building",
+    "white-label-seo": "White-Label SEO", "seo-audit": "SEO Audit", "industry-seo": "Industry SEO",
+    "content-writing": "Content Writing", "guest-posting": "Guest Posting", "digital-pr": "Digital PR",
+    "pricing": "Packages & Pricing", "about": "About Us", "blog": "Blog", "contact": "Contact",
+    "portfolio": "Portfolio", "clients": "Our Clients", "career": "Careers", "testimonials": "Testimonials",
+    "privacy-policy": "Privacy Policy", "refund-policy": "Refund Policy", "terms": "Terms",
+}
+
+# Homepage FAQ (mirrors the on-page FAQ) → FAQPage schema for AEO / rich results.
+HOME_FAQ = [
+    ("Do you handle both website design and SEO?",
+     "Yes — that's our core advantage. We design and develop your website and run SEO under one roof, so the site is built to rank from day one instead of being retrofitted later. You can also take either service on its own."),
+    ("How long does a new website take?",
+     "A standard business website typically takes 3–5 weeks from kickoff to launch; e-commerce and custom web apps take longer. We share a clear timeline and milestones after the discovery call."),
+    ("What platforms do you build on?",
+     "We build on WordPress, headless stacks, Shopify/WooCommerce for stores, and fully custom code when it's the right fit. We recommend the platform based on your goals, budget and who will maintain it."),
+    ("How quickly will I see SEO results?",
+     "Technical wins and a faster site show up immediately; meaningful ranking and traffic gains typically build over 3–6 months of consistent SEO and content. We report progress every month."),
+    ("Can you redesign or improve my existing website?",
+     "Absolutely. We audit your current site, keep what works, and redesign for speed, conversions and search — without losing your existing rankings during the migration."),
+    ("Do you offer combined website + SEO packages?",
+     "Yes. Our bundled plans include the website build plus ongoing SEO in one predictable monthly plan. See the packages section or ask for a tailored quote."),
+]
+
+
+def build_llms():
+    """llms.txt — a concise, AI-crawler-friendly map of the site's best content.
+    Helps GPTBot, ClaudeBot, PerplexityBot & Google-Extended understand and cite us."""
+    L = [
+        f"# {BRAND_NAME}",
+        "",
+        f"> {BRAND_NAME} is a website design, development and SEO studio in {BRAND_LOCALITY}, "
+        "India. We design and build fast, beautiful websites, then engineer them to rank on "
+        "Google and get cited by AI search (AEO, GEO, LLMO). Websites start from ₹9,999.",
+        "",
+        f"- Location: {BRAND_STREET}, {BRAND_LOCALITY}, {BRAND_REGION} {BRAND_POSTAL}, India",
+        f"- Phone / WhatsApp: {BRAND_PHONE}",
+        f"- Email: {BRAND_EMAIL}",
+        "",
+        "## Core services",
+        f"- [Website Design]({SITE_URL}/services/web-design): custom, responsive, conversion-focused UI/UX and brand design.",
+        f"- [Web Development]({SITE_URL}/services/web-development): WordPress, Shopify, React/Next.js, e-commerce and web apps.",
+        f"- [SEO Services]({SITE_URL}/services/seo): technical, on-page, local and content SEO to rank on Google.",
+        f"- [AI SEO / LLMO]({SITE_URL}/services/seo/ai-seo): get surfaced and cited inside ChatGPT, Gemini and Perplexity.",
+        f"- [Content Marketing]({SITE_URL}/services/content-marketing): topic clusters and answer-first content.",
+        f"- [PPC & Paid Ads]({SITE_URL}/services/ppc): Google, Meta and LinkedIn campaigns tuned for ROI.",
+        "",
+        "## Packages",
+        f"- [Pricing & packages]({SITE_URL}/pricing): Launch (from ₹9,999 one-time), Grow (website + SEO, monthly), Scale (custom). Free instant estimate calculator.",
+        "",
+        "## Resources",
+        f"- [Blog & free guides]({SITE_URL}/blog): practical web design, development and SEO guides, plus final-year web development project help for students.",
+        f"- [Portfolio]({SITE_URL}/portfolio): websites, web apps and SEO case studies.",
+        f"- [Contact]({SITE_URL}/contact): get a free quote and audit within 24 hours.",
+        "",
+    ]
+    return "\n".join(L)
 
 
 def build_sitemap():
@@ -1148,13 +1247,132 @@ def build_sitemap():
 
 
 def build_robots():
-    """robots.txt: allow the public site, keep bots out of the admin panel/API,
-    and point crawlers at the sitemap."""
-    return ("User-agent: *\n"
-            "Allow: /\n"
-            "Disallow: /admin/\n"
-            "Disallow: /api/\n\n"
-            f"Sitemap: {SITE_URL}/sitemap.xml\n")
+    """robots.txt: allow the public site (incl. AI answer engines), keep bots out
+    of the admin panel/API, and point crawlers at the sitemap + llms.txt."""
+    ai_bots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-Web",
+               "PerplexityBot", "Google-Extended", "Applebot-Extended", "Amazonbot", "CCBot"]
+    lines = ["User-agent: *", "Allow: /", "Disallow: /admin/", "Disallow: /api/", ""]
+    for b in ai_bots:                       # explicitly welcome AI answer engines
+        lines += [f"User-agent: {b}", "Allow: /", ""]
+    lines += [f"Sitemap: {SITE_URL}/sitemap.xml", f"# AI content map: {SITE_URL}/llms.txt", ""]
+    return "\n".join(lines)
+
+
+# ───────────────────────── SEO head injection ─────────────────────────
+
+_TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.I | re.S)
+_DESC_RE = re.compile(r'<meta\s+name=["\']description["\']\s+content=["\'](.*?)["\']', re.I | re.S)
+
+
+def _breadcrumb_ld(clean, canonical):
+    """BreadcrumbList from a clean URL: Home > seg > seg > current."""
+    items = [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL + "/"}]
+    if clean == "/":
+        return None
+    parts = [p for p in clean.strip("/").split("/") if p]
+    acc = ""
+    for i, seg in enumerate(parts):
+        acc += "/" + seg
+        items.append({"@type": "ListItem", "position": i + 2,
+                      "name": _SEG_LABEL.get(seg, seg.replace("-", " ").title()),
+                      "item": SITE_URL + acc})
+    return {"@type": "BreadcrumbList", "itemListElement": items}
+
+
+def _seo_head(clean, title, desc):
+    """Build the canonical + Open Graph + Twitter + JSON-LD block for a page."""
+    e = html.escape
+    canonical = SITE_URL + ("/" if clean == "/" else clean)
+    og_img = SITE_URL + OG_IMAGE
+    noindex = clean in ("/service",)
+    robots = "noindex, follow" if noindex else "index, follow, max-image-preview:large, max-snippet:-1"
+    og_type = "website"
+
+    tags = [
+        f'<link rel="canonical" href="{e(canonical)}">',
+        f'<meta name="robots" content="{robots}">',
+        f'<meta property="og:type" content="{og_type}">',
+        f'<meta property="og:site_name" content="{e(BRAND_NAME)}">',
+        f'<meta property="og:title" content="{e(title)}">',
+        f'<meta property="og:description" content="{e(desc)}">',
+        f'<meta property="og:url" content="{e(canonical)}">',
+        f'<meta property="og:image" content="{e(og_img)}">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        '<meta property="og:locale" content="en_IN">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:title" content="{e(title)}">',
+        f'<meta name="twitter:description" content="{e(desc)}">',
+        f'<meta name="twitter:image" content="{e(og_img)}">',
+        '<meta name="author" content="' + e(BRAND_NAME) + '">',
+        '<meta name="geo.region" content="IN-UP">',
+        f'<meta name="geo.placename" content="{e(BRAND_LOCALITY)}">',
+    ]
+
+    # ── JSON-LD @graph ──
+    org = {
+        "@type": "Organization", "@id": SITE_URL + "/#organization",
+        "name": BRAND_NAME, "url": SITE_URL + "/",
+        "logo": {"@type": "ImageObject", "url": SITE_URL + "/assets/favicon.svg"},
+        "image": og_img, "email": BRAND_EMAIL, "telephone": BRAND_PHONE,
+        "sameAs": BRAND_SAMEAS,
+        "contactPoint": {"@type": "ContactPoint", "telephone": BRAND_TEL,
+                         "contactType": "customer service", "areaServed": "IN",
+                         "availableLanguage": ["en", "hi"]},
+    }
+    website = {"@type": "WebSite", "@id": SITE_URL + "/#website", "url": SITE_URL + "/",
+               "name": BRAND_NAME, "publisher": {"@id": SITE_URL + "/#organization"},
+               "inLanguage": "en-IN"}
+    webpage = {"@type": "WebPage", "@id": canonical + "#webpage", "url": canonical,
+               "name": title, "description": desc, "isPartOf": {"@id": SITE_URL + "/#website"},
+               "inLanguage": "en-IN"}
+    graph = [org, website, webpage]
+
+    crumb = _breadcrumb_ld(clean, canonical)
+    if crumb:
+        crumb["@id"] = canonical + "#breadcrumb"
+        webpage["breadcrumb"] = {"@id": crumb["@id"]}
+        graph.append(crumb)
+
+    # LocalBusiness on the home & contact pages (rich local signals).
+    if clean in ("/", "/contact"):
+        graph.append({
+            "@type": "ProfessionalService", "@id": SITE_URL + "/#localbusiness",
+            "name": BRAND_NAME, "url": SITE_URL + "/", "image": og_img,
+            "telephone": BRAND_PHONE, "email": BRAND_EMAIL, "priceRange": "₹₹",
+            "address": {"@type": "PostalAddress", "streetAddress": BRAND_STREET,
+                        "addressLocality": BRAND_LOCALITY, "addressRegion": BRAND_REGION,
+                        "postalCode": BRAND_POSTAL, "addressCountry": "IN"},
+            "geo": {"@type": "GeoCoordinates", "latitude": BRAND_GEO[0], "longitude": BRAND_GEO[1]},
+            "areaServed": [{"@type": "Country", "name": "India"}],
+            "openingHoursSpecification": [{"@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                "opens": "10:00", "closes": "19:00"}],
+            "sameAs": BRAND_SAMEAS,
+        })
+
+    # FAQPage on the homepage (AEO / rich results).
+    if clean == "/":
+        graph.append({"@type": "FAQPage", "@id": SITE_URL + "/#faq",
+            "mainEntity": [{"@type": "Question", "name": q,
+                            "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in HOME_FAQ]})
+
+    ld = {"@context": "https://schema.org", "@graph": graph}
+    tags.append('<script type="application/ld+json">'
+                + json.dumps(ld, ensure_ascii=False) + '</script>')
+    return "\n".join(tags) + "\n"
+
+
+def inject_seo(html_text, clean):
+    """Insert canonical/OG/Twitter/JSON-LD before </head>. Idempotent-ish: skips if
+    a canonical is already present (e.g. a page that hard-codes its own SEO)."""
+    if 'rel="canonical"' in html_text[:4000] or "</head>" not in html_text:
+        return html_text
+    mt = _TITLE_RE.search(html_text)
+    md = _DESC_RE.search(html_text)
+    title = html.unescape((mt.group(1).strip() if mt else BRAND_NAME))
+    desc = html.unescape((md.group(1).strip() if md else ""))
+    return html_text.replace("</head>", _seo_head(clean, title, desc) + "</head>", 1)
 
 
 # ───────────────────────── request handler ─────────────────────────
@@ -1246,21 +1464,37 @@ class Handler(SimpleHTTPRequestHandler):
             return self._send_text(build_sitemap(), "application/xml; charset=utf-8")
         if raw == "/robots.txt":
             return self._send_text(build_robots(), "text/plain; charset=utf-8")
+        if raw == "/llms.txt":
+            return self._send_text(build_llms(), "text/plain; charset=utf-8")
         # Old .html URL → 301 to the clean URL.
         fname = raw[1:] if raw.startswith("/") else raw
         if fname in FILE_TO_CLEAN:
             return self._redirect301(FILE_TO_CLEAN[fname])
-        # Clean URL → serve the underlying file.
+        # Clean URL → serve the underlying file with SEO head injected server-side
+        # (canonical, Open Graph, Twitter, JSON-LD) so crawlers/AI bots see it.
         clean = raw.rstrip("/") or "/"
         if clean in CLEAN_TO_FILE:
-            self.path = "/" + CLEAN_TO_FILE[clean]
-            return super().do_GET()
+            return self.serve_page_with_seo(CLEAN_TO_FILE[clean], clean)
         # Blog article: /blog/<slug> → server-render the post (SEO meta + OG tags).
         m = re.match(r"^/blog/([a-z0-9][a-z0-9-]*)$", clean)
         if m:
             return self.serve_post(m.group(1))
         # Everything else (assets, /admin/, etc.) served as-is.
         return super().do_GET()
+
+    def serve_page_with_seo(self, fname, clean):
+        """Read a static HTML page and stream it with SEO/AEO head tags injected."""
+        try:
+            with open(os.path.join(ROOT, fname), "r", encoding="utf-8") as fh:
+                html_text = fh.read()
+        except OSError:
+            return self.send_error(404, "Page not found")
+        body = inject_seo(html_text, clean).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def serve_post(self, slug):
         """Render a published blog post, or a draft when the admin passes a valid

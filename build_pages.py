@@ -147,7 +147,7 @@ def service_page(slug, c):
         <h4>{esc(c['side_title'])}</h4>
         <p>{c['side_text']}</p>
         <a href="/contact.html" data-audit-open class="btn btn-primary btn-block">Get a Free Audit</a>
-        <a href="https://wa.me/919811722064" class="btn btn-outline-white btn-block" style="margin-top:10px"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>
+        <a href="https://wa.me/919311221517" class="btn btn-outline-white btn-block" style="margin-top:10px"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>
       </div>
       <div class="side-rate">
         <span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span>
@@ -885,7 +885,7 @@ SIMPLE = {
       ("Data sharing","We do not sell your data. We share it only with trusted providers who help us operate (e.g. email and analytics), under appropriate safeguards."),
       ("Data security","We use reasonable technical and organisational measures to protect your data. No method of transmission is 100% secure, but we take protection seriously."),
       ("Your rights","You may request access to, correction of, or deletion of your personal data. Contact us and we'll respond promptly."),
-      ("Contact","Questions about this policy? Email info@evisioninfoserve.com or call +91 98117 22064.")])),
+      ("Contact","Questions about this policy? Email info@evisioninfoserve.com or call +91 93112 21517.")])),
 
  "refund-policy": dict(
    title="Refund Policy", name="Refund Policy", eyebrow="Legal", page="",
@@ -898,7 +898,7 @@ SIMPLE = {
       ("One-time projects","For one-time deliverables (such as an SEO audit), a refund may be available only before work has commenced. Once work begins, fees are non-refundable."),
       ("How to request","To request a refund or cancellation, email info@evisioninfoserve.com with your details. We'll review and respond within 7 working days."),
       ("Exceptions","Where we have clearly failed to deliver an agreed deliverable, we'll first work to make it right, and consider a fair partial refund if we cannot."),
-      ("Contact","For any billing question, email info@evisioninfoserve.com or call +91 98117 22064.")])),
+      ("Contact","For any billing question, email info@evisioninfoserve.com or call +91 93112 21517.")])),
 
  "terms": dict(
    title="Terms and Conditions", name="Terms and Conditions", eyebrow="Legal", page="",
@@ -913,7 +913,7 @@ SIMPLE = {
       ("Intellectual property","Site content is owned by Evision Infoserve. Deliverables we create transfer to you as set out in your agreement, typically on full payment."),
       ("Limitation of liability","We deliver services with reasonable skill and care but do not guarantee specific rankings or results. Our liability is limited to the fees paid for the relevant service."),
       ("Changes","We may update these terms from time to time. Continued use of the site means you accept the current version."),
-      ("Contact","Questions about these terms? Email info@evisioninfoserve.com or call +91 98117 22064.")])),
+      ("Contact","Questions about these terms? Email info@evisioninfoserve.com or call +91 93112 21517.")])),
 }
 
 

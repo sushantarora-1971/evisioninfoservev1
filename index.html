@@ -109,6 +109,106 @@
   .pk ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
   .pk li { display:flex; gap:9px; font-size:14px; color: var(--color-gray-800); }
   .pk li .ic { width:18px; height:18px; color: var(--color-green-500); flex:none; margin-top:1px; }
+
+  /* ── Logo band ── */
+  .logos-band { padding: 34px 0; border-bottom: 1px solid var(--border-light); background:#fff; }
+  .logos-lead { text-align:center; font-family: var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color: var(--fg-muted-light); margin-bottom:20px; }
+
+  /* ── Industries ── */
+  .ind-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:16px; }
+  @media (max-width: 900px){ .ind-grid { grid-template-columns: repeat(2,1fr); } }
+  .ind { display:flex; align-items:center; gap:13px; padding:18px 18px; border:1px solid var(--border-light); border-radius: var(--radius-lg); background:#fff; transition: transform .18s, box-shadow .18s, border-color .18s; }
+  .ind:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(109,94,251,.3); }
+  .ind .ii { width:42px; height:42px; border-radius:11px; display:grid; place-items:center; flex:none; background: var(--pillar-design-soft); color: var(--pillar-design); }
+  .ind .ii .ic { width:21px; height:21px; }
+  .ind b { font-size:15px; color: var(--color-navy-800); font-weight:600; letter-spacing:-0.01em; }
+  .ind span { display:block; font-size:12.5px; color: var(--fg-muted-light); margin-top:2px; }
+
+  /* ── Featured work ── */
+  .fw-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:22px; }
+  @media (max-width: 860px){ .fw-grid { grid-template-columns: 1fr; max-width:460px; margin-left:auto; margin-right:auto; } }
+  .fw-card { border-radius: var(--radius-xl); overflow:hidden; background:#fff; border:1px solid var(--border-light); box-shadow: var(--shadow-card); display:flex; flex-direction:column; transition: transform .2s, box-shadow .2s, border-color .2s; }
+  .fw-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: rgba(109,94,251,.3); }
+  .fw-shot { position:relative; aspect-ratio:16/10; overflow:hidden; background: var(--color-navy-800); }
+  .fw-shot img { width:100%; height:100%; object-fit:cover; }
+  .fw-mock { position:absolute; inset:0; padding:22px 22px; display:flex; flex-direction:column; justify-content:center; gap:10px; }
+  .fw-mock::before { content:""; position:absolute; inset:0; background: radial-gradient(360px 200px at 12% 8%, rgba(109,94,251,.5), transparent 60%), radial-gradient(320px 200px at 96% 100%, rgba(245,182,43,.26), transparent 60%); }
+  .fw-mock.seo::before { background: radial-gradient(360px 200px at 12% 8%, rgba(245,182,43,.4), transparent 60%), radial-gradient(320px 200px at 96% 100%, rgba(109,94,251,.4), transparent 60%); }
+  .fw-mock.student::before { background: radial-gradient(360px 200px at 12% 8%, rgba(34,199,224,.4), transparent 60%), radial-gradient(320px 200px at 96% 100%, rgba(109,94,251,.42), transparent 60%); }
+  .fw-mt { position:relative; font-family: var(--font-headline); font-weight:700; font-size:19px; color:#fff; letter-spacing:-0.02em; line-height:1.15; max-width:16ch; }
+  .fw-metric { position:absolute; left:12px; bottom:12px; background: var(--color-navy-900); color: var(--color-gold-400); font-family: var(--font-headline); font-weight:700; font-size:13px; padding:5px 11px; border-radius:999px; z-index:2; }
+  .fw-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:6px; }
+  .fw-cat { font-family: var(--font-mono); font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color: var(--color-blue-500); }
+  .fw-body h3 { font-size:17px; color: var(--color-navy-800); letter-spacing:-0.02em; line-height:1.2; }
+  .fw-body p { font-size:13.5px; color: var(--fg-muted-light); line-height:1.5; }
+
+  /* ── Engagement models ── */
+  .eng-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:22px; }
+  @media (max-width: 860px){ .eng-grid { grid-template-columns: 1fr; } }
+  .eng { padding:30px 28px; border:1px solid var(--border-light); border-radius: var(--radius-xl); background:#fff; display:flex; flex-direction:column; gap:12px; transition: transform .2s, box-shadow .2s; }
+  .eng:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+  .eng .ei { width:50px; height:50px; border-radius:13px; display:grid; place-items:center; background: var(--color-navy-800); color:#fff; }
+  .eng .ei .ic { width:24px; height:24px; }
+  .eng h3 { font-size:20px; color: var(--color-navy-800); letter-spacing:-0.02em; }
+  .eng .etime { font-family: var(--font-mono); font-size:12px; font-weight:600; color: var(--color-blue-500); }
+  .eng p { font-size:14px; color: var(--fg-muted-light); line-height:1.55; }
+  .eng a { margin-top:auto; font-weight:600; font-size:14px; color: var(--color-blue-500); display:inline-flex; align-items:center; gap:6px; }
+  .eng a .ic { width:16px; height:16px; transition: transform .15s; }
+  .eng:hover a .ic { transform: translateX(3px); }
+
+  /* ── Guarantees ── */
+  .gtiles { display:grid; grid-template-columns: repeat(5,1fr); gap:16px; }
+  @media (max-width: 980px){ .gtiles { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 520px){ .gtiles { grid-template-columns: 1fr; } }
+  .gtile { text-align:left; }
+  .gtile .gi { width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background: rgba(255,255,255,.08); color: var(--color-gold-400); margin-bottom:12px; }
+  .gtile .gi .ic { width:22px; height:22px; }
+  .gtile b { color:#fff; font-size:15px; display:block; letter-spacing:-0.01em; }
+  .gtile span { font-size:13px; color: var(--fg-muted-dark); line-height:1.5; display:block; margin-top:5px; }
+
+  /* ── Comparison (us vs others) ── */
+  .vs-wrap { overflow-x:auto; }
+  .vs { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--border-light); border-radius: var(--radius-lg); overflow:hidden; min-width:640px; }
+  .vs th, .vs td { padding:15px 18px; text-align:left; font-size:14.5px; border-bottom:1px solid var(--border-light); }
+  .vs thead th { background: var(--color-navy-800); color:#fff; font-family: var(--font-headline); font-weight:600; font-size:15px; }
+  .vs thead th.hl { background: var(--color-blue-500); }
+  .vs td:not(:first-child), .vs th:not(:first-child) { text-align:center; }
+  .vs tbody tr:nth-child(even) { background: var(--bg-subtle); }
+  .vs .feat { font-weight:500; color: var(--color-navy-800); }
+  .vs .col-us { background: rgba(109,94,251,.05); }
+  .vs .yes { color: var(--color-green-500); }
+  .vs .no { color: var(--color-gray-200); }
+  .vs .ic { width:19px; height:19px; }
+
+  /* ── Awards / recognition ── */
+  .awards { display:grid; grid-template-columns: repeat(5,1fr); gap:14px; max-width:1040px; margin:0 auto; }
+  @media (max-width: 920px){ .awards { grid-template-columns: repeat(3,1fr); } }
+  @media (max-width: 560px){ .awards { grid-template-columns: repeat(2,1fr); } }
+  .award { display:flex; align-items:center; justify-content:center; gap:11px; padding:16px 14px; border:1px solid var(--border-light); border-radius: var(--radius-lg); background:#fff; box-shadow: var(--shadow-sm); text-align:left; }
+  .award .astar { color: var(--color-gold-500); display:inline-flex; gap:1px; }
+  .award .astar .ic { width:13px; height:13px; fill: currentColor; }
+  .award .an { font-family: var(--font-headline); font-weight:700; font-size:15px; color: var(--color-navy-800); line-height:1.05; }
+  .award .al { font-size:11px; color: var(--fg-muted-light); margin-top:4px; line-height:1.2; }
+  .award .abadge { width:38px; height:38px; border-radius:9px; display:grid; place-items:center; background: var(--color-navy-800); color: var(--color-gold-400); flex:none; }
+  .award .abadge .ic { width:20px; height:20px; }
+  .award-col { display:flex; flex-direction:column; }
+
+  /* ── Latest blog ── */
+  .bt-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:22px; }
+  @media (max-width: 860px){ .bt-grid { grid-template-columns: 1fr; max-width:460px; margin-left:auto; margin-right:auto; } }
+  .bt-card { border-radius: var(--radius-lg); overflow:hidden; background:#fff; border:1px solid var(--border-light); box-shadow: var(--shadow-card); display:flex; flex-direction:column; transition: transform .2s, box-shadow .2s; }
+  .bt-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .bt-thumb { height:160px; position:relative; overflow:hidden; display:flex; align-items:flex-end;
+    background: radial-gradient(340px 190px at 18% 10%, rgba(109,94,251,.5), transparent 62%), linear-gradient(135deg, var(--color-navy-800), var(--color-navy-700)); }
+  .bt-thumb.seo { background: radial-gradient(340px 190px at 18% 10%, rgba(245,182,43,.4), transparent 62%), linear-gradient(135deg, var(--color-navy-800), var(--color-navy-700)); }
+  .bt-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .bt-thumb::after { content:""; position:absolute; inset:0; background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px); background-size:22px 22px; }
+  .bt-ph { position:relative; z-index:1; padding:18px 20px; font-family: var(--font-headline); font-weight:700; font-size:17px; color:#fff; letter-spacing:-0.02em; line-height:1.2; }
+  .bt-ph .u { display:block; font-family: var(--font-mono); font-size:11px; font-weight:500; color: var(--color-blue-300); margin-top:8px; letter-spacing:0; }
+  .bt-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:9px; flex:1; }
+  .bt-body h3 { font-size:16.5px; color: var(--color-navy-800); line-height:1.3; letter-spacing:-0.01em; }
+  .bt-body p { font-size:13.5px; color: var(--fg-muted-light); line-height:1.5; }
+  .bt-meta { margin-top:auto; font-size:12px; color: var(--fg-muted-light); display:flex; gap:8px; align-items:center; }
 </style>
 </head>
 <body data-page="home">
@@ -183,6 +283,35 @@
   </div>
 </section>
 
+<!-- ░░ CLIENT LOGO MARQUEE ░░ -->
+<!-- Replace these text names with real client logo <img> tags when available. -->
+<section class="logos-band">
+  <div class="container">
+    <p class="logos-lead">Trusted by 320+ brands, startups &amp; institutions across India</p>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track">
+      <span class="marquee-item"><i data-lucide="hexagon"></i>NimbusKart</span>
+      <span class="marquee-item"><i data-lucide="triangle"></i>FinlyApp</span>
+      <span class="marquee-item"><i data-lucide="circle"></i>Verma Interiors</span>
+      <span class="marquee-item"><i data-lucide="square"></i>MediCare Plus</span>
+      <span class="marquee-item"><i data-lucide="octagon"></i>EduSphere</span>
+      <span class="marquee-item"><i data-lucide="diamond"></i>UrbanNest</span>
+      <span class="marquee-item"><i data-lucide="pentagon"></i>TravelGo</span>
+      <span class="marquee-item"><i data-lucide="star"></i>GreenLeaf</span>
+      <!-- duplicate set for seamless loop -->
+      <span class="marquee-item"><i data-lucide="hexagon"></i>NimbusKart</span>
+      <span class="marquee-item"><i data-lucide="triangle"></i>FinlyApp</span>
+      <span class="marquee-item"><i data-lucide="circle"></i>Verma Interiors</span>
+      <span class="marquee-item"><i data-lucide="square"></i>MediCare Plus</span>
+      <span class="marquee-item"><i data-lucide="octagon"></i>EduSphere</span>
+      <span class="marquee-item"><i data-lucide="diamond"></i>UrbanNest</span>
+      <span class="marquee-item"><i data-lucide="pentagon"></i>TravelGo</span>
+      <span class="marquee-item"><i data-lucide="star"></i>GreenLeaf</span>
+    </div>
+  </div>
+</section>
+
 <!-- ░░ TWO PILLARS ░░ -->
 <section class="section">
   <div class="container">
@@ -237,6 +366,58 @@
       <a href="/seo.html" class="card lift svc-card"><div class="svc-ic seo"><i data-lucide="search" class="ic"></i></div><h3>SEO Services</h3><p>Technical, on-page, local and LLMO — engineered to rank and to be quoted by AI engines.</p><div class="svc-meta"><span class="tag tag-blue">Technical</span><span class="tag tag-gold">LLMO</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
       <a href="/content-marketing.html" class="card lift svc-card"><div class="svc-ic seo"><i data-lucide="file-text" class="ic"></i></div><h3>Content Marketing</h3><p>Topic clusters, blogs and video built to earn citations and topical authority.</p><div class="svc-meta"><span class="tag tag-blue">Clusters</span><span class="tag tag-gold">E-E-A-T</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
       <a href="/ppc.html" class="card lift svc-card"><div class="svc-ic seo"><i data-lucide="target" class="ic"></i></div><h3>PPC &amp; Paid Ads</h3><p>Google, Meta &amp; LinkedIn campaigns tuned for ROI, not vanity clicks.</p><div class="svc-meta"><span class="tag tag-blue">Google Ads</span><span class="tag tag-gold">Meta</span></div><span class="svc-link">Explore service <i data-lucide="arrow-right" class="ic"></i></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ TECH STACK + INTEGRATIONS ░░ -->
+<section class="section-sm" style="background:#fff;border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light)">
+  <div class="container">
+    <div class="sec-head reveal" style="margin:0 auto;text-align:center">
+      <span class="eyebrow" style="justify-content:center">Tech we build with</span>
+      <h2 class="h-md" style="color:var(--color-navy-800);margin-top:10px">The right platform for your project</h2>
+    </div>
+    <div class="pillrow reveal" style="justify-content:center;margin-top:26px;max-width:900px;margin-left:auto;margin-right:auto">
+      <span class="p"><i data-lucide="pen-tool" class="ic"></i>Figma</span>
+      <span class="p"><i data-lucide="layout" class="ic"></i>WordPress</span>
+      <span class="p"><i data-lucide="shopping-bag" class="ic"></i>Shopify</span>
+      <span class="p"><i data-lucide="shopping-cart" class="ic"></i>WooCommerce</span>
+      <span class="p"><i data-lucide="code-2" class="ic"></i>React / Next.js</span>
+      <span class="p"><i data-lucide="server" class="ic"></i>Node &amp; PHP</span>
+      <span class="p"><i data-lucide="wind" class="ic"></i>Tailwind</span>
+      <span class="p"><i data-lucide="zap" class="ic"></i>Webflow</span>
+      <span class="p"><i data-lucide="database" class="ic"></i>Headless CMS</span>
+    </div>
+    <p class="logos-lead reveal" style="margin:30px 0 14px">And we integrate the tools you already use</p>
+    <div class="pillrow reveal" style="justify-content:center;max-width:820px;margin-left:auto;margin-right:auto">
+      <span class="p"><i data-lucide="credit-card" class="ic"></i>Razorpay / Stripe</span>
+      <span class="p"><i data-lucide="message-circle" class="ic"></i>WhatsApp API</span>
+      <span class="p"><i data-lucide="users" class="ic"></i>HubSpot / CRM</span>
+      <span class="p"><i data-lucide="bar-chart-3" class="ic"></i>Google Analytics</span>
+      <span class="p"><i data-lucide="mail" class="ic"></i>Mailchimp</span>
+      <span class="p"><i data-lucide="calendar" class="ic"></i>Calendly</span>
+      <span class="p"><i data-lucide="sparkles" class="ic"></i>OpenAI / Claude</span>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ INDUSTRIES ░░ -->
+<section class="section section-subtle">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Industries we serve</span>
+      <h2 class="h-lg" style="color:var(--color-navy-800)">Built for your business</h2>
+      <p class="lead">We've designed, built and ranked websites across dozens of sectors — we speak your industry's language.</p>
+    </div>
+    <div class="ind-grid reveal" style="margin-top:40px">
+      <div class="ind"><span class="ii"><i data-lucide="shopping-cart" class="ic"></i></span><div><b>E-commerce &amp; Retail</b><span>Stores that convert</span></div></div>
+      <div class="ind"><span class="ii"><i data-lucide="heart-pulse" class="ic"></i></span><div><b>Healthcare</b><span>Clinics, hospitals, pharma</span></div></div>
+      <div class="ind"><span class="ii"><i data-lucide="graduation-cap" class="ic"></i></span><div><b>Education &amp; EdTech</b><span>Institutes &amp; courses</span></div></div>
+      <div class="ind"><span class="ii"><i data-lucide="building-2" class="ic"></i></span><div><b>Real Estate</b><span>Listings &amp; portals</span></div></div>
+      <div class="ind"><span class="ii"><i data-lucide="rocket" class="ic"></i></span><div><b>Startups &amp; SaaS</b><span>0→1 products &amp; sites</span></div></div>
+      <div class="ind"><span class="ii"><i data-lucide="plane" class="ic"></i></span><div><b>Travel &amp; Hospitality</b><span>Bookings &amp; brands</span></div></div>
+      <div class="ind"><span class="ii"><i data-lucide="utensils" class="ic"></i></span><div><b>Restaurants &amp; F&amp;B</b><span>Menus &amp; ordering</span></div></div>
+      <div class="ind"><span class="ii"><i data-lucide="briefcase" class="ic"></i></span><div><b>Professional Services</b><span>Law, finance, consulting</span></div></div>
     </div>
   </div>
 </section>
@@ -302,9 +483,25 @@
 <section class="section-sm section-navy">
   <div class="container grid cols-4 reveal" style="text-align:center;gap:28px">
     <div><div class="stat-num gold"><span data-count="320" data-suffix="+">0</span></div><div class="stat-label">Websites designed &amp; shipped</div></div>
-    <div><div class="stat-num gold"><span data-count="3.4" data-suffix="x">0</span></div><div class="stat-label">Avg. organic traffic growth</div></div>
-    <div><div class="stat-num gold"><span data-count="98" data-suffix="/100">0</span></div><div class="stat-label">Avg. Core Web Vitals score</div></div>
+    <div><div class="stat-num gold"><span data-count="250" data-suffix="+">0</span></div><div class="stat-label">Happy clients across India</div></div>
+    <div><div class="stat-num gold"><span data-count="12" data-suffix="+ yrs">0</span></div><div class="stat-label">In business since 2013</div></div>
     <div><div class="stat-num gold"><span data-count="92" data-suffix="%">0</span></div><div class="stat-label">Client retention rate</div></div>
+  </div>
+</section>
+
+<!-- ░░ FEATURED WORK ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none;gap:20px;flex-wrap:wrap">
+      <div>
+        <span class="eyebrow">Featured work</span>
+        <h2 class="h-lg" style="color:var(--color-navy-800);margin-top:10px">Websites &amp; projects we've shipped</h2>
+      </div>
+      <a href="/portfolio.html" class="btn btn-ghost-light">View full portfolio <i data-lucide="arrow-right" class="ic"></i></a>
+    </div>
+    <div class="fw-grid reveal" id="fwGrid" style="margin-top:40px">
+      <p style="grid-column:1/-1;color:var(--fg-muted-light)">Loading our work…</p>
+    </div>
   </div>
 </section>
 
@@ -334,6 +531,17 @@
       <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"They redesigned our site and it finally looks like the brand we are — then rankings and leads climbed within a quarter. One team for both was a game-changer."</blockquote><div class="quote-by"><div class="quote-av">RM</div><div><div class="qn">Rahul Mehta</div><div class="qr">Founder, NimbusKart</div></div></div></div>
       <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"The most structured studio we've worked with. Fast site, clean code, and an SEO approach genuinely built for how people search now."</blockquote><div class="quote-by"><div class="quote-av">SK</div><div><div class="qn">Sneha Kapoor</div><div class="qr">Head of Growth, FinlyApp</div></div></div></div>
       <div class="card quote-card"><span class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span><blockquote>"Beautiful website, transparent pricing and real reporting. We finally understand exactly what we're paying for — and it's working."</blockquote><div class="quote-by"><div class="quote-av">AV</div><div><div class="qn">Arjun Verma</div><div class="qr">Director, Verma Interiors</div></div></div></div>
+    </div>
+
+    <!-- Awards / recognition — PLACEHOLDER badges. Keep only the platforms you
+         actually have a verified profile on, and update the ratings to match. -->
+    <p class="logos-lead reveal" style="margin:52px 0 18px">Rated &amp; recognized</p>
+    <div class="awards reveal">
+      <div class="award"><span class="abadge"><i data-lucide="star" class="ic" style="fill:currentColor"></i></span><div class="award-col"><div class="an">4.7★ Google</div><div class="al">2,124 reviews</div></div></div>
+      <div class="award"><span class="abadge"><i data-lucide="award" class="ic"></i></span><div class="award-col"><div class="an">Clutch</div><div class="al">Top Web Developers</div></div></div>
+      <div class="award"><span class="abadge"><i data-lucide="thumbs-up" class="ic"></i></span><div class="award-col"><div class="an">GoodFirms</div><div class="al">Top Rated Agency</div></div></div>
+      <div class="award"><span class="abadge"><i data-lucide="trophy" class="ic"></i></span><div class="award-col"><div class="an">DesignRush</div><div class="al">Accredited Agency</div></div></div>
+      <div class="award"><span class="abadge"><i data-lucide="badge-check" class="ic"></i></span><div class="award-col"><div class="an">ISO 9001</div><div class="al">Certified Company</div></div></div>
     </div>
   </div>
 </section>
@@ -384,7 +592,98 @@
         <a href="/pricing.html" class="btn btn-navy btn-block" style="margin-top:auto">Request a quote</a>
       </div>
     </div>
-    <p style="text-align:center;margin-top:22px;color:var(--fg-muted-light);font-size:14px">Prefer à la carte? <a href="/pricing.html" class="text-violet" style="font-weight:600">See all packages &amp; individual pricing →</a></p>
+    <p style="text-align:center;margin-top:22px;color:var(--fg-muted-light);font-size:14px">Not sure of the cost? <a href="/pricing.html#estimate" class="text-violet" style="font-weight:600">Try our instant estimate calculator →</a> &nbsp;·&nbsp; Prefer à la carte? <a href="/pricing.html" class="text-violet" style="font-weight:600">See all pricing</a></p>
+  </div>
+</section>
+
+<!-- ░░ ENGAGEMENT MODELS ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal" style="margin:0 auto;text-align:center">
+      <span class="eyebrow" style="justify-content:center">How to work with us</span>
+      <h2 class="h-lg" style="color:var(--color-navy-800)">Three flexible engagement models</h2>
+      <p class="lead" style="margin:12px auto 0">One-off project, ongoing partner, or an extension of your team — pick what fits.</p>
+    </div>
+    <div class="eng-grid reveal" style="margin-top:44px">
+      <div class="eng">
+        <div class="ei"><i data-lucide="package" class="ic"></i></div>
+        <span class="etime">Fixed scope · 2–6 weeks</span>
+        <h3>Fixed-Price Project</h3>
+        <p>A defined website or store, quoted upfront with a fixed price and timeline. Perfect when you know exactly what you need.</p>
+        <a href="/pricing.html">See packages <i data-lucide="arrow-right" class="ic"></i></a>
+      </div>
+      <div class="eng">
+        <div class="ei" style="background:var(--color-blue-500)"><i data-lucide="refresh-cw" class="ic"></i></div>
+        <span class="etime">Monthly · ongoing</span>
+        <h3>Website + SEO Retainer</h3>
+        <p>We build, maintain and grow your site every month — design updates, SEO, content and reporting in one predictable plan.</p>
+        <a href="/pricing.html">See retainers <i data-lucide="arrow-right" class="ic"></i></a>
+      </div>
+      <div class="eng">
+        <div class="ei" style="background:var(--color-gold-600)"><i data-lucide="users" class="ic"></i></div>
+        <span class="etime">Dedicated · monthly</span>
+        <h3>Hire Dedicated Developers</h3>
+        <p>Add vetted designers, developers or SEO specialists to your team full-time or part-time — you direct the work, we deliver.</p>
+        <a href="/contact.html" data-audit-open>Hire a team <i data-lucide="arrow-right" class="ic"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ GUARANTEES ░░ -->
+<section class="section-sm section-ink dot-grid">
+  <div class="container">
+    <div class="sec-head reveal" style="margin:0 auto 8px;text-align:center">
+      <span class="eyebrow on-dark" style="justify-content:center">Our promise</span>
+      <h2 class="h-md" style="color:#fff;margin-top:10px">What you can count on, every time</h2>
+    </div>
+    <div class="gtiles reveal" style="margin-top:34px">
+      <div class="gtile"><div class="gi"><i data-lucide="tag" class="ic"></i></div><b>Fixed pricing</b><span>A clear quote within 24 hours — no surprises.</span></div>
+      <div class="gtile"><div class="gi"><i data-lucide="key-round" class="ic"></i></div><b>You own everything</b><span>Full code, files and account ownership.</span></div>
+      <div class="gtile"><div class="gi"><i data-lucide="calendar-check" class="ic"></i></div><b>On-time delivery</b><span>Clear milestones and a committed launch date.</span></div>
+      <div class="gtile"><div class="gi"><i data-lucide="unlock" class="ic"></i></div><b>No lock-in</b><span>Month-to-month retainers, 30-day exit.</span></div>
+      <div class="gtile"><div class="gi"><i data-lucide="life-buoy" class="ic"></i></div><b>Real support</b><span>Post-launch care and a person who answers.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ WHY US vs OTHERS ░░ -->
+<section class="section section-subtle">
+  <div class="container">
+    <div class="sec-head reveal" style="margin:0 auto;text-align:center">
+      <span class="eyebrow" style="justify-content:center">Why Evision</span>
+      <h2 class="h-lg" style="color:var(--color-navy-800)">One partner beats a patchwork</h2>
+      <p class="lead" style="margin:12px auto 0">A freelancer here, an SEO there, a designer somewhere else — or one team that owns the whole outcome.</p>
+    </div>
+    <div class="vs-wrap reveal" style="margin-top:38px">
+      <table class="vs">
+        <thead><tr><th>What you get</th><th class="hl">Evision Infoserve</th><th>Freelancer</th><th>Typical agency</th></tr></thead>
+        <tbody>
+          <tr><td class="feat">Design + development + SEO in one team</td><td class="col-us"><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="x" class="ic no"></i></td><td>Sometimes</td></tr>
+          <tr><td class="feat">Built SEO-ready from day one</td><td class="col-us"><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="x" class="ic no"></i></td><td>Sometimes</td></tr>
+          <tr><td class="feat">Fixed pricing &amp; 24-hr quote</td><td class="col-us"><i data-lucide="check" class="ic yes"></i></td><td>Varies</td><td><i data-lucide="x" class="ic no"></i></td></tr>
+          <tr><td class="feat">You own the code &amp; accounts</td><td class="col-us"><i data-lucide="check" class="ic yes"></i></td><td>Sometimes</td><td><i data-lucide="x" class="ic no"></i></td></tr>
+          <tr><td class="feat">Ongoing support &amp; reporting</td><td class="col-us"><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="x" class="ic no"></i></td><td><i data-lucide="check" class="ic yes"></i></td></tr>
+          <tr><td class="feat">ISO-certified, 12+ years in business</td><td class="col-us"><i data-lucide="check" class="ic yes"></i></td><td><i data-lucide="x" class="ic no"></i></td><td>Varies</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ LATEST FROM THE BLOG ░░ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none;gap:20px;flex-wrap:wrap">
+      <div>
+        <span class="eyebrow">Guides &amp; free resources</span>
+        <h2 class="h-lg" style="color:var(--color-navy-800);margin-top:10px">Latest from our blog</h2>
+      </div>
+      <a href="/blog.html" class="btn btn-ghost-light">All articles <i data-lucide="arrow-right" class="ic"></i></a>
+    </div>
+    <div class="bt-grid reveal" id="btGrid" style="margin-top:40px">
+      <p style="grid-column:1/-1;color:var(--fg-muted-light)">Loading articles…</p>
+    </div>
   </div>
 </section>
 
@@ -416,13 +715,71 @@
     </div>
     <div style="display:flex;gap:14px;flex-wrap:wrap">
       <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Start a project</a>
-      <a href="https://wa.me/919811722064" class="btn btn-outline-white btn-lg"><i data-lucide="message-circle" class="ic"></i>WhatsApp Us</a>
+      <a href="https://wa.me/919311221517" class="btn btn-outline-white btn-lg"><i data-lucide="message-circle" class="ic"></i>WhatsApp Us</a>
     </div>
   </div>
 </section>
 
-<script src="/assets/site.js?v=5"></script>
-<script src="/assets/chrome.js?v=5"></script>
+<script>
+/* Homepage dynamic sections: Featured work (/api/portfolio) + Latest blog (/api/posts) */
+(function () {
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function grp(cat){ var c=(cat||"").toLowerCase();
+    if(c.indexOf("student")>-1) return "student";
+    if(c.indexOf("commerce")>-1) return "";
+    if(c.indexOf("seo")>-1||c.indexOf("ppc")>-1||c.indexOf("pr")>-1||c.indexOf("local")>-1) return "seo";
+    return ""; }
+
+  // Featured work
+  var fw = document.getElementById("fwGrid");
+  if (fw) {
+    fetch("/api/portfolio").then(function(r){return r.json();}).then(function(list){
+      if(!Array.isArray(list)||!list.length){ fw.innerHTML=""; return; }
+      fw.innerHTML = list.slice(0,3).map(function(w){
+        var shot = w.image
+          ? '<img src="'+esc(w.image)+'" alt="'+esc(w.title)+'" loading="lazy">'
+          : '<div class="fw-mock '+grp(w.category)+'"><div class="fw-mt">'+esc(w.title)+'</div></div>';
+        var metric = w.metric ? '<span class="fw-metric">'+esc(w.metric)+'</span>' : "";
+        return '<a class="fw-card" href="/portfolio.html">'+
+          '<div class="fw-shot">'+shot+metric+'</div>'+
+          '<div class="fw-body">'+
+            (w.category?'<span class="fw-cat">'+esc(w.category)+'</span>':"")+
+            '<h3>'+esc(w.title)+'</h3>'+
+            (w.summary?'<p>'+esc(w.summary)+'</p>':"")+
+          '</div></a>';
+      }).join("");
+      if(window.lucide) lucide.createIcons();
+    }).catch(function(){ fw.innerHTML=""; });
+  }
+
+  // Latest blog
+  var bt = document.getElementById("btGrid");
+  if (bt) {
+    fetch("/api/posts").then(function(r){return r.json();}).then(function(list){
+      if(!Array.isArray(list)||!list.length){ bt.innerHTML=""; return; }
+      bt.innerHTML = list.slice(0,3).map(function(p){
+        var accent = (p.tag||"").toLowerCase().indexOf("seo")>-1 ? " seo" : "";
+        var thumb = p.cover
+          ? '<div class="bt-thumb'+accent+'"><img src="'+esc(p.cover)+'" alt="'+esc(p.title)+'" loading="lazy"></div>'
+          : '<div class="bt-thumb'+accent+'"><div class="bt-ph">'+esc(p.title)+'<span class="u">// evisioninfoserve.com/blog</span></div></div>';
+        var meta = [];
+        if(p.tag) meta.push(esc(p.tag));
+        if(p.read_min) meta.push(p.read_min+" min read");
+        return '<a class="bt-card" href="/blog/'+encodeURIComponent(p.slug)+'">'+thumb+
+          '<div class="bt-body">'+
+            (p.tag?'<span class="tag tag-blue" style="align-self:flex-start">'+esc(p.tag)+'</span>':"")+
+            '<h3>'+esc(p.title)+'</h3>'+
+            (p.excerpt?'<p>'+esc(p.excerpt)+'</p>':"")+
+            '<div class="bt-meta"><span>'+(p.read_min?p.read_min+' min read':'')+'</span></div>'+
+          '</div></a>';
+      }).join("");
+      if(window.lucide) lucide.createIcons();
+    }).catch(function(){ bt.innerHTML=""; });
+  }
+})();
+</script>
+<script src="/assets/site.js?v=6"></script>
+<script src="/assets/chrome.js?v=6"></script>
 <script src="/assets/pricing.js?v=5"></script>
 </body>
 </html>

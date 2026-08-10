@@ -94,12 +94,13 @@
             '<div class="dd-foot"><span>Need a website, SEO, or both? <b class="text-gold">Get a free quote.</b></span>' +
             '<a href="' + P + 'contact.html" data-audit-open class="btn btn-secondary btn-sm">Free Quote</a></div>' +
           '</div></div>' +
+        navItem("pricing.html", "Pricing", "pricing") +
         navItem("blog.html", "Blog", "blog") +
         navItem("about.html", "About", "about") +
         navItem("contact.html", "Contact", "contact") +
       '</div>' +
       '<div class="nav-actions">' +
-        '<a href="tel:+919811722064" class="nav-phone"><i data-lucide="phone" class="ic"></i>+91 98117 22064</a>' +
+        '<a href="tel:+919311221517" class="nav-phone"><i data-lucide="phone" class="ic"></i>+91 93112 21517</a>' +
         '<a href="' + P + 'contact.html" data-audit-open class="btn btn-primary btn-sm">Get a Free Audit</a>' +
         '<button class="nav-burger" id="navBurger" aria-label="Open menu"><i data-lucide="menu" class="ic"></i></button>' +
       '</div>' +
@@ -119,11 +120,12 @@
     '<div class="m-head">' + BRAND + '<button class="m-close" data-close aria-label="Close"><i data-lucide="x"></i></button></div>' +
     '<a href="' + P + 'index.html" class="m-link' + (page === "home" ? " active" : "") + '">Home</a>' +
     '<div class="m-sub">Services</div>' + mServices +
+    '<a href="' + P + 'pricing.html" class="m-link' + (page === "pricing" ? " active" : "") + '">Packages &amp; Pricing</a>' +
     '<a href="' + P + 'blog.html" class="m-link' + (page === "blog" ? " active" : "") + '">Blog</a>' +
     '<a href="' + P + 'about.html" class="m-link' + (page === "about" ? " active" : "") + '">About</a>' +
     '<a href="' + P + 'contact.html" class="m-link' + (page === "contact" ? " active" : "") + '">Contact</a>' +
     '<a href="' + P + 'contact.html" data-audit-open class="btn btn-primary btn-block" style="margin-top:18px">Get a Free Audit</a>' +
-    '<a href="https://wa.me/919811722064" class="btn btn-ghost-light btn-block" style="margin-top:10px"><i data-lucide="message-circle" class="ic"></i>Chat on WhatsApp</a>' +
+    '<a href="https://wa.me/919311221517" class="btn btn-ghost-light btn-block" style="margin-top:10px"><i data-lucide="message-circle" class="ic"></i>Chat on WhatsApp</a>' +
     '</div></div>';
 
   var FOOTER =
@@ -161,10 +163,19 @@
         '<a href="' + P + 'contact.html">Contact</a></div>' +
       '<div class="foot-col foot-contact"><h4>Get in touch</h4>' +
         '<div><i data-lucide="map-pin" class="ic"></i><span>Gaur City Mall, Greater Noida West,<br>Uttar Pradesh 201009</span></div>' +
-        '<div><i data-lucide="phone" class="ic"></i><a href="tel:+919811722064">+91 98117 22064</a></div>' +
+        '<div><i data-lucide="phone" class="ic"></i><a href="tel:+919311221517">+91 93112 21517</a></div>' +
         '<div><i data-lucide="mail" class="ic"></i><a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a></div>' +
         '<a href="' + P + 'contact.html" class="btn btn-primary btn-sm" style="margin-top:4px">Request a Quote</a>' +
       '</div>' +
+    '</div>' +
+    '<div class="foot-news">' +
+      '<div class="fn-copy"><h4>Get 1 practical web &amp; SEO tip a week</h4>' +
+        '<p>Join 2,000+ founders &amp; marketers. No spam — unsubscribe anytime.</p></div>' +
+      '<form class="fn-form" id="footNews" novalidate>' +
+        '<input type="email" name="email" placeholder="Your email address" autocomplete="email" aria-label="Email address">' +
+        '<button type="submit" class="btn btn-primary btn-sm">Subscribe <i data-lucide="arrow-right" class="ic"></i></button>' +
+        '<span class="fn-msg" id="footNewsMsg"></span>' +
+      '</form>' +
     '</div>' +
     '<div class="foot-bottom"><div class="copy">© 2026 Evision Infoserve. All rights reserved.</div>' +
       '<div class="foot-layers"><i data-lucide="sparkles" style="width:15px;height:15px"></i>Design &amp; build · <b>SEO · AEO · GEO · LLMO</b></div>' +
@@ -188,16 +199,16 @@
         '<button type="submit" aria-label="Send"><i data-lucide="send" style="width:18px;height:18px"></i></button></form>' +
     '</div>' +
     '<div class="floaties">' +
-      '<a class="fab fab-wa fab-pulse" href="https://wa.me/919811722064" aria-label="WhatsApp"><i data-lucide="message-circle" class="ic"></i></a>' +
+      '<a class="fab fab-wa fab-pulse" href="https://wa.me/919311221517" aria-label="WhatsApp"><i data-lucide="message-circle" class="ic"></i></a>' +
       '<button class="fab fab-chat" id="chatToggle" aria-label="Open chat"><i data-lucide="messages-square" class="ic"></i></button>' +
     '</div>';
 
   // ── Mobile bottom action bar (phones only; styled via .m-cta-bar media query) ──
   var M_CTA =
     '<div class="m-cta-bar">' +
-      '<a href="tel:+919811722064" class="m-cta m-cta-call"><i data-lucide="phone" class="ic"></i>Call Us</a>' +
+      '<a href="tel:+919311221517" class="m-cta m-cta-call"><i data-lucide="phone" class="ic"></i>Call Us</a>' +
       '<a href="mailto:info@evisioninfoserve.com" class="m-cta m-cta-mail"><i data-lucide="mail" class="ic"></i>Email Us</a>' +
-      '<a href="https://wa.me/919811722064" class="m-cta m-cta-wa"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>' +
+      '<a href="https://wa.me/919311221517" class="m-cta m-cta-wa"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>' +
     '</div>';
 
   // ── Free Audit modal ──
@@ -232,7 +243,7 @@
           '<div class="audit-ok"><i data-lucide="check"></i></div>' +
           '<h3>You\'re all set! 🎉</h3>' +
           '<p>Thanks — we\'ve received your details. Our team will email your free audit report within <b>24 hours</b>. Need it faster? Ping us on WhatsApp.</p>' +
-          '<a href="https://wa.me/919811722064" class="btn btn-secondary btn-block">Chat on WhatsApp</a>' +
+          '<a href="https://wa.me/919311221517" class="btn btn-secondary btn-block">Chat on WhatsApp</a>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -266,14 +277,58 @@
           '<div class="audit-ok"><i data-lucide="check"></i></div>' +
           '<h3>Thank you! 🎉</h3>' +
           '<p>We\'ve received your request. Our team will contact you <b>shortly via call and WhatsApp</b>. Prefer to chat now?</p>' +
-          '<a href="https://wa.me/919811722064" class="btn btn-secondary btn-block">Message us on WhatsApp</a>' +
+          '<a href="https://wa.me/919311221517" class="btn btn-secondary btn-block">Message us on WhatsApp</a>' +
         '</div>' +
       '</div>' +
     '</div>';
 
+  // ── Top offer / urgency banner (content filled from /api/pricing offer) ──
+  var TOPBAR =
+    '<div class="ev-topbar" id="evTopbar" hidden><div class="ev-topbar-in" id="evTopbarIn">' +
+      '<span>🚀 <b>Websites from ₹9,999</b> — free SEO audit with every build.</span>' +
+      '<a href="' + P + 'contact.html" data-audit-open class="ev-tb-cta">Get a free quote →</a>' +
+    '</div><button class="ev-tb-x" id="evTopbarX" aria-label="Dismiss">&times;</button></div>';
+
+  // ── Sticky bottom CTA bar (desktop; phones use the m-cta bar instead) ──
+  var STICKY_BAR =
+    '<div class="ev-stickybar" id="evStickyBar">' +
+      '<div class="ev-sb-in">' +
+        '<div class="ev-sb-copy"><b>Launch a website from ₹9,999</b>' +
+          '<span>Free quote + a website &amp; SEO plan within 24 hours.</span></div>' +
+        '<div class="ev-sb-actions">' +
+          '<a href="' + P + 'contact.html" data-audit-open class="btn btn-primary btn-sm">Get a free quote</a>' +
+          '<a href="https://wa.me/919311221517" class="btn btn-ghost-light btn-sm"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>' +
+          '<button class="ev-sb-x" id="evSbX" aria-label="Dismiss">&times;</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  // ── Component styles (injected so we don't have to version-bump chrome.css) ──
+  var LEADGEN_CSS =
+    '.ev-topbar{position:relative;z-index:60;background:linear-gradient(90deg,#0A0E1C,#241b52);color:#fff;font-size:13.5px}' +
+    '.ev-topbar-in{max-width:1200px;margin:0 auto;padding:9px 44px;display:flex;align-items:center;justify-content:center;gap:14px;text-align:center;flex-wrap:wrap}' +
+    '.ev-topbar b{color:#F5B62B}.ev-topbar .ev-tb-cta{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}' +
+    '.ev-topbar .ev-tb-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:19px;line-height:1;padding:4px}' +
+    '.ev-topbar .ev-tb-x:hover{color:#fff}@media(max-width:600px){.ev-topbar{font-size:12px}}' +
+    '.ev-stickybar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(10,14,28,.97);border-top:1px solid rgba(255,255,255,.1);color:#fff;transform:translateY(115%);transition:transform .35s ease}' +
+    '.ev-stickybar.show{transform:translateY(0)}' +
+    '.ev-sb-in{max-width:1200px;margin:0 auto;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px}' +
+    '.ev-sb-copy b{font-family:var(--font-headline);font-size:16px;letter-spacing:-.01em}' +
+    '.ev-sb-copy span{display:block;font-size:13px;color:rgba(255,255,255,.7);margin-top:2px}' +
+    '.ev-sb-actions{display:flex;align-items:center;gap:10px;flex:none}' +
+    '.ev-sb-x{background:none;border:none;color:rgba(255,255,255,.55);cursor:pointer;font-size:22px;line-height:1;padding:2px 4px}.ev-sb-x:hover{color:#fff}' +
+    '@media(max-width:720px){.ev-stickybar{display:none}}' +
+    '.foot-news{border-top:1px solid rgba(255,255,255,.08);margin-top:10px;padding:24px 0 6px;display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap}' +
+    '.foot-news .fn-copy h4{color:#fff;font-size:17px;margin:0}.foot-news .fn-copy p{color:rgba(255,255,255,.6);font-size:13.5px;margin:4px 0 0}' +
+    '.fn-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}' +
+    '.fn-form input{padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:14px;min-width:240px}' +
+    '.fn-form input::placeholder{color:rgba(255,255,255,.5)}.fn-form input:focus{outline:none;border-color:#6D5EFB}' +
+    '.fn-form input.fn-bad{border-color:#ef4444}.fn-msg{font-size:12.5px;color:#F5B62B;flex-basis:100%}';
+  var st = document.createElement("style"); st.textContent = LEADGEN_CSS; document.head.appendChild(st);
+
   // ── inject ──
-  document.body.insertAdjacentHTML("afterbegin", HEADER + DRAWER);
-  document.body.insertAdjacentHTML("beforeend", FOOTER + WIDGETS + M_CTA + AUDIT_MODAL + START_MODAL);
+  document.body.insertAdjacentHTML("afterbegin", TOPBAR + HEADER + DRAWER);
+  document.body.insertAdjacentHTML("beforeend", FOOTER + WIDGETS + M_CTA + STICKY_BAR + AUDIT_MODAL + START_MODAL);
 
   // Rewrite every internal .html link (injected chrome + page content) to its clean URL.
   // Run again on load to catch links injected by later scripts (e.g. the offer banner).
@@ -300,9 +355,9 @@
   function botReply(text) {
     var map = {
       audit: "Great — our team can run a free SEO + AI-visibility audit and email you a 12-point report. What's your website URL?",
-      pricing: "Our plans are tailored to your goals and scope, so we share a custom quote rather than fixed prices. Tell me a bit about your business and I'll have a strategist send pricing — or reach us on WhatsApp at +91 98117 22064.",
+      pricing: "Our plans are tailored to your goals and scope, so we share a custom quote rather than fixed prices. Tell me a bit about your business and I'll have a strategist send pricing — or reach us on WhatsApp at +91 93112 21517.",
       ai: "We optimise across 4 layers — SEO, AEO, GEO &amp; LLMO — so you rank on Google AND get cited by ChatGPT, Gemini &amp; Perplexity. Shall I send our AI-search guide?",
-      default: "Thanks! A strategist will reach out shortly. You can also reach us on WhatsApp at +91 98117 22064 for an instant reply. 🚀"
+      default: "Thanks! A strategist will reach out shortly. You can also reach us on WhatsApp at +91 93112 21517 for an instant reply. 🚀"
     };
     var t = text.toLowerCase(), r = map.default;
     if (/audit/.test(t)) r = map.audit;
@@ -491,6 +546,75 @@
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
     }).then(done).catch(done);
   });
+
+  // ── Top offer banner: show default now, upgrade to the admin offer if set ──
+  (function () {
+    var bar = document.getElementById("evTopbar"), x = document.getElementById("evTopbarX");
+    if (!bar) return;
+    try { if (localStorage.getItem("ev_topbar_dismiss")) { bar.remove(); return; } } catch (e) {}
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+    bar.hidden = false;  // show the evergreen message immediately
+    fetch("/api/pricing").then(function (r) { return r.json(); }).then(function (d) {
+      var o = d && d.offer;
+      if (o && o.discount_pct > 0) {
+        document.getElementById("evTopbarIn").innerHTML =
+          '<span>🎉 <b>' + esc(o.name || "Limited-time offer") + ': save ' + o.discount_pct + '%</b>' +
+          (o.note ? ' — ' + esc(o.note) : '') + '</span>' +
+          '<a href="' + P + 'pricing.html" class="ev-tb-cta">Claim offer →</a>';
+        cleanHrefs(bar);
+      }
+    }).catch(function () {});
+    x.addEventListener("click", function () {
+      bar.remove(); try { localStorage.setItem("ev_topbar_dismiss", "1"); } catch (e) {}
+    });
+  })();
+
+  // ── Sticky bottom CTA bar (desktop): reveal after scrolling, dismissible ──
+  (function () {
+    var bar = document.getElementById("evStickyBar"), x = document.getElementById("evSbX");
+    if (!bar) return;
+    try { if (localStorage.getItem("ev_stickybar_dismiss")) return; } catch (e) {}
+    function onScroll() { bar.classList.toggle("show", (window.scrollY || 0) > 640); }
+    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+    x.addEventListener("click", function () {
+      bar.classList.remove("show");
+      window.removeEventListener("scroll", onScroll);
+      try { localStorage.setItem("ev_stickybar_dismiss", "1"); } catch (e) {}
+    });
+  })();
+
+  // ── Footer newsletter → /api/enquiry (type=newsletter) ──
+  (function () {
+    var f = document.getElementById("footNews"); if (!f) return;
+    var input = f.querySelector('[name="email"]'), msg = document.getElementById("footNewsMsg");
+    input.addEventListener("input", function () { input.classList.remove("fn-bad"); if (msg) msg.textContent = ""; });
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = input.value.trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { input.classList.add("fn-bad"); if (msg) msg.textContent = "Please enter a valid email."; return; }
+      var btn = f.querySelector("button[type=submit]"); btn.disabled = true; btn.textContent = "Subscribing…";
+      var payload = { name: "Newsletter subscriber", email: email, type: "newsletter",
+        source: (location.pathname.split("/").pop() || "home") + " (newsletter)", consent: 1, marketing: 1 };
+      function done() { f.innerHTML = '<span class="fn-msg" style="color:#4ade80;font-size:14px">✓ You\'re subscribed — watch your inbox!</span>'; }
+      fetch("/api/enquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).then(done).catch(done);
+    });
+  })();
+
+  // ── Exit-intent (desktop): one extra chance to capture, shares the popup flag ──
+  (function () {
+    if (window.matchMedia && window.matchMedia("(max-width: 720px)").matches) return;
+    var SEEN = "ev_lead_popup_seen";
+    function armed() { try { return !sessionStorage.getItem(SEEN); } catch (e) { return true; } }
+    function onOut(e) {
+      if (!armed()) { document.removeEventListener("mouseout", onOut); return; }
+      if (e.clientY > 0 || e.relatedTarget) return;  // only fire when the cursor leaves via the top
+      if (auditModal.classList.contains("open") || (startModal && startModal.classList.contains("open"))) return;
+      try { sessionStorage.setItem(SEEN, "1"); } catch (ex) {}
+      document.removeEventListener("mouseout", onOut);
+      openAudit();
+    }
+    setTimeout(function () { document.addEventListener("mouseout", onOut); }, 5000);  // arm after 5s
+  })();
 
   // reveal on scroll
   var io = new IntersectionObserver(function (entries) {

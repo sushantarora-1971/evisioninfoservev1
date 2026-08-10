@@ -144,7 +144,7 @@
       if (btn) { btn.disabled = true; btn.dataset.label = btn.innerHTML; btn.textContent = "Sending…"; }
 
       var box = form.closest(".lead-magnet");
-      var wa = "https://wa.me/919811722064?text=" + encodeURIComponent("Hi Evision! Please send me the free resource: " + magnet);
+      var wa = "https://wa.me/919311221517?text=" + encodeURIComponent("Hi Evision! Please send me the free resource: " + magnet);
       function done() {
         if (box) {
           box.classList.add("done");

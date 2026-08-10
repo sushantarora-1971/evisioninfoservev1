@@ -46,6 +46,36 @@
   .addons { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 36px; }
   @media (max-width: 900px){ .addons { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 520px){ .addons { grid-template-columns: 1fr; } }
+
+  /* ── Cost calculator ── */
+  .calc-sec { background: var(--color-navy-900); position: relative; overflow: hidden; }
+  .calc-sec::before { content:""; position:absolute; inset:0; pointer-events:none;
+    background: radial-gradient(680px 380px at 8% -10%, rgba(109,94,251,.28), transparent 60%),
+               radial-gradient(560px 360px at 100% 120%, rgba(245,182,43,.14), transparent 60%); }
+  .calc-wrap { position: relative; z-index:1; display: grid; grid-template-columns: 1.15fr .85fr; gap: 30px; margin-top: 36px; align-items: start; }
+  @media (max-width: 880px){ .calc-wrap { grid-template-columns: 1fr; } }
+  .calc-panel { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-xl); padding: 26px 26px; }
+  .calc-grp { margin-bottom: 22px; }
+  .calc-grp:last-child { margin-bottom: 0; }
+  .calc-lbl { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-blue-300); margin-bottom: 11px; }
+  .calc-opts { display: flex; flex-wrap: wrap; gap: 9px; }
+  .calc-chip { display: inline-flex; align-items: center; gap: 7px; padding: 10px 15px; border: 1.5px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.03); color: #E7EAF3; font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all .14s; user-select: none; }
+  .calc-chip:hover { border-color: rgba(109,94,251,.6); }
+  .calc-chip.on { background: var(--color-blue-500); border-color: var(--color-blue-500); color: #fff; }
+  .calc-chip .ic { width: 15px; height: 15px; }
+  .calc-side { position: sticky; top: 90px; background: #fff; border-radius: var(--radius-xl); padding: 26px 26px; box-shadow: var(--shadow-lg); }
+  .calc-est-lbl { font-size: 13px; color: var(--fg-muted-light); }
+  .calc-est { font-family: var(--font-headline); font-weight: 700; font-size: clamp(28px,4vw,38px); color: var(--color-navy-800); letter-spacing: -0.02em; line-height: 1.1; margin: 4px 0 2px; }
+  .calc-est small { display: block; font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--color-blue-500); margin-top: 4px; }
+  .calc-breakdown { font-size: 12.5px; color: var(--fg-muted-light); line-height: 1.5; margin: 12px 0 16px; padding-top: 14px; border-top: 1px dashed var(--border-light); }
+  .calc-form { display: flex; flex-direction: column; gap: 9px; }
+  .calc-form input { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border-light); border-radius: var(--radius-md); font-size: 14px; font-family: var(--font-body); }
+  .calc-form input:focus { outline: none; border-color: var(--color-blue-500); box-shadow: 0 0 0 3px rgba(109,94,251,.14); }
+  .calc-form input.calc-bad { border-color: #ef4444; }
+  .calc-msg { font-size: 12px; color: #ef4444; min-height: 2px; }
+  .calc-fine { font-size: 11.5px; color: var(--fg-muted-light); text-align: center; margin-top: 2px; }
+  .calc-done { text-align: center; padding: 20px 6px; }
+  .calc-done .ic { width: 46px; height: 46px; color: var(--color-green-500); }
   .addon { padding: 22px; }
   .addon h3 { font-size: 17px; color: var(--color-navy-800); margin-bottom: 4px; }
   .addon .ap { font-family: var(--font-headline); font-weight: 700; font-size: 22px; color: var(--color-blue-500); }
@@ -59,19 +89,73 @@
   <div class="container">
     <span class="eyebrow" style="justify-content:center"><span class="chip-mono" style="border:none;background:none;padding:0;color:var(--color-blue-500)">Offer + Product schema</span></span>
     <h1>Websites from ₹9,999,<br>priced transparently</h1>
-    <p class="lead">No lock-ins, no vanity metrics. Launch a website from just ₹9,999, bundle it with ongoing SEO, or pick exactly the service you need — clear deliverables, reported every month.</p>
+    <p class="lead">No lock-ins, no vanity metrics. Launch a website from just ₹9,999, bundle it with ongoing SEO, or get an instant estimate below — clear deliverables, reported every month.</p>
   </div>
 </section>
 
-<!-- ░░ ALL SERVICES — INDIVIDUAL PRICING (dynamic from admin) ░░ -->
-<section class="section" id="all-pricing" style="padding-top:46px">
+<!-- ░░ COST CALCULATOR (lead magnet) ░░ -->
+<section class="section calc-sec" id="estimate">
   <div class="container">
-    <div class="sec-head reveal" style="text-align:center;margin:0 auto 8px">
-      <span class="eyebrow" style="justify-content:center">Individual service pricing</span>
-      <h2 class="h-lg" style="color:var(--color-navy-800)">Pick exactly the service you need</h2>
-      <p class="lead" style="max-width:64ch;margin:10px auto 0">Transparent starting prices for every service. Any active festival discount is applied automatically.</p>
+    <div class="sec-head reveal" style="margin:0 auto;text-align:center">
+      <span class="eyebrow on-dark" style="justify-content:center">Instant estimate</span>
+      <h2 class="h-lg" style="color:#fff;margin-top:10px">What will your website cost?</h2>
+      <p class="lead" style="margin:12px auto 0;color:var(--fg-muted-dark)">Pick what you need and see a live estimate — then get a detailed, fixed quote by email within 24 hours.</p>
     </div>
-    <div data-pricing-grid style="margin-top:30px"></div>
+    <div class="calc-wrap reveal">
+      <div class="calc-panel">
+        <div class="calc-grp">
+          <div class="calc-lbl">1 · What are you building?</div>
+          <div class="calc-opts" data-calc="type" data-single>
+            <span class="calc-chip on" data-val="business" data-base="9999">Business website</span>
+            <span class="calc-chip" data-val="ecommerce" data-base="39999">E-commerce store</span>
+            <span class="calc-chip" data-val="webapp" data-base="79999">Web app / portal</span>
+            <span class="calc-chip" data-val="landing" data-base="4999">Landing page</span>
+          </div>
+        </div>
+        <div class="calc-grp">
+          <div class="calc-lbl">2 · How many pages?</div>
+          <div class="calc-opts" data-calc="pages" data-single>
+            <span class="calc-chip on" data-val="1–5 pages" data-add="0">1–5</span>
+            <span class="calc-chip" data-val="6–10 pages" data-add="15000">6–10</span>
+            <span class="calc-chip" data-val="11–20+ pages" data-add="40000">11–20+</span>
+          </div>
+        </div>
+        <div class="calc-grp">
+          <div class="calc-lbl">3 · Features you need</div>
+          <div class="calc-opts" data-calc="features">
+            <span class="calc-chip" data-val="Custom UI/UX design" data-add="8000"><i data-lucide="figma" class="ic"></i>Custom design</span>
+            <span class="calc-chip" data-val="CMS / blog" data-add="6000"><i data-lucide="pen-tool" class="ic"></i>CMS / blog</span>
+            <span class="calc-chip" data-val="Payments &amp; checkout" data-add="12000"><i data-lucide="credit-card" class="ic"></i>Payments</span>
+            <span class="calc-chip" data-val="Booking / appointments" data-add="9000"><i data-lucide="calendar" class="ic"></i>Booking</span>
+            <span class="calc-chip" data-val="Multi-language" data-add="10000"><i data-lucide="languages" class="ic"></i>Multi-language</span>
+            <span class="calc-chip" data-val="SEO setup" data-add="8000"><i data-lucide="search" class="ic"></i>SEO setup</span>
+            <span class="calc-chip" data-val="Content writing" data-add="7000"><i data-lucide="file-text" class="ic"></i>Content writing</span>
+            <span class="calc-chip" data-val="Monthly maintenance" data-mo="4999"><i data-lucide="life-buoy" class="ic"></i>Maintenance</span>
+          </div>
+        </div>
+      </div>
+      <div class="calc-side">
+        <div id="calcQuote">
+          <div class="calc-est-lbl">Estimated project cost</div>
+          <div class="calc-est" id="calcAmt">₹9,999 – ₹13,999<small id="calcMo" style="display:none"></small></div>
+          <div class="calc-breakdown" id="calcBreak">Business website · 1–5 pages</div>
+          <form class="calc-form" id="calcForm" novalidate>
+            <input type="text" name="name" placeholder="Full name *" autocomplete="name">
+            <input type="email" name="email" placeholder="Email *" autocomplete="email">
+            <input type="tel" name="phone" placeholder="Phone / WhatsApp *" autocomplete="tel">
+            <div class="calc-msg" id="calcMsg"></div>
+            <button type="submit" class="btn btn-primary btn-block">Email me this quote <i data-lucide="arrow-right" class="ic"></i></button>
+            <p class="calc-fine">Free &amp; no obligation · detailed quote within 24 hours.</p>
+          </form>
+        </div>
+        <div id="calcDone" style="display:none" class="calc-done">
+          <i data-lucide="check-circle-2" class="ic"></i>
+          <h3 style="color:var(--color-navy-800);margin:10px 0 6px">Quote on its way! 🎉</h3>
+          <p style="font-size:14px;color:var(--fg-muted-light)">Thanks — we'll email your detailed, fixed quote within 24 hours. Want it faster?</p>
+          <a href="https://wa.me/919311221517" class="btn btn-secondary btn-block" style="margin-top:12px">Chat on WhatsApp</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -132,7 +216,7 @@
 </section>
 
 <!-- ░░ COMPARISON ░░ -->
-<section class="section section-subtle" style="padding-top:24px">
+<section class="section" style="padding-top:24px">
   <div class="container">
     <div class="sec-head reveal" style="text-align:center;margin:0 auto 32px">
       <span class="eyebrow" style="justify-content:center">Compare plans</span>
@@ -168,7 +252,7 @@
 </section>
 
 <!-- ░░ ADD-ONS ░░ -->
-<section class="section">
+<section class="section section-subtle">
   <div class="container">
     <div class="sec-head reveal"><span class="eyebrow">À la carte</span><h2 class="h-lg" style="color:var(--color-navy-800)">Add-ons &amp; one-time projects</h2></div>
     <div class="addons reveal">
@@ -193,7 +277,7 @@
     </div>
     <div style="display:flex;gap:14px;flex-wrap:wrap">
       <a href="/contact.html" class="btn btn-secondary btn-lg">Request a Quote</a>
-      <a href="https://wa.me/919811722064" class="btn btn-outline-white btn-lg"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>
+      <a href="https://wa.me/919311221517" class="btn btn-outline-white btn-lg"><i data-lucide="message-circle" class="ic"></i>WhatsApp</a>
     </div>
   </div>
 </section>
@@ -212,8 +296,8 @@
   </div>
 </section>
 
-<script src="/assets/site.js?v=5"></script>
-<script src="/assets/chrome.js?v=5"></script>
+<script src="/assets/site.js?v=6"></script>
+<script src="/assets/chrome.js?v=6"></script>
 <script src="/assets/pricing.js?v=5"></script>
 <script>
   // billing labels emphasis
@@ -223,6 +307,70 @@
     t.addEventListener('change',function(){
       document.getElementById('lblMonthly').classList.toggle('on',!t.checked);
       document.getElementById('lblAnnual').classList.toggle('on',t.checked);
+    });
+  })();
+
+  // ── Website cost calculator ──
+  (function(){
+    var form=document.getElementById('calcForm'); if(!form) return;
+    var groups=document.querySelectorAll('[data-calc]');
+    var amtEl=document.getElementById('calcAmt'), moEl=document.getElementById('calcMo'),
+        breakEl=document.getElementById('calcBreak');
+    function inr(n){ return '₹'+Math.round(n).toLocaleString('en-IN'); }
+    function round500(n){ return Math.round(n/500)*500; }
+
+    // chip toggling (single-select groups vs multi)
+    document.querySelectorAll('.calc-chip').forEach(function(chip){
+      chip.addEventListener('click',function(){
+        var grp=chip.closest('[data-calc]');
+        if(grp.hasAttribute('data-single')){
+          grp.querySelectorAll('.calc-chip').forEach(function(c){ c.classList.remove('on'); });
+          chip.classList.add('on');
+        } else { chip.classList.toggle('on'); }
+        recalc();
+      });
+    });
+
+    function recalc(){
+      var typeChip=document.querySelector('[data-calc=type] .calc-chip.on');
+      var pagesChip=document.querySelector('[data-calc=pages] .calc-chip.on');
+      var base=typeChip?+typeChip.dataset.base:9999;
+      var low=base + (pagesChip?+pagesChip.dataset.add:0);
+      var mo=0, parts=[], feat=[];
+      if(typeChip) parts.push(typeChip.textContent.trim());
+      if(pagesChip) parts.push(pagesChip.dataset.val);
+      document.querySelectorAll('[data-calc=features] .calc-chip.on').forEach(function(c){
+        if(c.dataset.add){ low+=+c.dataset.add; }
+        if(c.dataset.mo){ mo+=+c.dataset.mo; }
+        feat.push(c.dataset.val.replace('&amp;','&'));
+      });
+      var high=round500(low*1.4); low=round500(low);
+      amtEl.firstChild.textContent = inr(low)+' – '+inr(high);
+      if(mo>0){ moEl.style.display=''; moEl.textContent='+ '+inr(mo)+'/mo care & support'; }
+      else { moEl.style.display='none'; }
+      if(feat.length) parts.push(feat.join(', '));
+      breakEl.textContent = parts.join(' · ');
+      form.dataset.summary = parts.join(' · ') + ' — est. ' + inr(low)+'–'+inr(high) + (mo?(' + '+inr(mo)+'/mo'):'');
+    }
+    recalc();
+
+    form.querySelectorAll('input').forEach(function(i){ i.addEventListener('input',function(){ i.classList.remove('calc-bad'); document.getElementById('calcMsg').textContent=''; }); });
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var msg=document.getElementById('calcMsg');
+      var name=form.querySelector('[name=name]'), email=form.querySelector('[name=email]'), phone=form.querySelector('[name=phone]');
+      var ok=true; function bad(el){ el.classList.add('calc-bad'); ok=false; }
+      if(!name.value.trim()) bad(name);
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) bad(email);
+      if(phone.value.replace(/\D/g,'').length<8) bad(phone);
+      if(!ok){ msg.textContent='Please enter your name, a valid email and phone.'; return; }
+      var btn=form.querySelector('button[type=submit]'); btn.disabled=true; btn.textContent='Sending…';
+      var payload={ name:name.value.trim(), email:email.value.trim(), phone:phone.value.trim(),
+        service:'Website quote (calculator)', message:'Estimate request — '+(form.dataset.summary||''),
+        type:'quote-calculator', source:'pricing (calculator)', consent:1, marketing:1 };
+      function done(){ document.getElementById('calcQuote').style.display='none';
+        document.getElementById('calcDone').style.display=''; if(window.lucide) lucide.createIcons(); }
+      fetch('/api/enquiry',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(done).catch(done);
     });
   })();
 </script>
