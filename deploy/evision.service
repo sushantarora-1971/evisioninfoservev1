@@ -22,9 +22,44 @@ Environment=PORT=8000
 #Environment=SMTP_FROM=you@gmail.com
 #Environment=NOTIFY_TO=info@evisioninfoserve.com
 
+# Optional: instant lead alerts on your phone (README → "Instant lead alerts").
+# Telegram is free and arrives in about a second — start with that.
+#Environment=TELEGRAM_BOT_TOKEN=8123456:AAF...
+#Environment=TELEGRAM_CHAT_ID=987654321
+# ntfy app: pick a long, unguessable topic — anyone who knows it can read alerts.
+#Environment=NTFY_TOPIC=evision-leads-7f3a91
+# Twilio: makes the phone actually ring and reads the lead out (paid).
+#Environment=TWILIO_SID=AC...
+#Environment=TWILIO_TOKEN=...
+#Environment=TWILIO_FROM=+15550001111
+#Environment=ALERT_PHONE=+919311221517
+
 # Optional: override the seeded admin on first run (before the DB exists).
 #Environment=ADMIN_EMAIL=you@evisioninfoserve.com
 #Environment=ADMIN_PASSWORD=change-me-strong
+
+# Optional: spam filter tuning (defaults are in server.py — see README).
+# Lower SPAM_THRESHOLD to be stricter; add domains as more junk turns up.
+#Environment=SPAM_THRESHOLD=60
+#Environment=SPAM_DOMAINS=jmailservice.com,guestpostmate.com
+#Environment=SPAM_RETENTION_DAYS=30
+
+# Optional: voice booking agent (README -> "Voice booking agent (ElevenLabs)").
+# The /api/voice/* endpoints answer 404 until VOICE_SHARED_SECRET is set, so an
+# unconfigured server exposes nothing. Mint the GOOGLE_* values once with
+# scripts/google_calendar_setup.py. Generate the secret with: openssl rand -hex 32
+#Environment=VOICE_SHARED_SECRET=a-long-random-string-not-a-word
+#Environment=VOICE_HOST_EMAIL=you@evisioninfoserve.com
+#Environment=GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com
+#Environment=GOOGLE_CLIENT_SECRET=...
+#Environment=GOOGLE_REFRESH_TOKEN=1//...
+#Environment=GOOGLE_CALENDAR_ID=primary
+# Optional: booking rules (defaults Mon-Fri 10-19, Sat 10-17, Sun closed).
+#Environment=VOICE_DAY_START=10
+#Environment=VOICE_DAY_END=19
+#Environment=VOICE_SAT_END=17
+#Environment=VOICE_BUFFER_MIN=15
+#Environment=VOICE_LEAD_HOURS=3
 
 ExecStart=/var/www/evisioninfoservev1/.venv/bin/python server.py
 Restart=on-failure

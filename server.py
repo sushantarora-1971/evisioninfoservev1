@@ -20,11 +20,14 @@ import sqlite3
 import hashlib
 import secrets
 import smtplib
+import sys
 import threading
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+
+import voice_booking as voice
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(ROOT, "evision.db")
@@ -55,6 +58,28 @@ SMTP_PASS = os.environ.get("SMTP_PASS")
 SMTP_FROM = os.environ.get("SMTP_FROM", SMTP_USER or "")
 NOTIFY_TO = os.environ.get("NOTIFY_TO", "info@evisioninfoserve.com")
 
+# ── Optional instant alerts on your phone ─────────────────────────────────
+# Email is too slow to call a lead back while they are still on the site, so a
+# new enquiry can also push straight to a phone. Every channel is off until its
+# env vars are set, and each one fails silently — an alert problem must never
+# cost us the lead. See the README for the 2-minute setup of each.
+#
+#   Telegram (free, instant)   TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID
+#   ntfy     (free, loud)      NTFY_TOPIC  [+ NTFY_SERVER, NTFY_PRIORITY]
+#   Phone call (paid, rings)   TWILIO_SID + TWILIO_TOKEN + TWILIO_FROM + ALERT_PHONE
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh").rstrip("/")
+NTFY_TOPIC = os.environ.get("NTFY_TOPIC")
+NTFY_PRIORITY = os.environ.get("NTFY_PRIORITY", "urgent")
+TWILIO_SID = os.environ.get("TWILIO_SID")
+TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN")
+TWILIO_FROM = os.environ.get("TWILIO_FROM")
+ALERT_PHONE = os.environ.get("ALERT_PHONE", "+919311221517")   # who gets called
+# Lead types that are NOT worth a phone alert (they still email + land in /admin/).
+ALERT_SKIP_TYPES = {t.strip() for t in
+                    (os.environ.get("ALERT_SKIP_TYPES", "newsletter")).split(",") if t.strip()}
+
 # token -> {"email": str, "expires": float}
 SESSIONS = {}
 
@@ -63,6 +88,17 @@ SESSIONS = {}
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def log(msg):
+    """print() that can't take a request down. A Windows console is cp1252, so
+    a spammer's Cyrillic name or a stray arrow would otherwise raise
+    UnicodeEncodeError mid-response; under systemd (UTF-8) this is just print."""
+    try:
+        print(msg)
+    except UnicodeEncodeError:
+        enc = sys.stdout.encoding or "ascii"
+        print(msg.encode(enc, "replace").decode(enc, "replace"))
 
 
 def slugify(text, fallback="post"):
@@ -123,8 +159,12 @@ def init_db():
             service TEXT, budget TEXT, message TEXT,
             type TEXT DEFAULT 'quote',
             source TEXT,
-            status TEXT DEFAULT 'new',
+            status TEXT DEFAULT 'new',   -- 'new' | 'contacted' | 'converted' | 'closed' | 'spam'
             notes TEXT DEFAULT '',
+            ip TEXT DEFAULT '',          -- sender IP (spam filtering / rate limits)
+            ua TEXT DEFAULT '',          -- sender user-agent
+            spam_score INTEGER DEFAULT 0,
+            spam_reason TEXT DEFAULT '',
             created_at TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS clients (
@@ -134,6 +174,20 @@ def init_db():
             status TEXT DEFAULT 'active',
             notes TEXT DEFAULT '',
             from_enquiry INTEGER,
+            created_at TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            conversation_id TEXT UNIQUE,   -- ElevenLabs call id; makes booking idempotent
+            enquiry_id INTEGER,            -- the row this call created in enquiries
+            name TEXT, email TEXT, phone TEXT, company TEXT,
+            project_type TEXT, budget_band TEXT, notes TEXT DEFAULT '',
+            start_at TEXT NOT NULL,        -- ISO 8601 with +05:30 offset
+            duration_min INTEGER DEFAULT 30,
+            event_id TEXT DEFAULT '',      -- Google Calendar event id
+            meet_link TEXT DEFAULT '',
+            lead_source TEXT DEFAULT '',
+            status TEXT DEFAULT 'booked',  -- 'booked' | 'cancelled'
             created_at TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS services (
@@ -211,7 +265,12 @@ def init_db():
     # ── lightweight migrations: add columns to existing databases ──
     existing_cols = {r["name"] for r in c.execute("PRAGMA table_info(enquiries)").fetchall()}
     for col, ddl in (("consent", "consent INTEGER DEFAULT 0"),
-                     ("marketing", "marketing INTEGER DEFAULT 0")):
+                     ("marketing", "marketing INTEGER DEFAULT 0"),
+                     # spam filtering: who sent it and why it was scored the way it was
+                     ("ip", "ip TEXT DEFAULT ''"),
+                     ("ua", "ua TEXT DEFAULT ''"),
+                     ("spam_score", "spam_score INTEGER DEFAULT 0"),
+                     ("spam_reason", "spam_reason TEXT DEFAULT ''")):
         if col not in existing_cols:
             c.execute(f"ALTER TABLE enquiries ADD COLUMN {ddl}")
     conn.commit()
@@ -315,6 +374,13 @@ def init_db():
              now_iso(), now_iso(), now_iso()),
         )
     conn.commit()
+    # The consent label is baked into each post's stored body, so the INSERT OR
+    # IGNORE above can't refresh it on posts that already exist. Patch just that
+    # snippet in place — idempotent (only rows still carrying the old wording
+    # match) and surgical, so admin edits elsewhere in the body survive.
+    c.execute("UPDATE posts SET body = REPLACE(body, ?, ?) WHERE instr(body, ?) > 0",
+              (LM_CONSENT_OLD, LM_CONSENT, LM_CONSENT_OLD))
+    conn.commit()
     # Seed extra portfolio items (web design/dev + student projects) idempotently
     # — only inserts an item if no row with the same title exists, so it's safe
     # to run repeatedly and won't duplicate or clobber admin-managed items.
@@ -358,6 +424,207 @@ def account_by_email(email):
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
+# ─────────────────── spam filtering for the public enquiry form ────────────
+# Bots scrape the contact form and post junk leads: invented names, throwaway
+# mailboxes, guest-post / backlink outreach, the same phone number reused under
+# five different identities. Nothing is silently deleted — every submission is
+# SCORED, and anything at or above SPAM_THRESHOLD is saved with status='spam'
+# so it stays out of the inbox, out of the "new" badge and out of the
+# notification email, while remaining reviewable (and restorable) in /admin/.
+#
+# Tunable via env vars; the defaults are deliberately conservative so a real
+# lead needs to trip several rules at once before it is quarantined.
+SPAM_THRESHOLD = int(os.environ.get("SPAM_THRESHOLD", "60"))
+SPAM_RETENTION_DAYS = int(os.environ.get("SPAM_RETENTION_DAYS", "30"))
+# Hard cap per IP. Set well above anything a real visitor does (mobile networks
+# put many users behind one IP, so this is a flood stop, not a spam filter).
+RATE_LIMIT_HOUR = int(os.environ.get("ENQUIRY_RATE_HOUR", "12"))
+RATE_LIMIT_DAY = int(os.environ.get("ENQUIRY_RATE_DAY", "40"))
+
+# Throwaway mailbox providers + domains that have only ever sent us outreach
+# spam. Extend without touching code: SPAM_DOMAINS="foo.com,bar.net"
+SPAM_DOMAINS = {
+    # domains seen in real spam on this site
+    "jmailservice.com", "guestpostmate.com", "sendproud.com",
+    # common disposable / burner providers
+    "mailinator.com", "guerrillamail.com", "sharklasers.com", "yopmail.com",
+    "10minutemail.com", "tempmail.com", "temp-mail.org", "trashmail.com",
+    "getnada.com", "maildrop.cc", "dispostable.com", "fakeinbox.com",
+    "throwawaymail.com", "emailondeck.com", "moakt.com", "mailnesia.com",
+    "spam4.me", "tempr.email", "mytemp.email", "inboxkitten.com",
+    "mail-temp.com", "byom.de", "grr.la", "einrot.com", "cuvox.de",
+}
+SPAM_DOMAINS |= {d.strip().lower() for d in
+                 (os.environ.get("SPAM_DOMAINS") or "").split(",") if d.strip()}
+
+# Phrases that show up in link-building / guest-post outreach and classic junk,
+# but effectively never in a genuine "I need SEO for my business" enquiry.
+SPAM_PHRASES = [
+    "guest post", "guest posting site", "sponsored post", "paid post",
+    "link insertion", "link exchange", "dofollow", "do-follow", "backlink",
+    "high da", "da pa", "da 50", "buy links", "sell links", "link building service",
+    "seo reseller", "outreach service", "casino", "betting", "gambling", "escort",
+    "bitcoin", "crypto investment", "forex", "payday loan", "viagra", "porn",
+    "unsubscribe", "bulk email", "mass mailing", "cheap traffic", "buy followers",
+    "make money online", "work from home opportunity", "click here now",
+]
+
+# Automated clients that are never a real visitor's browser.
+BOT_UA_RE = re.compile(
+    r"python-requests|python-urllib|curl/|wget|scrapy|okhttp|go-http-client|"
+    r"libwww-perl|java/|axios/|httpclient|node-fetch|postman", re.I)
+
+# Scripts a Greater-Noida marketing site never receives genuine enquiries in.
+FOREIGN_SCRIPT_RE = re.compile(r"[Ѐ-ӿ一-鿿぀-ヿ؀-ۿ]")
+URL_RE = re.compile(r"(https?://|www\.)", re.I)
+
+
+def _iso_ago(**kw):
+    """ISO timestamp N hours/days ago, comparable against created_at strings."""
+    from datetime import timedelta
+    return (datetime.now(timezone.utc) - timedelta(**kw)).isoformat(timespec="seconds")
+
+
+def digits_only(s):
+    return re.sub(r"\D", "", s or "")
+
+
+def score_enquiry(rec, conn, ip="", ua="", origin="", referer="", elapsed_ms=None,
+                  honeypot=""):
+    """Weighted spam score for one submission.
+
+    Returns (score, [reasons]). No single soft signal can quarantine a lead —
+    a genuine enquiry has to trip several rules before it crosses the
+    threshold. Hard signals (honeypot, blocked domain, bot user-agent) score
+    100 on their own because a human browser cannot produce them.
+    """
+    score, why = 0, []
+
+    def hit(points, reason):
+        nonlocal score
+        score += points
+        why.append(reason)
+
+    text = " ".join(filter(None, [rec.get("message"), rec.get("company"),
+                                  rec.get("name"), rec.get("website")])).lower()
+    email = (rec.get("email") or "").lower()
+    domain = email.split("@")[-1] if "@" in email else ""
+
+    # ── hard signals ──
+    if honeypot.strip():
+        hit(100, "honeypot field filled")
+    if domain and domain in SPAM_DOMAINS:
+        hit(100, f"blocked email domain ({domain})")
+    if ua and BOT_UA_RE.search(ua):
+        hit(100, "automated user-agent")
+    elif not ua:
+        hit(50, "no user-agent")
+
+    # ── request-shape signals ──
+    # A real browser submitting our own form always sends Origin or Referer
+    # from this site; a script POSTing straight at /api/enquiry usually sends
+    # neither.
+    host = (SITE_URL.split("//")[-1] or "").lower()
+    src = (origin or referer or "").lower()
+    if not src:
+        hit(45, "no Origin/Referer header")
+    elif host and host not in src and "localhost" not in src and "127.0.0.1" not in src:
+        hit(60, "submitted from another site")
+    if elapsed_ms is not None and elapsed_ms < 3000:
+        hit(60, f"form completed in {elapsed_ms / 1000:.1f}s")
+
+    # ── content signals ──
+    for p in SPAM_PHRASES:
+        if p in text:
+            hit(50, f"spam phrase: '{p}'")
+            break
+    links = len(re.findall(URL_RE, rec.get("message") or ""))
+    if links:
+        hit(40 if links == 1 else 60, f"{links} link(s) in the message")
+    if FOREIGN_SCRIPT_RE.search(text):
+        hit(30, "non-Latin script in the text")
+    if len(rec.get("name") or "") > 60:
+        hit(30, "absurdly long name")
+    # Generated identities habitually put the person's own name in Company.
+    name_l = (rec.get("name") or "").strip().lower()
+    if name_l and name_l == (rec.get("company") or "").strip().lower():
+        hit(35, "company name is identical to the person's name")
+    # contact.html is the only source of type='quote' and it requires a message,
+    # so a quote with none was not sent through the real form.
+    if rec.get("type") == "quote" and not (rec.get("message") or "").strip():
+        hit(35, "quote request with an empty message")
+
+    # ── history signals (needs the DB) ──
+    # These target the bot pattern specifically — many invented identities
+    # behind one connection — rather than volume alone, because a genuinely
+    # keen visitor may well grab three lead magnets and then request a quote.
+    phone = digits_only(rec.get("phone"))
+    try:
+        if phone and len(phone) >= 8:
+            others = conn.execute(
+                "SELECT COUNT(DISTINCT lower(email)) n FROM enquiries "
+                "WHERE replace(replace(replace(phone,' ',''),'-',''),'+','') LIKE ? "
+                "  AND created_at > ? AND lower(email) <> ? AND email <> ''",
+                (f"%{phone[-10:]}", _iso_ago(days=30), email),
+            ).fetchone()["n"]
+            if others >= 1:
+                hit(45, f"phone already used by {others} other sender(s)")
+
+        if ip:
+            recent = conn.execute(
+                "SELECT lower(email) e, status, message, created_at FROM enquiries "
+                "WHERE ip=? AND created_at > ?", (ip, _iso_ago(hours=24)),
+            ).fetchall()
+            hour_ago = _iso_ago(hours=1)
+            last_hour = [r for r in recent if r["created_at"] > hour_ago]
+            # Same person, more forms = fine. Several different senders from one
+            # connection in an hour = a script cycling through fake identities.
+            identities = {r["e"] for r in last_hour if r["e"]} - {email}
+            if len(identities) >= 2:
+                hit(60, f"{len(identities) + 1} different senders from this IP within an hour")
+            elif len(last_hour) >= 6:
+                hit(40, f"{len(last_hour)} submissions from this IP within an hour")
+            if any(r["status"] == "spam" for r in recent):
+                hit(50, "this IP already sent spam in the last 24h")
+            # Byte-identical resubmission (bots replay the same payload).
+            msg = (rec.get("message") or "").strip()
+            if email and any(r["e"] == email and (r["message"] or "").strip() == msg
+                             for r in recent):
+                hit(30, "identical submission already received today")
+    except sqlite3.Error:
+        pass  # scoring must never break the form
+
+    return score, why
+
+
+def enquiry_rate_limited(conn, ip):
+    """True when this IP has flooded the form — the request is refused outright
+    (nothing stored), which keeps a bot loop from filling the database."""
+    if not ip:
+        return False
+    try:
+        hour = conn.execute(
+            "SELECT COUNT(*) n FROM enquiries WHERE ip=? AND created_at > ?",
+            (ip, _iso_ago(hours=1))).fetchone()["n"]
+        day = conn.execute(
+            "SELECT COUNT(*) n FROM enquiries WHERE ip=? AND created_at > ?",
+            (ip, _iso_ago(days=1))).fetchone()["n"]
+    except sqlite3.Error:
+        return False
+    return hour >= RATE_LIMIT_HOUR or day >= RATE_LIMIT_DAY
+
+
+def purge_old_spam(conn):
+    """Drop quarantined spam older than the retention window, so the table does
+    not grow forever. Real enquiries are never touched."""
+    try:
+        conn.execute("DELETE FROM enquiries WHERE status='spam' AND created_at < ?",
+                     (_iso_ago(days=SPAM_RETENTION_DAYS),))
+        conn.commit()
+    except sqlite3.Error:
+        pass
+
+
 # ── Clean / hierarchical URLs ──────────────────────────────────────────────
 # Map each file to its pretty URL. The server serves the file at the clean URL
 # and 301-redirects the old .html URL to it.
@@ -380,6 +647,7 @@ FILE_TO_CLEAN = {
     "email-marketing.html": "/services/email-marketing",
     "mobile-app-marketing.html": "/services/mobile-app-marketing",
     "pricing.html": "/pricing", "about.html": "/about", "blog.html": "/blog",
+    "website-scorecard.html": "/website-health-check",
     "contact.html": "/contact", "portfolio.html": "/portfolio", "clients.html": "/clients",
     "career.html": "/career", "testimonials.html": "/testimonials",
     "privacy-policy.html": "/privacy-policy", "refund-policy.html": "/refund-policy",
@@ -554,6 +822,23 @@ POST_SEED = {
 # Seeded idempotently by slug on every startup, so they survive DB resets and
 # stay editable in the admin CMS.
 
+# The consent label rendered inside every lead-magnet card. Kept as constants so
+# init_db() can refresh the copy baked into already-seeded posts (see below).
+LM_CONSENT_OLD = (
+    '<label class="lm-consent"><input type="checkbox" name="consent"> '
+    'Email me this resource &amp; the occasional tip. I agree to the '
+    '<a href="/privacy-policy.html">privacy policy</a>.</label>'
+)
+LM_CONSENT = (
+    '<label class="lm-consent"><input type="checkbox" name="consent"> '
+    '<span>I authorize <b>Evision Infoserve</b> to send me this resource and related '
+    'notifications via <b>SMS, RCS, Call, Email &amp; WhatsApp</b> &mdash; including on a '
+    'number registered with DND/NCPR &mdash; and I accept the '
+    '<a href="/terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and '
+    '<a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>'
+)
+
+
 def _lm(magnet, headline, sub, benes, cta, slug):
     """Return the HTML for an inline lead-magnet capture card."""
     lis = "".join(
@@ -569,9 +854,7 @@ def _lm(magnet, headline, sub, benes, cta, slug):
         '<input type="text" name="name" placeholder="Full name *" autocomplete="name">'
         '<input type="email" name="email" placeholder="Email *" autocomplete="email">'
         '<input type="tel" name="phone" placeholder="Phone / WhatsApp *" autocomplete="tel">'
-        '<label class="lm-consent"><input type="checkbox" name="consent"> '
-        'Email me this resource &amp; the occasional tip. I agree to the '
-        '<a href="/privacy-policy.html">privacy policy</a>.</label>'
+        + LM_CONSENT +
         '<div class="lm-msg"></div>'
         f'<button type="submit" class="btn btn-primary btn-block">{cta} '
         '<i data-lucide="arrow-right" class="ic"></i></button>'
@@ -922,44 +1205,179 @@ def compute_pricing(conn):
     return offer, out
 
 
+# ───────────────────── new-lead alerts (email + phone) ─────────────────────
+
+LEAD_LABELS = {"audit": "Free Audit", "get-started": "Get Started",
+               "lead-magnet": "Lead Magnet", "scorecard": "Scorecard",
+               "quote-calculator": "Quote Calculator", "newsletter": "Newsletter",
+               "voice-call": "Voice Call"}
+
+
+def lead_label(e):
+    return LEAD_LABELS.get(e.get("type"), "Quote")
+
+
+def wa_number(phone):
+    """A lead's phone as a wa.me / tel target: digits, Indian country code added
+    when they typed a bare 10-digit mobile."""
+    d = re.sub(r"\D", "", phone or "")
+    if len(d) == 10:
+        d = "91" + d
+    return d
+
+
+def lead_lines(e):
+    """The alert body, shared by every channel. Short enough to read on a lock
+    screen: who, what they want, and how to reach them."""
+    bits = [f"{lead_label(e)} — {e.get('name') or 'Someone'}"]
+    if e.get("phone"):
+        bits.append(f"Phone: {e['phone']}")
+    if e.get("email"):
+        bits.append(f"Email: {e['email']}")
+    detail = " · ".join(filter(None, [e.get("company"), e.get("service"), e.get("budget")]))
+    if detail:
+        bits.append(detail)
+    if e.get("message"):
+        msg = " ".join((e["message"] or "").split())
+        bits.append("“" + (msg[:220] + "…" if len(msg) > 220 else msg) + "”")
+    if e.get("source"):
+        bits.append(f"From: {e['source']}")
+    return bits
+
+
+def _http(url, data=None, headers=None, timeout=10):
+    """Minimal POST/GET helper (stdlib only). Returns the response body text."""
+    import urllib.request
+    req = urllib.request.Request(url, data=data, headers=headers or {})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read().decode("utf-8", "replace")
+
+
+def send_telegram_alert(e):
+    """Push the lead to Telegram — free, arrives in about a second, and the
+    phone number is tap-to-call inside the app."""
+    if not (TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID):
+        return False
+    import urllib.parse
+    # Telegram's HTML mode understands &amp; &lt; &gt; and nothing else, so
+    # html.escape()'s &#x27; for apostrophes would show up as literal text.
+    def esc(s):
+        return (str(s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    lines = ["🔥 <b>New lead — " + esc(e.get("name") or "Someone") + "</b>",
+             "<i>" + esc(lead_label(e)) + "</i>", ""]
+    for ln in lead_lines(e)[1:]:
+        lines.append(esc(ln))
+    wa = wa_number(e.get("phone"))
+    if wa:
+        greet = urllib.parse.quote(
+            f"Hi {(e.get('name') or '').split(' ')[0]}, this is Evision Infoserve — "
+            f"thanks for your enquiry. When is a good time to talk?")
+        lines += ["", f'<a href="https://wa.me/{wa}?text={greet}">💬 WhatsApp them</a> · '
+                      f'<a href="{SITE_URL}/admin/">📋 Admin panel</a>']
+    body = urllib.parse.urlencode({
+        "chat_id": TELEGRAM_CHAT_ID, "text": "\n".join(lines),
+        "parse_mode": "HTML", "disable_web_page_preview": "true",
+    }).encode()
+    _http(f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage", body,
+          {"Content-Type": "application/x-www-form-urlencoded"})
+    return True
+
+
+def send_ntfy_alert(e):
+    """Push via ntfy — free, and at 'urgent' priority it rings/vibrates through
+    a silenced phone, which is the closest thing to a call without paying."""
+    if not NTFY_TOPIC:
+        return False
+    # Publish as JSON rather than via headers: ntfy headers must be ASCII, which
+    # would mangle a name in Devanagari (or even an em dash).
+    prio = {"min": 1, "low": 2, "default": 3, "high": 4, "urgent": 5, "max": 5}
+    payload = {
+        "topic": NTFY_TOPIC,
+        "title": f"New {lead_label(e)} lead — {e.get('name') or 'Someone'}",
+        "message": "\n".join(lead_lines(e)[1:]),
+        "priority": prio.get(NTFY_PRIORITY.lower(), 5),
+        "tags": ["fire", "telephone_receiver"],
+        "click": f"{SITE_URL}/admin/",
+    }
+    wa = wa_number(e.get("phone"))
+    if wa:
+        payload["actions"] = [{"action": "view", "label": "WhatsApp",
+                               "url": f"https://wa.me/{wa}"}]
+    _http(NTFY_SERVER, json.dumps(payload).encode("utf-8"),
+          {"Content-Type": "application/json"})
+    return True
+
+
+def place_twilio_call(e):
+    """Actually ring your phone and read the lead out loud (paid, ~₹2/call).
+    Use it for the enquiry types you want to drop everything for."""
+    if not (TWILIO_SID and TWILIO_TOKEN and TWILIO_FROM and ALERT_PHONE):
+        return False
+    import urllib.parse
+    say = (f"New lead on your website. {e.get('name') or 'Someone'} is interested in "
+           f"{e.get('service') or 'your services'}. Check WhatsApp or the admin panel.")
+    say = html.escape(say)
+    twiml = f"<Response><Say voice='alice' language='en-IN'>{say}</Say>" \
+            f"<Pause length='1'/><Say voice='alice' language='en-IN'>{say}</Say></Response>"
+    body = urllib.parse.urlencode({"To": ALERT_PHONE, "From": TWILIO_FROM, "Twiml": twiml}).encode()
+    auth = base64.b64encode(f"{TWILIO_SID}:{TWILIO_TOKEN}".encode()).decode()
+    _http(f"https://api.twilio.com/2010-04-01/Accounts/{TWILIO_SID}/Calls.json", body,
+          {"Content-Type": "application/x-www-form-urlencoded",
+           "Authorization": "Basic " + auth}, timeout=15)
+    return True
+
+
+def alert_new_enquiry(e):
+    """Fan a new (non-spam) lead out to every configured channel. Runs in a
+    background thread; one channel failing never stops the others."""
+    sent = []
+    phone_channels = e.get("type") not in ALERT_SKIP_TYPES
+    jobs = [("email", notify_new_enquiry)]
+    if phone_channels:
+        jobs += [("telegram", send_telegram_alert), ("ntfy", send_ntfy_alert),
+                 ("call", place_twilio_call)]
+    for name, fn in jobs:
+        try:
+            if fn(e):
+                sent.append(name)
+        except Exception as ex:
+            log(f"[alert] {name} failed: {ex}")
+    log(f"[alert] New {lead_label(e)} from {e.get('name')} "
+        f"({e.get('phone') or e.get('email')}) -> {', '.join(sent) or 'no channel configured'}")
+
+
 def notify_new_enquiry(e):
-    """Email the admin about a new enquiry. Runs in a background thread so the
-    visitor's request is never blocked. Degrades gracefully if SMTP is unset."""
-    label = {"audit": "Free Audit", "get-started": "Get Started"}.get(e.get("type"), "Quote")
+    """Email the admin about a new enquiry. Degrades gracefully if SMTP is unset."""
+    label = lead_label(e)
     if not (SMTP_HOST and SMTP_USER and SMTP_PASS):
-        print(f"[enquiry] New {label}: {e.get('name')} <{e.get('email')}> "
-              f"— email notify not configured (set SMTP_* env vars to enable).")
-        return
-    try:
-        body = (
-            f"New {label} request from the website:\n\n"
-            f"Name    : {e.get('name')}\n"
-            f"Email   : {e.get('email')}\n"
-            f"Phone   : {e.get('phone')}\n"
-            f"Company : {e.get('company')}\n"
-            f"Website : {e.get('website')}\n"
-            f"Service : {e.get('service')}\n"
-            f"Budget  : {e.get('budget')}\n"
-            f"Source  : {e.get('source')}\n"
-            f"Consent (T&C)     : {'yes' if e.get('consent') else 'no'}\n"
-            f"Marketing opt-in  : {'yes' if e.get('marketing') else 'no'}\n\n"
-            f"Message:\n{e.get('message') or '(none)'}\n\n"
-            f"— View in the admin panel: /admin/\n"
-        )
-        msg = EmailMessage()
-        msg["Subject"] = f"[Evision] New {label} — {e.get('name')}"
-        msg["From"] = SMTP_FROM
-        msg["To"] = NOTIFY_TO
-        if e.get("email"):
-            msg["Reply-To"] = e["email"]
-        msg.set_content(body)
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
-            s.starttls()
-            s.login(SMTP_USER, SMTP_PASS)
-            s.send_message(msg)
-        print(f"[enquiry] Notification email sent to {NOTIFY_TO}")
-    except Exception as ex:  # never let email problems break the API
-        print(f"[enquiry] Email notification failed: {ex}")
+        return False
+    body = (
+        f"New {label} request from the website:\n\n"
+        f"Name    : {e.get('name')}\n"
+        f"Email   : {e.get('email')}\n"
+        f"Phone   : {e.get('phone')}\n"
+        f"Company : {e.get('company')}\n"
+        f"Website : {e.get('website')}\n"
+        f"Service : {e.get('service')}\n"
+        f"Budget  : {e.get('budget')}\n"
+        f"Source  : {e.get('source')}\n"
+        f"Contact consent   : {'yes - SMS/RCS/Call/Email/WhatsApp + T&C' if e.get('consent') else 'NO - do not call/SMS'}\n"
+        f"Marketing opt-in  : {'yes' if e.get('marketing') else 'no'}\n\n"
+        f"Message:\n{e.get('message') or '(none)'}\n\n"
+        f"— View in the admin panel: {SITE_URL}/admin/\n"
+    )
+    msg = EmailMessage()
+    msg["Subject"] = f"[Evision] New {label} — {e.get('name')}"
+    msg["From"] = SMTP_FROM
+    msg["To"] = NOTIFY_TO
+    if e.get("email"):
+        msg["Reply-To"] = e["email"]
+    msg.set_content(body)
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
+        s.starttls()
+        s.login(SMTP_USER, SMTP_PASS)
+        s.send_message(msg)
+    return True   # failures are caught and logged by alert_new_enquiry()
 
 
 # ───────────────────────── blog post rendering ─────────────────────────
@@ -1067,9 +1485,9 @@ def render_post_page(post):
 <meta name="twitter:description" content="{e(og_desc)}">
 <script type="application/ld+json">{json.dumps(ld)}</script>
 <link rel="stylesheet" href="/assets/tokens.css?v=5">
-<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=6">
 <link rel="stylesheet" href="/assets/chrome.css?v=5">
-<link rel="stylesheet" href="/assets/blog.css?v=2">
+<link rel="stylesheet" href="/assets/blog.css?v=3">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body data-page="blog">
@@ -1104,8 +1522,8 @@ def render_post_page(post):
   </div>
 </section>
 
-<script src="/assets/site.js?v=6"></script>
-<script src="/assets/chrome.js?v=6"></script>
+<script src="/assets/site.js?v=7"></script>
+<script src="/assets/chrome.js?v=7"></script>
 </body>
 </html>"""
 
@@ -1148,6 +1566,7 @@ _SEG_LABEL = {
     "white-label-seo": "White-Label SEO", "seo-audit": "SEO Audit", "industry-seo": "Industry SEO",
     "content-writing": "Content Writing", "guest-posting": "Guest Posting", "digital-pr": "Digital PR",
     "pricing": "Packages & Pricing", "about": "About Us", "blog": "Blog", "contact": "Contact",
+    "website-health-check": "Website Health Check",
     "portfolio": "Portfolio", "clients": "Our Clients", "career": "Careers", "testimonials": "Testimonials",
     "privacy-policy": "Privacy Policy", "refund-policy": "Refund Policy", "terms": "Terms",
 }
@@ -1412,6 +1831,16 @@ class Handler(SimpleHTTPRequestHandler):
         except json.JSONDecodeError:
             return {}
 
+    def _client_ip(self):
+        """Real visitor IP. Nginx sets X-Forwarded-For / X-Real-IP (see
+        deploy/nginx-evision.conf); bind HOST=127.0.0.1 in production so those
+        headers can only come from the proxy."""
+        xff = self.headers.get("X-Forwarded-For", "")
+        if xff:
+            return xff.split(",")[0].strip()[:64]
+        return (self.headers.get("X-Real-IP")
+                or (self.client_address[0] if self.client_address else ""))[:64]
+
     def _auth(self):
         h = self.headers.get("Authorization", "")
         if h.startswith("Bearer "):
@@ -1659,8 +2088,11 @@ class Handler(SimpleHTTPRequestHandler):
                 return
             conn = db()
             stats = {
-                "enquiries": conn.execute("SELECT COUNT(*) n FROM enquiries").fetchone()["n"],
+                # "enquiries" counts real leads only — quarantined spam is
+                # reported separately so the headline number stays honest.
+                "enquiries": conn.execute("SELECT COUNT(*) n FROM enquiries WHERE status<>'spam'").fetchone()["n"],
                 "new": conn.execute("SELECT COUNT(*) n FROM enquiries WHERE status='new'").fetchone()["n"],
+                "spam": conn.execute("SELECT COUNT(*) n FROM enquiries WHERE status='spam'").fetchone()["n"],
                 "clients": conn.execute("SELECT COUNT(*) n FROM clients").fetchone()["n"],
                 "active": conn.execute("SELECT COUNT(*) n FROM clients WHERE status='active'").fetchone()["n"],
             }
@@ -1703,23 +2135,83 @@ class Handler(SimpleHTTPRequestHandler):
                 "marketing": 1 if data.get("marketing") else 0,
             }
             conn = db()
+
+            # ── anti-spam ──
+            ip = self._client_ip()
+            if enquiry_rate_limited(conn, ip):
+                conn.close()
+                log(f"[enquiry] Rate-limited {ip}")
+                # Deliberately vague + 429 so a bot loop backs off.
+                return self._json({"error": "Too many submissions. Please try again later."}, 429)
+
+            elapsed = data.get("_t")
+            try:
+                elapsed = int(elapsed) if elapsed is not None else None
+            except (TypeError, ValueError):
+                elapsed = None
+            ua = self.headers.get("User-Agent", "")[:300]
+            score, why = score_enquiry(
+                record, conn, ip=ip, ua=ua,
+                origin=self.headers.get("Origin", ""),
+                referer=self.headers.get("Referer", ""),
+                elapsed_ms=elapsed,
+                # _hp is stamped by assets/chrome.js; subject_line is the raw
+                # honeypot input, which also catches bots that skip our JS and
+                # POST the scraped field names straight at this endpoint.
+                honeypot=str(data.get("_hp") or "") + str(data.get("subject_line") or ""),
+            )
+            is_spam = score >= SPAM_THRESHOLD
+            record["status"] = "spam" if is_spam else "new"
+            record["spam_score"], record["spam_reason"] = score, "; ".join(why)
+
             conn.execute(
                 """INSERT INTO enquiries
                    (name,email,phone,company,website,service,budget,message,type,source,
-                    consent,marketing,status,created_at)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?, 'new', ?)""",
+                    consent,marketing,status,ip,ua,spam_score,spam_reason,created_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (
                     record["name"], record["email"], record["phone"], record["company"],
                     record["website"], record["service"], record["budget"], record["message"],
                     record["type"], record["source"], record["consent"], record["marketing"],
-                    now_iso(),
+                    record["status"], ip, ua, score, record["spam_reason"], now_iso(),
                 ),
             )
             conn.commit()
+            if is_spam:
+                purge_old_spam(conn)
             conn.close()
-            # Fire-and-forget admin notification (won't block the response).
-            threading.Thread(target=notify_new_enquiry, args=(record,), daemon=True).start()
+            if is_spam:
+                # Quarantined: no email, no "new" badge. Still visible under the
+                # Spam filter in /admin/ so nothing is lost to a false positive.
+                log(f"[enquiry] Spam ({score}) from {ip}: {record['name']} "
+                    f"<{record['email']}> - {record['spam_reason']}")
+            else:
+                # Fire-and-forget alerts: email + whichever phone channels are
+                # configured. Threaded so the visitor never waits on them.
+                threading.Thread(target=alert_new_enquiry, args=(record,), daemon=True).start()
+            # Bots get the same 201 as everyone else — an error would tell them
+            # what to change.
             return self._json({"ok": True}, 201)
+
+        # Public (shared-secret): the ElevenLabs phone agent, mid-conversation.
+        # Authenticated with a header secret rather than a login, because the
+        # caller is a machine. Failures answer 200 with a line for the agent to
+        # say — see the voice_* handlers below.
+        if path.startswith("/api/voice/"):
+            if not voice.enabled():
+                return self._json({"error": "Voice booking is not configured."}, 404)
+            if not voice.secret_ok(self.headers.get("X-Voice-Secret", "")):
+                log(f"[voice] Rejected {path} from {self._client_ip()} (bad secret)")
+                return self._json({"error": "Unauthorized"}, 401)
+            conversation = (self.headers.get("X-Conversation-Id")
+                            or data.get("conversation_id") or "").strip()[:128]
+            if path == "/api/voice/check-availability":
+                return self.voice_check_availability(data, conversation)
+            if path == "/api/voice/book-meeting":
+                return self.voice_book_meeting(data, conversation)
+            if path == "/api/voice/post-call":
+                return self.voice_post_call(data, conversation)
+            return self._json({"error": "Not found"}, 404)
 
         # Admin: login
         if path == "/api/admin/login":
@@ -1975,6 +2467,175 @@ class Handler(SimpleHTTPRequestHandler):
 
         return self._json({"error": "Not found"}, 404)
 
+    # ───────────── Voice agent handlers ─────────────
+    # Reached only via /api/voice/* above, so the shared secret is already
+    # checked. Each one answers 200 even when it fails: an HTTP error mid-call
+    # makes the agent freeze or hallucinate a confirmation at the caller, which
+    # is worse than losing the booking.
+
+    def voice_check_availability(self, data, conversation):
+        now = datetime.now(voice.IST)
+        raw_date = (data.get("preferred_date") or "").strip()
+        try:
+            preferred = datetime.strptime(raw_date, "%Y-%m-%d").date()
+        except ValueError:
+            preferred = now.date()      # agent sent nonsense; start from today
+        preferred = max(preferred, now.date())
+        part = (data.get("part_of_day") or "any").strip().lower()
+        try:
+            duration = 45 if int(data.get("duration_minutes") or 30) > 30 else 30
+        except (TypeError, ValueError):
+            duration = 30
+
+        try:
+            busy = voice.busy_intervals(preferred, preferred + timedelta(days=voice.SEARCH_DAYS))
+        except Exception as ex:
+            log(f"[voice] Calendar unreachable: {ex}")
+            return self._json(voice.reply_unavailable())
+
+        day, starts = voice.find_slots(preferred, duration, part, now, busy)
+        if not starts:
+            log(f"[voice] Nothing free from {preferred} for {duration}min")
+            return self._json(voice.reply_nothing_free(preferred))
+        held = voice.hold_slots(starts, duration, conversation)
+        log(f"[voice] Offered {len(held)} slot(s) on {day} to {conversation or 'unknown call'}")
+        return self._json(voice.reply_slots(day, preferred, held))
+
+    def voice_book_meeting(self, data, conversation):
+        name = (data.get("full_name") or "").strip()
+        email = (data.get("email") or "").strip().lower()
+        slot_id = (data.get("slot_id") or "").strip()
+        if not name or not EMAIL_RE.match(email):
+            log(f"[voice] Refusing to book with name={name!r} email={email!r}")
+            return self._json(voice.reply_book_failed())
+
+        # Phone lines drop and agents retry. Keying on the call id means a retry
+        # replays the same confirmation instead of booking a second meeting.
+        key = conversation or f"slot:{slot_id}"
+        conn = db()
+        prior = conn.execute("SELECT * FROM bookings WHERE conversation_id=?", (key,)).fetchone()
+        if prior:
+            conn.close()
+            log(f"[voice] Duplicate book_meeting for {key} — replaying confirmation")
+            return self._json(voice.reply_booked(
+                datetime.fromisoformat(prior["start_at"]), prior["meet_link"], prior["email"]))
+
+        offer = voice.take_offer(slot_id)
+        if not offer:
+            conn.close()
+            log(f"[voice] Unknown or expired slot_id {slot_id!r} for {key}")
+            return self._json(voice.reply_slot_gone())
+
+        lead = {
+            "full_name": name, "email": email,
+            "phone": (data.get("caller_phone") or "").strip(),
+            "company": (data.get("company") or "").strip(),
+            "project_type": (data.get("project_type") or "other").strip(),
+            "budget_band": (data.get("budget_band") or "not_disclosed").strip(),
+            "notes": (data.get("notes") or "").strip(),
+            "lead_source": (data.get("lead_source") or "").strip(),
+        }
+        try:
+            # Two callers can be quoted the same time within the same minute.
+            if not voice.is_still_free(offer["start"], offer["duration"]):
+                conn.close()
+                log(f"[voice] Slot {offer['start']} was taken before {key} confirmed")
+                return self._json(voice.reply_slot_gone())
+            event_id, meet_link = voice.create_event(offer["start"], offer["duration"], lead)
+        except Exception as ex:
+            conn.close()
+            log(f"[voice] Booking failed for {key}: {ex}")
+            return self._json(voice.reply_book_failed())
+
+        # Land it in the normal lead pipeline so it shows up in /admin/ and
+        # fires the same phone alerts as a web enquiry.
+        record = {
+            "name": name, "email": email, "phone": lead["phone"],
+            "company": lead["company"], "website": "",
+            "service": voice.PROJECT_LABELS.get(lead["project_type"], lead["project_type"]),
+            "budget": voice.BUDGET_LABELS.get(lead["budget_band"], ""),
+            "message": (f"Call booked for {voice.spoken(offer['start'])} (IST).\n\n"
+                        f"{lead['notes'] or '(no notes captured)'}"),
+            "type": "voice-call",
+            "source": lead["lead_source"] or "voice-agent",
+            "consent": 1, "marketing": 0, "status": "new",
+        }
+        cur = conn.execute(
+            """INSERT INTO enquiries
+               (name,email,phone,company,website,service,budget,message,type,source,
+                consent,marketing,status,ip,ua,spam_score,spam_reason,created_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'','',0,'',?)""",
+            (record["name"], record["email"], record["phone"], record["company"],
+             record["website"], record["service"], record["budget"], record["message"],
+             record["type"], record["source"], record["consent"], record["marketing"],
+             record["status"], now_iso()),
+        )
+        enquiry_id = cur.lastrowid
+        conn.execute(
+            """INSERT INTO bookings
+               (conversation_id,enquiry_id,name,email,phone,company,project_type,
+                budget_band,notes,start_at,duration_min,event_id,meet_link,
+                lead_source,status,created_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'booked',?)""",
+            (key, enquiry_id, name, email, lead["phone"], lead["company"],
+             lead["project_type"], lead["budget_band"], lead["notes"],
+             offer["start"].isoformat(), offer["duration"], event_id, meet_link,
+             lead["lead_source"], now_iso()),
+        )
+        conn.commit()
+        conn.close()
+        threading.Thread(target=alert_new_enquiry, args=(record,), daemon=True).start()
+        log(f"[voice] Booked {name} <{email}> for {offer['start']} ({key})")
+        return self._json(voice.reply_booked(offer["start"], meet_link, email))
+
+    def voice_post_call(self, data, conversation):
+        """Called once after the call ends, whether or not anything was booked."""
+        key = conversation or ""
+        summary = (data.get("summary") or "").strip()
+        name = (data.get("caller_name") or "").strip()
+        phone = (data.get("caller_phone") or "").strip()
+        conn = db()
+        booking = conn.execute("SELECT enquiry_id FROM bookings WHERE conversation_id=?",
+                               (key,)).fetchone() if key else None
+
+        if booking and booking["enquiry_id"]:
+            conn.execute("UPDATE enquiries SET notes=? WHERE id=?",
+                         (summary, booking["enquiry_id"]))
+            conn.commit()
+            conn.close()
+            log(f"[voice] Call summary attached to enquiry #{booking['enquiry_id']}")
+            return self._json({"ok": True})
+
+        # Nobody booked. The call is still a lead worth chasing, so it goes into
+        # the same inbox with status 'new' rather than disappearing.
+        if not (name or phone):
+            conn.close()
+            log(f"[voice] Post-call with no caller details ({key or 'no id'}) — ignored")
+            return self._json({"ok": True})
+        record = {
+            "name": name or "Unknown caller", "email": (data.get("email") or "").strip().lower(),
+            "phone": phone, "company": "", "website": "", "service": "", "budget": "",
+            "message": summary or "Voice call ended without a booking.",
+            "type": "voice-call",
+            "source": (data.get("lead_source") or "").strip() or "voice-agent",
+            "consent": 0, "marketing": 0, "status": "new",
+        }
+        conn.execute(
+            """INSERT INTO enquiries
+               (name,email,phone,company,website,service,budget,message,type,source,
+                consent,marketing,status,ip,ua,spam_score,spam_reason,created_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'','',0,'',?)""",
+            (record["name"], record["email"], record["phone"], record["company"],
+             record["website"], record["service"], record["budget"], record["message"],
+             record["type"], record["source"], record["consent"], record["marketing"],
+             record["status"], now_iso()),
+        )
+        conn.commit()
+        conn.close()
+        threading.Thread(target=alert_new_enquiry, args=(record,), daemon=True).start()
+        log(f"[voice] Unbooked call from {record['name']} saved as a lead")
+        return self._json({"ok": True})
+
     # ───────────── API: PATCH ─────────────
     def api_patch(self):
         acc = self._account()
@@ -2186,6 +2847,14 @@ class Handler(SimpleHTTPRequestHandler):
         # Authors may only delete their own blog posts; everything else is admin-only.
         if not is_admin and not re.match(r"^/api/admin/posts/\d+$", self.path):
             return self._json({"error": "This action is restricted to the main admin account."}, 403)
+        # Empty the spam quarantine in one go (must be matched before /(\d+)$).
+        if self.path == "/api/admin/enquiries/spam":
+            conn = db()
+            n = conn.execute("SELECT COUNT(*) n FROM enquiries WHERE status='spam'").fetchone()["n"]
+            conn.execute("DELETE FROM enquiries WHERE status='spam'")
+            conn.commit()
+            conn.close()
+            return self._json({"ok": True, "deleted": n})
         m = re.match(r"^/api/admin/enquiries/(\d+)$", self.path)
         if m:
             conn = db()
@@ -2258,9 +2927,13 @@ class Handler(SimpleHTTPRequestHandler):
 
 def main():
     init_db()
+    conn = db()
+    purge_old_spam(conn)          # keep the quarantine trimmed on every restart
+    conn.close()
     server = ThreadingHTTPServer((HOST, PORT), Handler)
     print(f"Evision Infoserve server running:")
     print(f"  Bound  ->  {HOST}:{PORT}")
+    print(f"  Spam   ->  quarantine at score >= {SPAM_THRESHOLD}, kept {SPAM_RETENTION_DAYS} days")
     print(f"  Site   ->  http://localhost:{PORT}/")
     print(f"  Admin  ->  http://localhost:{PORT}/admin/")
     try:

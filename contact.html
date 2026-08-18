@@ -7,7 +7,7 @@
 <title>Contact &amp; Request a Quote | Evision Infoserve</title>
 <meta name="description" content="Request a free quote or SEO audit from Evision Infoserve, Greater Noida. Call +91 93112 21517, WhatsApp us, or fill the RFQ form for a tailored proposal in 24 hours.">
 <link rel="stylesheet" href="/assets/tokens.css?v=5">
-<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=6">
 <link rel="stylesheet" href="/assets/chrome.css?v=5">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
@@ -85,6 +85,11 @@
           <h2>Project &amp; quote request</h2>
           <p class="sub">The more you share, the sharper our proposal. Fields marked <span style="color:var(--color-orange-500)">*</span> are required.</p>
           <input type="hidden" name="type" value="quote">
+          <!-- Honeypot: invisible to humans and screen readers, but bots that
+               scrape this form fill every input they find — the server scores
+               any submission carrying it as spam. Keep it in the markup so it
+               also traps bots that POST straight to /api/enquiry. -->
+          <div class="hp-trap" aria-hidden="true"><label>Subject line (leave blank)<input type="text" data-hp name="subject_line" tabindex="-1" autocomplete="off"></label></div>
           <div class="form-grid">
             <div class="field"><label>Full name <span class="req">*</span></label><input type="text" name="name" required placeholder="Your name"><span class="err-msg">Please enter your name.</span></div>
             <div class="field"><label>Work email <span class="req">*</span></label><input type="email" name="email" required placeholder="you@company.com"><span class="err-msg">Enter a valid email.</span></div>
@@ -97,9 +102,10 @@
               <select name="budget"><option value="">Select range…</option><option>₹10k – ₹25k</option><option>₹25k – ₹50k</option><option>₹50k – ₹1L</option><option>₹1L+</option></select></div>
             <div class="field full"><label>Tell us about your goals <span class="req">*</span></label><textarea name="message" required placeholder="What are you trying to achieve? Current challenges, target keywords, competitors…"></textarea><span class="err-msg">A few words help us help you.</span></div>
           </div>
-          <label class="consent-line"><input type="checkbox" name="marketing" value="1"><span>Keep me posted with SEO tips, offers &amp; updates by email. You can unsubscribe anytime.</span></label>
+          <label class="consent-line"><input type="checkbox" name="consent" value="1" required><span>I authorize <b>Evision Infoserve</b> to contact me with notifications and updates about my enquiry via <b>SMS, RCS, Call, Email &amp; WhatsApp</b> — including on a number registered with DND/NCPR. I accept the <a href="/terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>. <span class="req">*</span></span></label>
+          <label class="consent-line"><input type="checkbox" name="marketing" value="1"><span>Optional: keep me posted with SEO tips, offers &amp; updates. You can unsubscribe anytime.</span></label>
           <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top:16px"><i data-lucide="send" class="ic"></i>Send Request</button>
-          <p style="font-size:12.5px;color:var(--fg-muted-light);text-align:center;margin-top:12px">By submitting you agree to be contacted about your enquiry. We never share your data.</p>
+          <p style="font-size:12.5px;color:var(--fg-muted-light);text-align:center;margin-top:12px">We never share or sell your data. You can withdraw consent anytime by writing to info@evisioninfoserve.com.</p>
         </form>
         <div class="rfq-success" id="rfqSuccess">
           <div class="ok"><i data-lucide="check" class="ic"></i></div>
@@ -134,8 +140,8 @@
   </div>
 </section>
 
-<script src="/assets/site.js?v=6"></script>
-<script src="/assets/chrome.js?v=6"></script>
+<script src="/assets/site.js?v=7"></script>
+<script src="/assets/chrome.js?v=7"></script>
 <script src="/assets/pricing.js?v=5"></script>
 </body>
 </html>

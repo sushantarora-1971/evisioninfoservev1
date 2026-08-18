@@ -32,12 +32,19 @@
 <main class="main">
   <!-- ░ DASHBOARD ░ -->
   <section class="view" id="view-dashboard">
-    <header class="topbar"><h1>Dashboard</h1></header>
+    <header class="topbar">
+      <h1>Dashboard</h1>
+      <div class="filters">
+        <button class="btn-ghost sm" id="ringToggle"
+                title="Chime + desktop notification when a new lead arrives while this panel is open">🔔 Alerts on</button>
+      </div>
+    </header>
     <div class="stat-grid">
       <div class="stat"><span class="stat-k">Total enquiries</span><b id="sEnq">—</b></div>
       <div class="stat"><span class="stat-k">New / unread</span><b id="sNew" class="accent">—</b></div>
       <div class="stat"><span class="stat-k">Clients</span><b id="sCli">—</b></div>
       <div class="stat"><span class="stat-k">Active clients</span><b id="sAct" class="green">—</b></div>
+      <div class="stat"><span class="stat-k">Spam blocked</span><b id="sSpam">—</b></div>
     </div>
     <h2 class="sec-title">Latest enquiries</h2>
     <div class="card"><div id="recentWrap"></div></div>
@@ -49,8 +56,10 @@
       <h1>Enquiries</h1>
       <div class="filters">
         <input type="search" id="enqSearch" placeholder="Search name, email, company…">
-        <select id="enqType"><option value="">All types</option><option value="quote">Quote</option><option value="audit">Free audit</option><option value="get-started">Get Started</option></select>
-        <select id="enqStatus"><option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="converted">Converted</option><option value="closed">Closed</option></select>
+        <select id="enqType"><option value="">All types</option><option value="quote">Quote</option><option value="audit">Free audit</option><option value="get-started">Get Started</option><option value="lead-magnet">Lead magnet</option><option value="scorecard">Scorecard</option><option value="newsletter">Newsletter</option><option value="voice-call">Voice call</option></select>
+        <!-- "All statuses" hides quarantined spam; pick Spam to review it. -->
+        <select id="enqStatus"><option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="converted">Converted</option><option value="closed">Closed</option><option value="spam">🚫 Spam</option></select>
+        <button class="btn-ghost sm hidden" id="purgeSpamBtn">Delete all spam</button>
       </div>
     </header>
     <div class="card"><div id="enqWrap"></div></div>

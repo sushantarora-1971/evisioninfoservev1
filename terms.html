@@ -5,36 +5,353 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
 <title>Terms and Conditions | Evision Infoserve</title>
-<meta name="description" content="Evision Infoserve terms and conditions for using our website and services.">
+<meta name="description" content="The terms governing use of the Evision Infoserve website and our website design, development, SEO and content services — scope, payment, ownership, liability and governing law.">
 <link rel="stylesheet" href="/assets/tokens.css?v=5">
-<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=6">
 <link rel="stylesheet" href="/assets/chrome.css?v=5">
-<link rel="stylesheet" href="/assets/service.css">
+<link rel="stylesheet" href="/assets/service.css?v=5">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  /* ── Legal page shell (shared with privacy-policy.html) ── */
+  .lg-hero { background:
+    radial-gradient(820px 480px at 82% -10%, rgba(109,94,251,.22), transparent 60%),
+    var(--color-navy-900); color:#fff; position:relative; overflow:hidden; }
+  .lg-hero::before { content:""; position:absolute; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size:26px 26px;
+    mask-image: radial-gradient(700px 500px at 70% 0%, #000, transparent 76%); }
+  .lg-hero-inner { position:relative; z-index:1; padding:58px 0 64px; max-width:800px; }
+  .lg-hero h1 { font-size:clamp(34px,4.6vw,54px); line-height:1.04; letter-spacing:-0.035em; margin-top:16px; }
+  .lg-hero .lead { color:var(--fg-muted-dark); margin-top:16px; }
+  .lg-meta { display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+
+  .lg-wrap { display:grid; grid-template-columns:236px minmax(0,1fr); gap:60px; align-items:start; }
+
+  /* Table of contents */
+  .lg-toc { position:sticky; top:100px; }
+  .lg-toc-t { font-family:var(--font-headline); font-weight:700; font-size:12px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--color-gray-400); margin-bottom:14px; }
+  .lg-toc ol { list-style:none; margin:0; padding:0; }
+  .lg-toc a { display:block; padding:6px 0 6px 16px; font-size:14px; line-height:1.4;
+    color:var(--fg-muted-light); border-left:2px solid var(--border-light);
+    transition:color .15s, border-color .15s; }
+  .lg-toc a:hover { color:var(--color-blue-500); border-left-color:var(--color-blue-500); }
+
+  /* Prose */
+  .lg-body { max-width:760px; }
+  .lg-body h2 { font-family:var(--font-headline); font-weight:700; font-size:clamp(21px,2.4vw,26px);
+    letter-spacing:-0.02em; color:var(--color-navy-800); margin:48px 0 14px; scroll-margin-top:100px; }
+  .lg-body h3 { font-family:var(--font-headline); font-weight:600; font-size:17px;
+    color:var(--color-navy-800); margin:26px 0 8px; }
+  .lg-body p { color:var(--color-gray-800); line-height:1.72; margin-bottom:14px; }
+  .lg-body ul { margin:0 0 16px; padding-left:0; list-style:none; }
+  .lg-body ul li { position:relative; padding-left:26px; margin-bottom:9px; line-height:1.65;
+    color:var(--color-gray-800); }
+  .lg-body ul li::before { content:""; position:absolute; left:8px; top:10px; width:6px; height:6px;
+    border-radius:50%; background:var(--color-blue-500); }
+  .lg-body a { color:var(--color-blue-500); text-decoration:underline; text-underline-offset:2px; }
+  .lg-body strong { color:var(--color-navy-800); font-weight:650; }
+
+  /* Plain-English summary card */
+  .lg-tldr { border:1px solid var(--border-light); border-left:3px solid var(--color-blue-500);
+    background:var(--color-violet-100); border-radius:var(--radius-lg); padding:24px 26px; }
+  .lg-tldr h2 { margin:0 0 12px; font-size:18px; scroll-margin-top:0; }
+  .lg-tldr ul { margin-bottom:0; }
+
+  /* Callout */
+  .lg-note { border:1px solid var(--border-light); border-left:3px solid var(--color-gold-500);
+    background:#FFFBF0; border-radius:var(--radius-lg); padding:20px 24px; margin:22px 0; }
+  .lg-note p:last-child { margin-bottom:0; }
+  .lg-note ul { margin-bottom:0; }
+  .lg-note ul li::before { background:var(--color-gold-600); }
+
+  /* Data table */
+  .lg-tw { overflow-x:auto; margin:18px 0 22px; border:1px solid var(--border-light);
+    border-radius:var(--radius-lg); }
+  .lg-table { width:100%; border-collapse:collapse; font-size:14.5px; min-width:540px; }
+  .lg-table th, .lg-table td { text-align:left; padding:13px 16px;
+    border-bottom:1px solid var(--border-light); vertical-align:top; line-height:1.55; }
+  .lg-table th { background:var(--bg-subtle); font-family:var(--font-headline); font-weight:650;
+    font-size:13px; color:var(--color-navy-800); }
+  .lg-table tr:last-child td { border-bottom:0; }
+  .lg-table td { color:var(--color-gray-800); }
+
+  /* Contact block */
+  .lg-contact { border:1px solid var(--border-light); border-radius:var(--radius-lg);
+    padding:24px 26px; background:var(--bg-subtle); margin-top:20px; }
+  .lg-contact p { margin-bottom:6px; }
+  .lg-updated { display:inline-flex; align-items:center; gap:8px; font-size:13.5px;
+    color:var(--fg-muted-light); border:1px solid var(--border-light); border-radius:999px;
+    padding:6px 14px; margin-bottom:30px; }
+
+  @media (max-width:1000px){
+    .lg-wrap { grid-template-columns:1fr; gap:34px; }
+    .lg-toc { position:static; }
+    .lg-toc ol { columns:2; column-gap:24px; }
+  }
+  @media (max-width:560px){ .lg-toc ol { columns:1; } }
+</style>
 </head>
 <body data-page="">
 
-<section class="svc-hero">
-  <div class="container svc-hero-inner">
-    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-gold-500)">Terms and Conditions</span></nav>
+<!-- ░░ HERO ░░ -->
+<section class="lg-hero">
+  <div class="container lg-hero-inner">
+    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-blue-300)">Terms and Conditions</span></nav>
     <span class="eyebrow on-dark" style="margin-top:18px">Legal</span>
     <h1>Terms and Conditions</h1>
-    <p class="lead">The terms that govern your use of our website and services.</p>
+    <p class="lead">The terms on which you may use this website and on which Evision Infoserve provides website design, development, SEO and content services.</p>
+    <div class="lg-meta">
+      <span class="chip-mono"><i data-lucide="scale" style="width:14px;height:14px"></i>Governed by Indian law</span>
+      <span class="chip-mono"><i data-lucide="file-signature" style="width:14px;height:14px"></i>Your proposal overrides</span>
+      <span class="chip-mono"><i data-lucide="map-pin" style="width:14px;height:14px"></i>Gautam Buddh Nagar, U.P.</span>
+    </div>
   </div>
 </section>
 
+<!-- ░░ BODY ░░ -->
 <section class="section">
-  <div class="container" style="max-width:880px">
-    <p style="color:var(--fg-muted-light);margin-bottom:8px">Last updated: June 2026</p>
-    <p>These Terms and Conditions govern your use of the Evision Infoserve website and the services we provide. By using our site or engaging us, you agree to these terms.</p>
-    <h2 style="margin-top:28px">Use of our website</h2><p>You may use this site for lawful purposes only. You agree not to misuse it, attempt unauthorised access, or disrupt its operation.</p>
-    <h2 style="margin-top:28px">Services & proposals</h2><p>Specific services, deliverables, timelines and fees are set out in individual proposals or agreements, which take precedence where they differ from general information on this site.</p>
-    <h2 style="margin-top:28px">Quotes & pricing</h2><p>Prices shown on this site are indicative starting points and may change. A confirmed quote is provided after we understand your requirements.</p>
-    <h2 style="margin-top:28px">Client responsibilities</h2><p>You agree to provide timely access, information and approvals needed to deliver the work, and to ensure content you supply does not infringe third-party rights.</p>
-    <h2 style="margin-top:28px">Intellectual property</h2><p>Site content is owned by Evision Infoserve. Deliverables we create transfer to you as set out in your agreement, typically on full payment.</p>
-    <h2 style="margin-top:28px">Limitation of liability</h2><p>We deliver services with reasonable skill and care but do not guarantee specific rankings or results. Our liability is limited to the fees paid for the relevant service.</p>
-    <h2 style="margin-top:28px">Changes</h2><p>We may update these terms from time to time. Continued use of the site means you accept the current version.</p>
-    <h2 style="margin-top:28px">Contact</h2><p>Questions about these terms? Email info@evisioninfoserve.com or call +91 93112 21517.</p>
+  <div class="container">
+    <div class="lg-wrap">
+
+      <!-- TOC -->
+      <aside class="lg-toc">
+        <div class="lg-toc-t">On this page</div>
+        <ol>
+          <li><a href="#acceptance">1. Acceptance</a></li>
+          <li><a href="#definitions">2. Definitions</a></li>
+          <li><a href="#website-use">3. Use of this website</a></li>
+          <li><a href="#services">4. Services &amp; proposals</a></li>
+          <li><a href="#pricing">5. Quotes, pricing &amp; GST</a></li>
+          <li><a href="#payment">6. Payment terms</a></li>
+          <li><a href="#scope">7. Scope, changes &amp; revisions</a></li>
+          <li><a href="#your-responsibilities">8. Your responsibilities</a></li>
+          <li><a href="#timelines">9. Timelines &amp; delays</a></li>
+          <li><a href="#third-party">10. Third-party services</a></li>
+          <li><a href="#ip">11. Intellectual property</a></li>
+          <li><a href="#portfolio">12. Portfolio &amp; credit</a></li>
+          <li><a href="#results">13. Results &amp; SEO disclaimer</a></li>
+          <li><a href="#support">14. Support &amp; maintenance</a></li>
+          <li><a href="#confidentiality">15. Confidentiality</a></li>
+          <li><a href="#cancellation">16. Cancellation &amp; termination</a></li>
+          <li><a href="#liability">17. Warranties &amp; liability</a></li>
+          <li><a href="#indemnity">18. Indemnity</a></li>
+          <li><a href="#force-majeure">19. Force majeure</a></li>
+          <li><a href="#law">20. Governing law &amp; disputes</a></li>
+          <li><a href="#general">21. General</a></li>
+          <li><a href="#contact">22. Contact us</a></li>
+        </ol>
+      </aside>
+
+      <!-- PROSE -->
+      <div class="lg-body">
+        <span class="lg-updated"><i data-lucide="calendar-clock" style="width:15px;height:15px"></i>Last updated: 18 August 2026</span>
+
+        <div class="lg-tldr">
+          <h2>The short version</h2>
+          <ul>
+            <li>Prices on this website are <strong>indicative starting points</strong>. Your signed proposal is the real agreement and overrides this page.</li>
+            <li>We do our work with skill and care, but <strong>nobody can guarantee search rankings</strong> — including us.</li>
+            <li>You own the deliverables <strong>once you have paid in full</strong>.</li>
+            <li>We keep your business information confidential, and we ask you to give us timely feedback and approvals.</li>
+            <li>Our total liability is capped at <strong>the fees you paid us</strong> for the service concerned.</li>
+          </ul>
+        </div>
+
+        <h2 id="acceptance">1. Acceptance of these terms</h2>
+        <p>These Terms and Conditions ("Terms") govern your access to and use of the website <strong>evisioninfoserve.com</strong> and any services provided by <strong>Evision Infoserve</strong> ("Evision Infoserve", "we", "us", "our"), a business based at Gaur City Mall, Greater Noida West, Greater Noida, Uttar Pradesh 201009, India.</p>
+        <p>By browsing this website, submitting an enquiry, downloading a resource, booking a call or engaging us for any service, you confirm that you have read, understood and agree to be bound by these Terms. <strong>If you do not agree, please do not use this website or our services.</strong></p>
+        <p>You confirm that you are at least 18 years old and legally capable of entering into a binding contract, and that where you act for a company or firm you are authorised to bind it.</p>
+
+        <h2 id="definitions">2. Definitions</h2>
+        <ul>
+          <li><strong>"Client", "you"</strong> — the person or entity engaging Evision Infoserve for Services.</li>
+          <li><strong>"Services"</strong> — website design, website development, SEO, AEO/GEO and LLM optimisation, content writing, PPC, social media, and any other work we agree to perform.</li>
+          <li><strong>"Proposal"</strong> — the quotation, scope of work, statement of work or written agreement describing the specific Services, deliverables, timelines and fees for your project.</li>
+          <li><strong>"Deliverables"</strong> — the designs, code, content, reports and other materials we create for you under a Proposal.</li>
+          <li><strong>"Client Materials"</strong> — logos, text, images, data, credentials and other materials you supply to us.</li>
+        </ul>
+
+        <h2 id="website-use">3. Use of this website</h2>
+        <p>You may use this website for lawful purposes only. You agree not to:</p>
+        <ul>
+          <li>attempt to gain unauthorised access to any part of the website, its server, database or administrative area;</li>
+          <li>scrape, harvest, mirror or systematically extract content except as permitted by our <a href="/robots.txt">robots.txt</a>;</li>
+          <li>introduce malware, attempt to disrupt or overload the site, or interfere with other users' access;</li>
+          <li>submit false, misleading, abusive or spam content through our forms, or use our contact details to send unsolicited commercial messages;</li>
+          <li>copy, republish or resell our website content, articles, tools or designs without written permission.</li>
+        </ul>
+        <p>We may block, rate-limit or remove any submission or user that breaches this section, without notice.</p>
+        <p>All content on this website — text, layout, graphics, code, articles, checklists and tools — is owned by or licensed to Evision Infoserve and protected by Indian and international copyright law. Free resources we offer are provided for your own business use; you may not resell or distribute them as your own.</p>
+
+        <h2 id="services">4. Services and proposals</h2>
+        <p>Information on this website — service pages, packages, examples and timelines — is general and for guidance only. <strong>It is an invitation to discuss, not a binding offer.</strong></p>
+        <p>The Services we will actually perform for you are set out in your Proposal. Once you accept a Proposal in writing (including by email or by paying the advance), it forms a contract between us, read together with these Terms.</p>
+        <div class="lg-note">
+          <p><strong>Order of precedence.</strong> If anything in your signed Proposal conflicts with these Terms, <strong>the Proposal prevails</strong> for that project. If anything on a general website page conflicts with either, the Proposal and then these Terms prevail.</p>
+        </div>
+        <p>We may use qualified subcontractors or freelancers to help deliver parts of a project. We remain responsible to you for the work they perform.</p>
+
+        <h2 id="pricing">5. Quotes, pricing and GST</h2>
+        <ul>
+          <li>Prices shown on this website, including entry-level and package prices, are <strong>indicative starting points</strong> for a standard scope. Your final price depends on your requirements.</li>
+          <li>A written quotation is valid for <strong>30 days</strong> from its date unless it says otherwise.</li>
+          <li>Unless expressly stated, quoted fees are <strong>exclusive of GST and other applicable taxes</strong>, which will be charged at the prevailing rate.</li>
+          <li>Quoted fees exclude third-party costs — domain names, hosting, premium themes or plugins, stock images, fonts, paid tools and advertising spend — unless the Proposal lists them.</li>
+          <li>We may revise our published prices at any time. A change does not affect a Proposal you have already accepted.</li>
+          <li>Discounts and promotional offers apply only for the stated period and cannot be combined unless we say so.</li>
+        </ul>
+
+        <h2 id="payment">6. Payment terms</h2>
+        <ul>
+          <li><strong>Advance.</strong> Projects normally begin on receipt of the advance stated in the Proposal, typically 50% of the project fee. We are not obliged to start work before it is received.</li>
+          <li><strong>Retainers.</strong> Monthly services such as SEO, content and social media are billed in advance for each month.</li>
+          <li><strong>Balance.</strong> Any balance falls due as set out in the Proposal — typically before final launch, handover or transfer of files.</li>
+          <li><strong>Due date.</strong> Invoices are payable within <strong>7 days</strong> of the invoice date unless the Proposal states otherwise.</li>
+          <li><strong>Late payment.</strong> If an invoice remains unpaid past its due date, we may suspend work, pause reporting and withhold Deliverables or access until payment is received. We may charge interest of <strong>1.5% per month</strong> on overdue amounts.</li>
+          <li><strong>Deductions.</strong> Any TDS deducted must be at the correct statutory rate, and you agree to furnish the TDS certificate promptly.</li>
+          <li>Bank charges, payment-gateway fees and currency conversion costs are borne by you.</li>
+        </ul>
+
+        <h2 id="scope">7. Scope, change requests and revisions</h2>
+        <p>Each Proposal states what is included, including the number of design concepts and revision rounds.</p>
+        <ul>
+          <li><strong>Revisions</strong> mean refinements within the agreed direction and scope.</li>
+          <li><strong>A change request</strong> is anything beyond that — new pages or sections, a fresh design direction after approval, added features, integrations or platform changes. These are quoted separately and may affect the timeline.</li>
+          <li>We will tell you in writing before treating something as a change request, so you can decide whether to proceed.</li>
+          <li>Work approved at one stage — for example a sitemap or a design concept — is treated as signed off. Reopening it later is a change request.</li>
+        </ul>
+
+        <h2 id="your-responsibilities">8. Your responsibilities</h2>
+        <p>Timely delivery depends heavily on you. You agree to:</p>
+        <ul>
+          <li>provide content, images, logos, brand assets and access credentials promptly and in usable formats;</li>
+          <li>nominate a single point of contact who can give decisions and approvals;</li>
+          <li>respond to requests for feedback or approval within a reasonable period, normally <strong>5 working days</strong>;</li>
+          <li>ensure that all Client Materials you supply are accurate and that you own them or have the rights and licences to use them, including for text, photographs, fonts and any third-party content;</li>
+          <li>keep your own backups of any data, content and credentials you hold;</li>
+          <li>comply with applicable law in the way you use the Deliverables, including advertising, consumer, tax and data-protection law.</li>
+        </ul>
+        <p>We are not liable for delays, defects or losses caused by late, incomplete or inaccurate materials, delayed approvals, or changes made to the Deliverables by you or another party after handover.</p>
+
+        <h2 id="timelines">9. Timelines and delays</h2>
+        <p>Timelines in a Proposal are good-faith estimates based on prompt feedback and complete materials from you. They are not guaranteed dates unless the Proposal expressly says so.</p>
+        <p>If a project is put on hold at your request or through lack of response for more than <strong>30 days</strong>, we may treat it as dormant, invoice for the work completed to that point, and reschedule the remaining work subject to our availability. Work resumed after a long pause may be re-quoted.</p>
+
+        <h2 id="third-party">10. Third-party services and platforms</h2>
+        <p>Our work frequently involves platforms and tools we do not control — hosting providers, domain registrars, CMS platforms, search engines, plugins, APIs, analytics tools, payment gateways and advertising networks.</p>
+        <ul>
+          <li>Your use of those services is governed by <strong>their</strong> terms and pricing, which you are responsible for accepting and paying.</li>
+          <li>We are not responsible for outages, policy changes, algorithm updates, price rises, account suspensions, data loss or feature removals by a third party.</li>
+          <li>Where we procure a third-party item on your behalf, we pass through its cost and its licence terms; ownership and renewal remain your responsibility.</li>
+          <li>Recommendations we make about tools are our professional opinion, not a warranty of their performance.</li>
+        </ul>
+
+        <h2 id="ip">11. Intellectual property and ownership</h2>
+        <ul>
+          <li><strong>Your materials.</strong> Client Materials remain yours. You grant us a licence to use them for the purpose of delivering the Services.</li>
+          <li><strong>Deliverables.</strong> On <strong>full payment of all sums due</strong>, ownership of the final Deliverables created specifically for you — approved designs, custom code, and content we wrote for you — transfers to you.</li>
+          <li><strong>Before full payment</strong>, all rights in the Deliverables remain with Evision Infoserve, and any files shared are for review only.</li>
+          <li><strong>Our toolkit.</strong> We retain ownership of our pre-existing and reusable know-how, frameworks, component libraries, code snippets, templates, checklists and processes. Where these are embedded in your Deliverables, we grant you a perpetual, non-exclusive, royalty-free licence to use them as part of those Deliverables — but not to resell or license them separately.</li>
+          <li><strong>Third-party assets.</strong> Stock images, fonts, themes and plugins remain subject to their own licences, which pass to you as-is.</li>
+          <li><strong>Rejected concepts.</strong> Design concepts and drafts you did not select remain ours.</li>
+        </ul>
+
+        <h2 id="portfolio">12. Portfolio, credit and testimonials</h2>
+        <p>Unless you tell us otherwise in writing, we may display your project name, logo, screenshots and non-confidential results in our portfolio, case studies, social media and marketing materials. If you would prefer we did not, just let us know and we will remove it.</p>
+        <p>Where you provide a testimonial or review, you permit us to publish it with your name, role and company. Any performance figures we publish reflect that specific project and are not a promise of similar results.</p>
+
+        <h2 id="results">13. Results, SEO and AI visibility disclaimer</h2>
+        <p>This section matters, so please read it carefully.</p>
+        <div class="lg-note">
+          <ul>
+            <li><strong>We do not guarantee search rankings.</strong> Nobody can. Search engines are independent third parties whose algorithms change constantly and are not disclosed. Any agency promising a specific position is not being straight with you.</li>
+            <li><strong>We do not guarantee traffic, leads, conversions, revenue or a specific return on investment.</strong> Results depend on competition, your market, your budget, your product and factors outside our control.</li>
+            <li><strong>We do not guarantee inclusion or citation in AI assistants</strong> or generative search results. AEO, GEO and LLM optimisation improve your chances; they cannot compel a third-party model to cite you.</li>
+            <li><strong>Estimates and forecasts are illustrative</strong>, based on data available at the time, and are not commitments.</li>
+            <li><strong>Rankings can move</strong> after an algorithm update, a competitor's activity, a manual action, or changes you make to the site.</li>
+          </ul>
+        </div>
+        <p>What we do commit to is performing the Services with reasonable skill, care and diligence, using ethical, search-engine-compliant methods, and reporting honestly on what we did and what happened.</p>
+        <p>We do not use spam techniques, cloaking, private blog networks or purchased links. If you instruct us to work on a site that has previously used such techniques, or you use another provider alongside us who does, we accept no responsibility for penalties, ranking loss or de-indexing that follows.</p>
+
+        <h2 id="support">14. Handover, support and maintenance</h2>
+        <ul>
+          <li>After launch we provide a <strong>30-day defect-fix period</strong> covering genuine bugs in the work we delivered, at no charge, unless your Proposal states a different period.</li>
+          <li>That period does not cover new features, content changes, redesigns, or breakages caused by changes you or a third party made, by plugin or platform updates, or by hosting problems.</li>
+          <li>Ongoing maintenance, hosting, security monitoring and content updates are separate services, available under a maintenance plan.</li>
+          <li>We keep working copies during a project, but <strong>we are not your backup service</strong>. Maintaining backups of your live website and data is your responsibility unless a maintenance plan says otherwise.</li>
+        </ul>
+
+        <h2 id="confidentiality">15. Confidentiality and data protection</h2>
+        <p>Each of us agrees to keep the other's non-public business information confidential, to use it only for the purpose of the engagement, and to protect it with reasonable care. This does not apply to information that is already public, is received lawfully from someone else, is independently developed, or must be disclosed by law.</p>
+        <p>Credentials you share with us are used only for the agreed work and are handled as described in our <a href="/privacy-policy.html">Privacy Policy</a>. You should revoke our access when the engagement ends.</p>
+        <p>Where we process personal data on your behalf, we act on your instructions as a Data Processor under the Digital Personal Data Protection Act, 2023; you remain the Data Fiduciary for the personal data of your own users.</p>
+
+        <h2 id="cancellation">16. Cancellation, suspension and termination</h2>
+        <ul>
+          <li><strong>You may cancel</strong> a project or retainer by written notice. Retainers require <strong>30 days' written notice</strong> unless your Proposal states otherwise.</li>
+          <li>On cancellation, you remain liable for all work performed and third-party costs committed up to the effective date, and any advance covering that work is not refundable.</li>
+          <li><strong>We may suspend or terminate</strong> if invoices remain unpaid, if you fail to provide materials or approvals for a prolonged period, if you ask us to do something unlawful or unethical, or if you materially breach these Terms.</li>
+          <li>Either party may terminate immediately if the other becomes insolvent or commits a material breach that is not remedied within 15 days of written notice.</li>
+          <li>On termination we will, once all outstanding sums are paid, hand over the completed Deliverables and remove our access from your systems.</li>
+        </ul>
+        <p>Refunds are governed by our <a href="/refund-policy.html">Refund Policy</a>, which forms part of these Terms.</p>
+
+        <h2 id="liability">17. Warranties and limitation of liability</h2>
+        <p>We warrant that we will perform the Services with reasonable skill and care, and that the Deliverables we create for you will be our original work or properly licensed.</p>
+        <p>Except as expressly stated, this website and our Services are provided <strong>"as is"</strong>, and to the fullest extent permitted by law we exclude all other warranties, whether express or implied, including implied warranties of merchantability, fitness for a particular purpose and uninterrupted or error-free operation.</p>
+        <p>To the fullest extent permitted by law:</p>
+        <ul>
+          <li>we are <strong>not liable for indirect, incidental, special or consequential loss</strong>, including loss of profits, revenue, goodwill, business opportunity, anticipated savings or data, however caused;</li>
+          <li>our <strong>total aggregate liability</strong> arising out of or in connection with the Services, whether in contract, tort (including negligence) or otherwise, is limited to <strong>the total fees actually paid by you to us for the specific Service giving rise to the claim during the three (3) months preceding the event</strong>;</li>
+          <li>we are not liable for loss caused by third-party platforms, search-engine algorithm changes, hosting failures, hacking or malware on systems we do not control, or changes made by you or another provider;</li>
+          <li>any claim must be brought within <strong>six (6) months</strong> of the date you became aware of the circumstances giving rise to it.</li>
+        </ul>
+        <p>Nothing in these Terms limits liability for fraud, wilful misconduct, or any liability that cannot be excluded under Indian law. Your statutory rights as a consumer, where they apply, are not affected.</p>
+
+        <h2 id="indemnity">18. Indemnity</h2>
+        <p>You agree to indemnify and hold Evision Infoserve, its team and its subcontractors harmless from any claim, demand, loss, damage, cost or expense (including reasonable legal fees) arising out of:</p>
+        <ul>
+          <li>Client Materials you supplied, including any claim that they infringe a third party's intellectual property, privacy or publicity rights;</li>
+          <li>your use of the Deliverables in a way that breaches applicable law;</li>
+          <li>content, claims or offers you asked us to publish;</li>
+          <li>your breach of these Terms.</li>
+        </ul>
+
+        <h2 id="force-majeure">19. Force majeure</h2>
+        <p>Neither party is liable for failure or delay in performance caused by events beyond its reasonable control — including natural disasters, epidemics, war, civil unrest, government action, strikes, power failures, internet or hosting outages, cyber-attacks, or failures of third-party platforms. Affected obligations are suspended for the duration of the event, and if it continues for more than 60 days either party may terminate the affected work, with payment due for work already performed.</p>
+
+        <h2 id="law">20. Governing law and dispute resolution</h2>
+        <p>These Terms and any dispute or claim arising out of them, including non-contractual disputes, are governed by and construed in accordance with <strong>the laws of India</strong>.</p>
+        <p>If a dispute arises, both parties agree to first attempt to resolve it amicably through discussion, by writing to the contact address below, within <strong>30 days</strong>.</p>
+        <p>If it cannot be resolved that way, the dispute shall be referred to arbitration by a sole arbitrator under the Arbitration and Conciliation Act, 1996. The seat and venue of arbitration shall be <strong>Greater Noida, Uttar Pradesh</strong>, and the proceedings shall be conducted in English.</p>
+        <p>Subject to the above, the courts at <strong>Gautam Buddh Nagar, Uttar Pradesh</strong> shall have exclusive jurisdiction.</p>
+
+        <h2 id="general">21. General</h2>
+        <ul>
+          <li><strong>Entire agreement.</strong> These Terms, together with your Proposal, our <a href="/privacy-policy.html">Privacy Policy</a> and our <a href="/refund-policy.html">Refund Policy</a>, form the entire agreement between us and supersede earlier discussions.</li>
+          <li><strong>Changes.</strong> We may update these Terms from time to time; the "Last updated" date shows the current version. Changes apply from the date they are posted and do not retrospectively alter an accepted Proposal. Continued use of the website means you accept the current version.</li>
+          <li><strong>Severability.</strong> If any provision is held invalid or unenforceable, the rest remains in full force.</li>
+          <li><strong>No waiver.</strong> A delay or failure to enforce any right is not a waiver of it.</li>
+          <li><strong>Assignment.</strong> You may not assign your rights without our written consent. We may assign to a successor of our business.</li>
+          <li><strong>No partnership.</strong> Nothing here creates a partnership, joint venture, employment or agency relationship.</li>
+          <li><strong>Notices &amp; electronic records.</strong> Notices may be given by email to the addresses used in the engagement. This document is an electronic record under the Information Technology Act, 2000 and does not require a physical signature.</li>
+          <li><strong>Non-solicitation.</strong> During the engagement and for 12 months afterwards, neither party will directly solicit for employment any individual who worked on the project, without written consent.</li>
+        </ul>
+
+        <h2 id="contact">22. Contact us</h2>
+        <p>Questions about these Terms, or about a Proposal? We are happy to talk it through before you sign anything.</p>
+        <div class="lg-contact">
+          <p><strong>Evision Infoserve</strong></p>
+          <p><i data-lucide="mail" style="width:15px;height:15px;vertical-align:-2px"></i> <a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a></p>
+          <p><i data-lucide="phone" style="width:15px;height:15px;vertical-align:-2px"></i> <a href="tel:+919311221517">+91 93112 21517</a></p>
+          <p><i data-lucide="map-pin" style="width:15px;height:15px;vertical-align:-2px"></i> Gaur City Mall, Greater Noida West, Greater Noida, Uttar Pradesh 201009, India</p>
+          <p style="margin-top:12px;color:var(--fg-muted-light);font-size:14px">Please write "Terms query" in your subject line so we route it correctly.</p>
+        </div>
+        <p style="margin-top:22px">Related: <a href="/privacy-policy.html">Privacy Policy</a> · <a href="/refund-policy.html">Refund Policy</a></p>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -46,8 +363,8 @@
   </div>
 </section>
 
-<script src="/assets/site.js?v=6"></script>
-<script src="/assets/chrome.js?v=6"></script>
+<script src="/assets/site.js?v=7"></script>
+<script src="/assets/chrome.js?v=7"></script>
 <script src="/assets/pricing.js?v=5"></script>
 </body>
 </html>

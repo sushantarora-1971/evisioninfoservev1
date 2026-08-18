@@ -1,0 +1,118 @@
+{
+  "_comment": "Evision Infoserve — ElevenLabs Agent server tools. Attach both to the agent. Replace BASE_URL with your public HTTPS host (ngrok while testing) and REPLACE_WITH_SHARED_SECRET with the value of VOICE_SHARED_SECRET on the server. Note: no trailing slashes on the URLs — server.py matches paths exactly.",
+
+  "_post_call_webhook": "post_call is NOT a server tool. Configure it in the ElevenLabs agent settings under 'Post-call webhook' pointing at https://BASE_URL/api/voice/post-call with the same X-Voice-Secret header. It logs the call as a lead even when nothing was booked. Body: {conversation_id, summary, caller_name, caller_phone, email, lead_source}.",
+
+  "tools": [
+    {
+      "type": "webhook",
+      "name": "check_availability",
+      "description": "Call this to find open meeting slots on the calendar. Use it AFTER you have understood what kind of website the caller needs. Pass the date the caller prefers in YYYY-MM-DD format — resolve words like 'tomorrow' or 'Friday' yourself using the current_date variable. If the caller has no preference, pass the next working day. Returns at most three slots. Read them out loud naturally and let the caller pick one. Never invent a time that this tool did not return.",
+      "response_timeout_secs": 15,
+      "api_schema": {
+        "url": "https://BASE_URL/api/voice/check-availability",
+        "method": "POST",
+        "request_headers": {
+          "Content-Type": "application/json",
+          "X-Voice-Secret": "REPLACE_WITH_SHARED_SECRET",
+          "X-Conversation-Id": "{{system__conversation_id}}"
+        },
+        "request_body_schema": {
+          "type": "object",
+          "properties": {
+            "preferred_date": {
+              "type": "string",
+              "description": "Date the caller wants, in YYYY-MM-DD format. Asia/Kolkata timezone."
+            },
+            "part_of_day": {
+              "type": "string",
+              "enum": ["morning", "afternoon", "evening", "any"],
+              "description": "Caller's rough preference. Use 'any' if they did not say."
+            },
+            "duration_minutes": {
+              "type": "integer",
+              "description": "Meeting length. Use 30 unless the caller describes a large or complex project, then use 45."
+            }
+          },
+          "required": ["preferred_date"]
+        }
+      }
+    },
+
+    {
+      "type": "webhook",
+      "name": "book_meeting",
+      "description": "Call this ONLY after the caller has clearly agreed to a specific slot returned by check_availability, and you have collected their full name and email address. Pass the exact slot_id string from check_availability — do not modify it. Confirm the email back to the caller letter by letter before calling this. Returns a confirmation you should read out. If it returns an error, apologise and tell the caller the team will confirm by WhatsApp shortly.",
+      "response_timeout_secs": 25,
+      "api_schema": {
+        "url": "https://BASE_URL/api/voice/book-meeting",
+        "method": "POST",
+        "request_headers": {
+          "Content-Type": "application/json",
+          "X-Voice-Secret": "REPLACE_WITH_SHARED_SECRET",
+          "X-Conversation-Id": "{{system__conversation_id}}"
+        },
+        "request_body_schema": {
+          "type": "object",
+          "properties": {
+            "slot_id": {
+              "type": "string",
+              "description": "Exact slot_id string returned by check_availability. Copy it verbatim."
+            },
+            "full_name": {
+              "type": "string",
+              "description": "Caller's full name as they said it."
+            },
+            "email": {
+              "type": "string",
+              "description": "Caller's email address, lowercase, confirmed back to them before calling."
+            },
+            "caller_phone": {
+              "type": "string",
+              "description": "The caller's phone number in E.164 format. Pass the caller_phone dynamic variable."
+            },
+            "company": {
+              "type": "string",
+              "description": "Caller's company or business name. Empty string if individual."
+            },
+            "project_type": {
+              "type": "string",
+              "enum": [
+                "new_website",
+                "redesign",
+                "ecommerce",
+                "web_app",
+                "seo_only",
+                "maintenance",
+                "other"
+              ],
+              "description": "Best match for what the caller described."
+            },
+            "budget_band": {
+              "type": "string",
+              "enum": ["under_50k", "50k_150k", "150k_500k", "above_500k", "not_disclosed"],
+              "description": "Rough budget in INR if the caller shared it."
+            },
+            "lead_source": {
+              "type": "string",
+              "description": "Where the lead came from. Pass the lead_source dynamic variable."
+            },
+            "notes": {
+              "type": "string",
+              "description": "Two or three sentences summarising what the caller wants, in your own words. This goes into the calendar invite and the admin panel, so the team can prepare."
+            }
+          },
+          "required": ["slot_id", "full_name", "email", "project_type", "notes"]
+        }
+      }
+    }
+  ],
+
+  "dynamic_variables_to_pass_at_call_start": {
+    "current_date": "YYYY-MM-DD, the day the call is happening (Asia/Kolkata)",
+    "current_time_ist": "HH:MM, 24-hour",
+    "caller_name": "from your CRM record, empty string if unknown",
+    "caller_phone": "E.164 format",
+    "lead_source": "website_form | whatsapp | meta_ad | referral"
+  }
+}

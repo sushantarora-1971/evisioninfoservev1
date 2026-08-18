@@ -3,6 +3,62 @@
    Injects header, footer, chat + WhatsApp widgets on every page.
    Reads document.body.dataset.page for active nav state.
    ============================================================ */
+/* ── Anti-spam for every enquiry form ────────────────────────────────────────
+   Two traps, added in one place so every form (contact, popups, lead magnets,
+   scorecard, newsletter) is covered without touching its submit handler:
+     1. Honeypot — a hidden text input injected into each form. Humans never
+        see it; form-filling bots fill everything they find.
+     2. Timing  — how long the page was open before the POST. Bots submit in
+        milliseconds; humans take seconds.
+   Both ride along as _hp / _t on the JSON body, and server.py scores them.
+   ─────────────────────────────────────────────────────────────────────────── */
+(function () {
+  var T0 = Date.now();
+  // Named so a bot's "fill every text input" pass takes the bait, but browser
+  // autofill/password managers don't recognise it (they fill hidden url/email/
+  // name fields, which is the classic way a honeypot flags a real visitor).
+  var HP_NAME = "subject_line";
+
+  function addHoneypots(root) {
+    (root || document).querySelectorAll("form").forEach(function (f) {
+      if (f.querySelector("[data-hp]")) return;
+      var wrap = document.createElement("div");
+      wrap.setAttribute("aria-hidden", "true");
+      wrap.style.cssText = "position:absolute!important;left:-9999px!important;" +
+        "top:auto;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none";
+      wrap.innerHTML = '<label>Subject line (leave blank)<input type="text" data-hp name="' +
+        HP_NAME + '" tabindex="-1" autocomplete="off"></label>';
+      f.appendChild(wrap);
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { addHoneypots(); });
+  } else { addHoneypots(); }
+  // Header/footer/modals are injected later in this file — catch those too.
+  setTimeout(function () { addHoneypots(); }, 1200);
+
+  function honeypotValue() {
+    var v = "";
+    document.querySelectorAll("[data-hp]").forEach(function (i) { v += i.value || ""; });
+    return v;
+  }
+
+  // Stamp every enquiry POST, whoever sends it.
+  var origFetch = window.fetch;
+  window.fetch = function (input, init) {
+    try {
+      var url = typeof input === "string" ? input : (input && input.url) || "";
+      if (url.indexOf("/api/enquiry") !== -1 && init && typeof init.body === "string") {
+        var p = JSON.parse(init.body);
+        p._t = Date.now() - T0;
+        p._hp = honeypotValue();
+        init = Object.assign({}, init, { body: JSON.stringify(p) });
+      }
+    } catch (e) { /* never block a submission on this */ }
+    return origFetch.call(this, input, init);
+  };
+})();
+
 (function () {
   var page = document.body.dataset.page || "";
   var P = (window.SITE_PREFIX || "/"); // absolute links → server 301s .html to clean URLs
@@ -21,6 +77,7 @@
     "youtube-marketing.html": "/services/youtube-marketing", "email-marketing.html": "/services/email-marketing",
     "mobile-app-marketing.html": "/services/mobile-app-marketing", "services.html": "/services",
     "pricing.html": "/pricing", "about.html": "/about", "blog.html": "/blog", "contact.html": "/contact",
+    "website-scorecard.html": "/website-health-check",
     "portfolio.html": "/portfolio", "clients.html": "/clients", "career.html": "/career", "testimonials.html": "/testimonials",
     "privacy-policy.html": "/privacy-policy", "refund-policy.html": "/refund-policy", "terms.html": "/terms", "service.html": "/service"
   };
@@ -155,6 +212,7 @@
         '<a href="' + P + 'orm.html">ORM &amp; Reputation</a></div>' +
       '<div class="foot-col"><h4>Company</h4>' +
         '<a href="' + P + 'about.html">About Us</a>' +
+        '<a href="' + P + 'website-scorecard.html">Free Website Score</a>' +
         '<a href="' + P + 'blog.html">Blog</a>' +
         '<a href="' + P + 'portfolio.html">Case Studies</a>' +
         '<a href="' + P + 'clients.html">Our Clients</a>' +
@@ -175,6 +233,8 @@
         '<input type="email" name="email" placeholder="Your email address" autocomplete="email" aria-label="Email address">' +
         '<button type="submit" class="btn btn-primary btn-sm">Subscribe <i data-lucide="arrow-right" class="ic"></i></button>' +
         '<span class="fn-msg" id="footNewsMsg"></span>' +
+        '<p class="fn-fine">By subscribing you authorize Evision Infoserve to send you updates by email, and you accept our ' +
+          '<a href="' + P + 'terms.html">Terms</a> and <a href="' + P + 'privacy-policy.html">Privacy Policy</a>. Unsubscribe anytime.</p>' +
       '</form>' +
     '</div>' +
     '<div class="foot-bottom"><div class="copy">© 2026 Evision Infoserve. All rights reserved.</div>' +
@@ -233,7 +293,10 @@
             '</div>' +
             '<select name="service"><option value="">What are you looking for?…</option>' + auditOpts + '</select>' +
             '<label class="audit-consent"><input type="checkbox" id="auditConsent">' +
-              '<span>I accept the <a href="' + P + 'contact.html" data-audit-noop>Terms &amp; Conditions</a> and agree to receive my audit report and marketing emails from Evision Infoserve.</span></label>' +
+              '<span>I authorize <b>Evision Infoserve</b> to send me my audit report and related notifications via ' +
+              '<b>SMS, RCS, Call, Email &amp; WhatsApp</b> — including on a number registered with DND/NCPR — and I accept the ' +
+              '<a href="' + P + 'terms.html" target="_blank" rel="noopener" data-audit-noop>Terms &amp; Conditions</a> and ' +
+              '<a href="' + P + 'privacy-policy.html" target="_blank" rel="noopener" data-audit-noop>Privacy Policy</a>.</span></label>' +
             '<div class="audit-err" id="auditErr"></div>' +
             '<button type="submit" class="btn btn-primary btn-block btn-lg">Get my free quote &amp; audit <i data-lucide="arrow-right" class="ic"></i></button>' +
             '<p class="audit-fine">We respect your inbox — unsubscribe anytime.</p>' +
@@ -268,6 +331,11 @@
             '</div>' +
             '<input type="email" name="email" placeholder="Email (optional)" autocomplete="email">' +
             '<textarea name="message" rows="2" placeholder="Anything we should know? (optional)"></textarea>' +
+            '<label class="audit-consent"><input type="checkbox" id="startConsent">' +
+              '<span>I authorize <b>Evision Infoserve</b> to contact me via <b>SMS, RCS, Call, Email &amp; WhatsApp</b> ' +
+              '— including on a number registered with DND/NCPR — and I accept the ' +
+              '<a href="' + P + 'terms.html" target="_blank" rel="noopener" data-audit-noop>Terms &amp; Conditions</a> and ' +
+              '<a href="' + P + 'privacy-policy.html" target="_blank" rel="noopener" data-audit-noop>Privacy Policy</a>.</span></label>' +
             '<div class="audit-err" id="startErr"></div>' +
             '<button type="submit" class="btn btn-primary btn-block btn-lg">Request a callback <i data-lucide="phone-call" class="ic"></i></button>' +
             '<p class="audit-fine">We\'ll reach out via call &amp; WhatsApp. No spam, ever.</p>' +
@@ -323,7 +391,9 @@
     '.fn-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}' +
     '.fn-form input{padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:14px;min-width:240px}' +
     '.fn-form input::placeholder{color:rgba(255,255,255,.5)}.fn-form input:focus{outline:none;border-color:#6D5EFB}' +
-    '.fn-form input.fn-bad{border-color:#ef4444}.fn-msg{font-size:12.5px;color:#F5B62B;flex-basis:100%}';
+    '.fn-form input.fn-bad{border-color:#ef4444}.fn-msg{font-size:12.5px;color:#F5B62B;flex-basis:100%}' +
+    '.fn-fine{flex-basis:100%;font-size:11.5px;line-height:1.5;color:rgba(255,255,255,.45);margin:2px 0 0;max-width:420px}' +
+    '.fn-fine a{color:rgba(255,255,255,.7);text-decoration:underline}';
   var st = document.createElement("style"); st.textContent = LEADGEN_CSS; document.head.appendChild(st);
 
   // ── inject ──
@@ -499,10 +569,15 @@
     if (!nameV) { err.textContent = "Please enter your name."; return; }
     if (phoneV.replace(/\D/g, "").length < 8) { err.textContent = "Please enter a valid phone number."; return; }
     if (emailV && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailV)) { err.textContent = "Enter a valid email, or leave it blank."; return; }
+    var startConsent = document.getElementById("startConsent");
+    if (startConsent && !startConsent.checked) {
+      err.textContent = "Please authorize us to contact you so we can call you back."; return;
+    }
     var payload = {
       type: "get-started", name: nameV, phone: phoneV, email: emailV,
       service: get("service").value, message: get("message").value.trim(),
       source: (location.pathname.split("/").pop() || "home") + " (get started)",
+      consent: 1, marketing: 0
     };
     var btn = startForm.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Sending…";
@@ -533,7 +608,7 @@
       service: get("service").value,
       type: "audit",
       source: (location.pathname.split("/").pop() || "home") + " (audit popup)",
-      consent: 1, marketing: 1
+      consent: consent.checked ? 1 : 0, marketing: consent.checked ? 1 : 0
     };
     var btn = auditForm.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Sending…";

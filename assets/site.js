@@ -62,12 +62,16 @@
       var ok = true;
       form.querySelectorAll("[required]").forEach(function (inp) {
         var field = inp.closest(".field");
-        var valid = inp.type === "email" ? /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(inp.value) :
+        var valid = inp.type === "checkbox" ? inp.checked :
+          inp.type === "email" ? /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(inp.value) :
           inp.type === "tel" ? inp.value.replace(/\D/g, "").length >= 8 : inp.value.trim() !== "";
         if (field) field.classList.toggle("error", !valid);
+        // Consent checkboxes sit outside .field, so flag the label itself.
+        var line = inp.closest(".consent-line");
+        if (line) line.classList.toggle("error", !valid);
         if (!valid) ok = false;
       });
-      if (!ok) { var first = form.querySelector(".field.error input, .field.error select, .field.error textarea"); if (first) first.focus(); return; }
+      if (!ok) { var first = form.querySelector(".field.error input, .field.error select, .field.error textarea, .consent-line.error input"); if (first) first.focus(); return; }
       var success = form.querySelector("[data-success]") || document.getElementById(form.dataset.success);
       function showSuccess() { form.style.display = "none"; if (success) success.style.display = ""; }
 
@@ -93,6 +97,9 @@
     });
     form.querySelectorAll("input,select,textarea").forEach(function (inp) {
       inp.addEventListener("input", function () { var f = inp.closest(".field"); if (f) f.classList.remove("error"); });
+      inp.addEventListener("change", function () {
+        var l = inp.closest(".consent-line"); if (l) l.classList.remove("error");
+      });
     });
   });
 
@@ -138,7 +145,9 @@
       var payload = {
         name: name.value.trim(), email: email.value.trim(), phone: phone.value.trim(),
         service: magnet, message: "Requested resource: " + magnet,
-        type: "lead-magnet", source: slug, consent: 1, marketing: consent && consent.checked ? 1 : 0
+        type: "lead-magnet", source: slug,
+        consent: consent && consent.checked ? 1 : 0,
+        marketing: consent && consent.checked ? 1 : 0
       };
       var btn = form.querySelector("button[type=submit]");
       if (btn) { btn.disabled = true; btn.dataset.label = btn.innerHTML; btn.textContent = "Sending…"; }

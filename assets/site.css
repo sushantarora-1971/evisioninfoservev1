@@ -266,6 +266,17 @@ h1,h2,h3,h4 { font-family: var(--font-headline); font-weight: 700; line-height: 
 .field .err-msg { font-size: 12px; color: var(--color-red-500); display: none; }
 .field.error .err-msg { display: block; }
 
+/* Consent / authorisation checkboxes (DND + T&C opt-in) */
+.consent-line { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px;
+  font-size: 12.5px; line-height: 1.5; color: var(--fg-muted-light); cursor: pointer; }
+.consent-line input { width: 17px; height: 17px; margin: 1px 0 0; flex: none;
+  accent-color: var(--color-blue-500); cursor: pointer; }
+.consent-line b { color: var(--color-navy-700); font-weight: 600; }
+.consent-line a { color: var(--color-blue-500); text-decoration: underline; text-underline-offset: 2px; }
+.consent-line .req { color: var(--color-orange-500); }
+.consent-line.error { color: var(--color-red-500); }
+.consent-line.error input { outline: 2px solid var(--color-red-500); outline-offset: 2px; }
+
 /* ── Breadcrumb ────────────────────────────────────────────── */
 .crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--fg-muted-light); }
 .crumb a:hover { color: var(--color-blue-500); }
@@ -415,3 +426,8 @@ h1,h2,h3,h4 { font-family: var(--font-headline); font-weight: 700; line-height: 
 .pillrow .p .ic { width:16px; height:16px; color: var(--color-blue-500); }
 .section-ink .pillrow .p { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color:#fff; }
 .section-ink .pillrow .p .ic { color: var(--color-blue-300); }
+
+/* Honeypot trap — off-screen for humans, still in the DOM for bots to fill.
+   Never use display:none: the better bots skip fields they can tell are hidden. */
+.hp-trap { position:absolute !important; left:-9999px !important; top:auto;
+  width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; }

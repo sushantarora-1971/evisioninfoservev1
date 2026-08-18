@@ -32,3 +32,9 @@ Thumbs.db
 .DS_Store
 .vscode/
 *.log
+
+# Vendored upstream clone (625 MB, has its own .git) — not part of this site
+ruflo/
+
+# claude-flow tool artifacts
+.claude-flow/

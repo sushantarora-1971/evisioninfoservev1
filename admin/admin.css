@@ -94,6 +94,7 @@ button{cursor:pointer;font:inherit}
 .pill-closed{background:var(--slate-bg);color:var(--muted)}
 .pill-paused{background:var(--amber-bg);color:var(--amber)}
 .pill-churned{background:var(--red-bg);color:var(--red)}
+.pill-spam{background:var(--red-bg);color:var(--red)}
 
 /* ── Drawer ── */
 .drawer-overlay{position:fixed;inset:0;background:rgba(11,25,48,.4);z-index:40}

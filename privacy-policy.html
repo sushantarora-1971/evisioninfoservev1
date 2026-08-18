@@ -5,36 +5,323 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
 <title>Privacy Policy | Evision Infoserve</title>
-<meta name="description" content="Evision Infoserve privacy policy — how we collect, use and protect your personal data.">
+<meta name="description" content="How Evision Infoserve collects, uses, shares and protects your personal data — written for the Digital Personal Data Protection Act, 2023. Includes your rights and our Grievance Officer.">
 <link rel="stylesheet" href="/assets/tokens.css?v=5">
-<link rel="stylesheet" href="/assets/site.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=6">
 <link rel="stylesheet" href="/assets/chrome.css?v=5">
-<link rel="stylesheet" href="/assets/service.css">
+<link rel="stylesheet" href="/assets/service.css?v=5">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  /* ── Legal page shell (shared with terms.html) ── */
+  .lg-hero { background:
+    radial-gradient(820px 480px at 82% -10%, rgba(109,94,251,.22), transparent 60%),
+    var(--color-navy-900); color:#fff; position:relative; overflow:hidden; }
+  .lg-hero::before { content:""; position:absolute; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size:26px 26px;
+    mask-image: radial-gradient(700px 500px at 70% 0%, #000, transparent 76%); }
+  .lg-hero-inner { position:relative; z-index:1; padding:58px 0 64px; max-width:800px; }
+  .lg-hero h1 { font-size:clamp(34px,4.6vw,54px); line-height:1.04; letter-spacing:-0.035em; margin-top:16px; }
+  .lg-hero .lead { color:var(--fg-muted-dark); margin-top:16px; }
+  .lg-meta { display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+
+  .lg-wrap { display:grid; grid-template-columns:236px minmax(0,1fr); gap:60px; align-items:start; }
+
+  /* Table of contents */
+  .lg-toc { position:sticky; top:100px; }
+  .lg-toc-t { font-family:var(--font-headline); font-weight:700; font-size:12px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--color-gray-400); margin-bottom:14px; }
+  .lg-toc ol { list-style:none; margin:0; padding:0; }
+  .lg-toc a { display:block; padding:6px 0 6px 16px; font-size:14px; line-height:1.4;
+    color:var(--fg-muted-light); border-left:2px solid var(--border-light);
+    transition:color .15s, border-color .15s; }
+  .lg-toc a:hover { color:var(--color-blue-500); border-left-color:var(--color-blue-500); }
+
+  /* Prose */
+  .lg-body { max-width:760px; }
+  .lg-body h2 { font-family:var(--font-headline); font-weight:700; font-size:clamp(21px,2.4vw,26px);
+    letter-spacing:-0.02em; color:var(--color-navy-800); margin:48px 0 14px; scroll-margin-top:100px; }
+  .lg-body h3 { font-family:var(--font-headline); font-weight:600; font-size:17px;
+    color:var(--color-navy-800); margin:26px 0 8px; }
+  .lg-body p { color:var(--color-gray-800); line-height:1.72; margin-bottom:14px; }
+  .lg-body ul { margin:0 0 16px; padding-left:0; list-style:none; }
+  .lg-body ul li { position:relative; padding-left:26px; margin-bottom:9px; line-height:1.65;
+    color:var(--color-gray-800); }
+  .lg-body ul li::before { content:""; position:absolute; left:8px; top:10px; width:6px; height:6px;
+    border-radius:50%; background:var(--color-blue-500); }
+  .lg-body a { color:var(--color-blue-500); text-decoration:underline; text-underline-offset:2px; }
+  .lg-body strong { color:var(--color-navy-800); font-weight:650; }
+
+  /* Plain-English summary card */
+  .lg-tldr { border:1px solid var(--border-light); border-left:3px solid var(--color-blue-500);
+    background:var(--color-violet-100); border-radius:var(--radius-lg); padding:24px 26px; }
+  .lg-tldr h2 { margin:0 0 12px; font-size:18px; scroll-margin-top:0; }
+  .lg-tldr ul { margin-bottom:0; }
+
+  /* Callout */
+  .lg-note { border:1px solid var(--border-light); border-left:3px solid var(--color-gold-500);
+    background:#FFFBF0; border-radius:var(--radius-lg); padding:20px 24px; margin:22px 0; }
+  .lg-note p:last-child { margin-bottom:0; }
+  .lg-note ul li::before { background:var(--color-gold-600); }
+
+  /* Data table */
+  .lg-tw { overflow-x:auto; margin:18px 0 22px; border:1px solid var(--border-light);
+    border-radius:var(--radius-lg); }
+  .lg-table { width:100%; border-collapse:collapse; font-size:14.5px; min-width:540px; }
+  .lg-table th, .lg-table td { text-align:left; padding:13px 16px;
+    border-bottom:1px solid var(--border-light); vertical-align:top; line-height:1.55; }
+  .lg-table th { background:var(--bg-subtle); font-family:var(--font-headline); font-weight:650;
+    font-size:13px; color:var(--color-navy-800); }
+  .lg-table tr:last-child td { border-bottom:0; }
+  .lg-table td { color:var(--color-gray-800); }
+
+  /* Contact block */
+  .lg-contact { border:1px solid var(--border-light); border-radius:var(--radius-lg);
+    padding:24px 26px; background:var(--bg-subtle); margin-top:20px; }
+  .lg-contact p { margin-bottom:6px; }
+  .lg-updated { display:inline-flex; align-items:center; gap:8px; font-size:13.5px;
+    color:var(--fg-muted-light); border:1px solid var(--border-light); border-radius:999px;
+    padding:6px 14px; margin-bottom:30px; }
+
+  @media (max-width:1000px){
+    .lg-wrap { grid-template-columns:1fr; gap:34px; }
+    .lg-toc { position:static; }
+    .lg-toc ol { columns:2; column-gap:24px; }
+  }
+  @media (max-width:560px){ .lg-toc ol { columns:1; } }
+</style>
 </head>
 <body data-page="">
 
-<section class="svc-hero">
-  <div class="container svc-hero-inner">
-    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-gold-500)">Privacy Policy</span></nav>
+<!-- ░░ HERO ░░ -->
+<section class="lg-hero">
+  <div class="container lg-hero-inner">
+    <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-blue-300)">Privacy Policy</span></nav>
     <span class="eyebrow on-dark" style="margin-top:18px">Legal</span>
     <h1>Privacy Policy</h1>
-    <p class="lead">How we collect, use and protect your information.</p>
+    <p class="lead">What personal data Evision Infoserve collects, why we collect it, who we share it with, how long we keep it — and the rights you have over it.</p>
+    <div class="lg-meta">
+      <span class="chip-mono"><i data-lucide="shield-check" style="width:14px;height:14px"></i>DPDP Act, 2023</span>
+      <span class="chip-mono"><i data-lucide="cookie" style="width:14px;height:14px"></i>No ad or tracking cookies</span>
+      <span class="chip-mono"><i data-lucide="map-pin" style="width:14px;height:14px"></i>Data stored in India</span>
+    </div>
   </div>
 </section>
 
+<!-- ░░ BODY ░░ -->
 <section class="section">
-  <div class="container" style="max-width:880px">
-    <p style="color:var(--fg-muted-light);margin-bottom:8px">Last updated: June 2026</p>
-    <p>This Privacy Policy explains how Evision Infoserve ("we", "us") collects and uses information when you use our website or services.</p>
-    <h2 style="margin-top:28px">Information we collect</h2><p>We collect details you submit through our forms — such as your name, email, phone number, company and message — plus standard analytics data like pages visited and device type.</p>
-    <h2 style="margin-top:28px">How we use it</h2><p>We use your information to respond to enquiries, deliver and improve our services, send updates you've opted into, and meet legal obligations.</p>
-    <h2 style="margin-top:28px">Marketing communications</h2><p>If you opt in, we may email you tips, offers and updates. You can unsubscribe at any time using the link in any email.</p>
-    <h2 style="margin-top:28px">Cookies & analytics</h2><p>We use cookies and analytics tools to understand how the site is used and to improve it. You can control cookies through your browser settings.</p>
-    <h2 style="margin-top:28px">Data sharing</h2><p>We do not sell your data. We share it only with trusted providers who help us operate (e.g. email and analytics), under appropriate safeguards.</p>
-    <h2 style="margin-top:28px">Data security</h2><p>We use reasonable technical and organisational measures to protect your data. No method of transmission is 100% secure, but we take protection seriously.</p>
-    <h2 style="margin-top:28px">Your rights</h2><p>You may request access to, correction of, or deletion of your personal data. Contact us and we'll respond promptly.</p>
-    <h2 style="margin-top:28px">Contact</h2><p>Questions about this policy? Email info@evisioninfoserve.com or call +91 93112 21517.</p>
+  <div class="container">
+    <div class="lg-wrap">
+
+      <!-- TOC -->
+      <aside class="lg-toc">
+        <div class="lg-toc-t">On this page</div>
+        <ol>
+          <li><a href="#who-we-are">1. Who we are</a></li>
+          <li><a href="#scope">2. Scope</a></li>
+          <li><a href="#what-we-collect">3. Data we collect</a></li>
+          <li><a href="#why">4. Why we use it</a></li>
+          <li><a href="#consent">5. Consent &amp; lawful basis</a></li>
+          <li><a href="#cookies">6. Cookies &amp; storage</a></li>
+          <li><a href="#sharing">7. Who we share it with</a></li>
+          <li><a href="#client-data">8. Client project data</a></li>
+          <li><a href="#retention">9. How long we keep it</a></li>
+          <li><a href="#security">10. How we protect it</a></li>
+          <li><a href="#rights">11. Your rights</a></li>
+          <li><a href="#children">12. Children's data</a></li>
+          <li><a href="#transfers">13. Transfers outside India</a></li>
+          <li><a href="#third-party">14. Third-party links</a></li>
+          <li><a href="#changes">15. Changes</a></li>
+          <li><a href="#grievance">16. Grievance Officer</a></li>
+        </ol>
+      </aside>
+
+      <!-- PROSE -->
+      <div class="lg-body">
+        <span class="lg-updated"><i data-lucide="calendar-clock" style="width:15px;height:15px"></i>Last updated: 18 August 2026</span>
+
+        <div class="lg-tldr">
+          <h2>The short version</h2>
+          <ul>
+            <li>We collect the details <strong>you type into our forms</strong> — name, email, phone, company, website and what you need help with.</li>
+            <li>We use them to <strong>reply to you, deliver our services and send updates you asked for</strong>. Nothing else.</li>
+            <li>We run <strong>no advertising trackers and set no marketing cookies</strong> on this website.</li>
+            <li>We <strong>never sell your data</strong> and never trade it to data brokers.</li>
+            <li>You can ask us to <strong>show, correct or delete</strong> your data at any time — write to <a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a>.</li>
+          </ul>
+        </div>
+
+        <h2 id="who-we-are">1. Who we are</h2>
+        <p><strong>Evision Infoserve</strong> ("Evision Infoserve", "we", "us", "our") is a website design, development and SEO studio based in Greater Noida, Uttar Pradesh, India. We operate the website <strong>evisioninfoserve.com</strong> and the services offered through it.</p>
+        <p>For the purposes of the Digital Personal Data Protection Act, 2023 ("DPDP Act"), Evision Infoserve is the <strong>Data Fiduciary</strong> responsible for the personal data described in this policy. Where you are a client and we handle data inside your own systems, we act as a <strong>Data Processor</strong> on your instructions — see <a href="#client-data">section 8</a>.</p>
+        <p><strong>Contact:</strong> Gaur City Mall, Greater Noida West, Greater Noida, Uttar Pradesh 201009, India · <a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a> · <a href="tel:+919311221517">+91 93112 21517</a></p>
+
+        <h2 id="scope">2. Scope of this policy</h2>
+        <p>This policy applies to personal data we collect when you:</p>
+        <ul>
+          <li>browse evisioninfoserve.com or any of its pages;</li>
+          <li>submit an enquiry, quote request, callback request or contact form;</li>
+          <li>download a free resource, guide or checklist (a "lead magnet");</li>
+          <li>take our free Website Health Scorecard quiz;</li>
+          <li>subscribe to our newsletter;</li>
+          <li>book a call with us, including through our automated voice assistant; or</li>
+          <li>engage us as a client for design, development, SEO or related services.</li>
+        </ul>
+        <p>It does not apply to third-party websites we link to, or to how our clients handle data on their own properties.</p>
+
+        <h2 id="what-we-collect">3. Data we collect</h2>
+
+        <h3>3.1 Information you give us</h3>
+        <p>Every field below is collected only because you typed it into a form or told it to us:</p>
+        <div class="lg-tw">
+          <table class="lg-table">
+            <thead><tr><th style="width:34%">Where</th><th>What we collect</th></tr></thead>
+            <tbody>
+              <tr><td>Enquiry, quote &amp; contact forms</td><td>Name, email address, phone/WhatsApp number, company name, website URL, service required, budget range and your message.</td></tr>
+              <tr><td>Lead-magnet download forms</td><td>Name, email address, phone number, and whether you ticked the consent box for follow-up tips.</td></tr>
+              <tr><td>Website Health Scorecard</td><td>Your answers to the quiz questions, plus name, email and phone if you ask us to send the resulting action plan.</td></tr>
+              <tr><td>Newsletter form</td><td>Email address.</td></tr>
+              <tr><td>Call bookings, including our voice assistant</td><td>Name, email, phone, company, project type, budget band, notes from the conversation, your preferred meeting time and a call reference ID.</td></tr>
+              <tr><td>Client onboarding</td><td>Billing and contact details, GSTIN where applicable, and the project information needed to deliver the work.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.2 Information collected automatically</h3>
+        <p>When you submit a form, our server records a small amount of technical information alongside it:</p>
+        <ul>
+          <li><strong>IP address</strong> and <strong>browser user-agent string</strong> — used to rate-limit submissions and score them for spam, so genuine enquiries reach us;</li>
+          <li><strong>the page you submitted from</strong> — so we know which enquiry relates to which service;</li>
+          <li><strong>standard web-server logs</strong> — requested URL, timestamp, response status and referring page.</li>
+        </ul>
+        <div class="lg-note">
+          <p><strong>What we deliberately do not do:</strong> this website carries no Google Analytics, no Meta/Facebook pixel, no advertising or retargeting tags and no cross-site tracking scripts. We do not build behavioural profiles of visitors and we do not fingerprint your device.</p>
+        </div>
+
+        <h3>3.3 Sensitive personal data</h3>
+        <p>We do not ask for — and do not want — financial account details, passwords, government identifiers, health information or any other sensitive category of data through our website forms. Please do not include them in a form message. Payment for our services is settled directly through your bank or a payment provider: <strong>we never store your full card or bank credentials.</strong></p>
+
+        <h2 id="why">4. Why we use your data</h2>
+        <p>We use personal data only for the purposes it was given for:</p>
+        <div class="lg-tw">
+          <table class="lg-table">
+            <thead><tr><th style="width:38%">Purpose</th><th>What this means in practice</th></tr></thead>
+            <tbody>
+              <tr><td>Responding to you</td><td>Replying to your enquiry by email, phone, WhatsApp or a scheduled call, and preparing a proposal or quote.</td></tr>
+              <tr><td>Delivering our services</td><td>Running your design, development, SEO or content project, reporting on it and supporting you afterwards.</td></tr>
+              <tr><td>Sending what you asked for</td><td>Emailing the guide, checklist, audit or scorecard result you requested.</td></tr>
+              <tr><td>Marketing you opted into</td><td>Occasional tips, offers and updates — only if you ticked the consent box or subscribed. Every email carries an unsubscribe link.</td></tr>
+              <tr><td>Protecting the website</td><td>Spam scoring, rate limiting and abuse prevention on our forms.</td></tr>
+              <tr><td>Billing and records</td><td>Raising invoices, collecting payment and keeping the accounting and tax records Indian law requires.</td></tr>
+              <tr><td>Improving what we do</td><td>Understanding, in aggregate, which services people ask about most — so we can explain them better.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>We do not use your data for automated decision-making that produces legal effects, and we do not profile you for advertising.</p>
+
+        <h2 id="consent">5. Consent and lawful basis</h2>
+        <p>Under the DPDP Act we process your personal data on the basis of:</p>
+        <ul>
+          <li><strong>Your consent</strong> — given freely and specifically when you submit a form, tick a consent box or subscribe. You may withdraw it at any time (see <a href="#rights">section 11</a>); withdrawal does not affect processing already carried out.</li>
+          <li><strong>Certain legitimate uses</strong> permitted by the Act — for example using the details you voluntarily provided for the very purpose you provided them, complying with a legal obligation, or responding to a court or regulatory order.</li>
+        </ul>
+        <p>If we ever want to use your data for a genuinely new purpose, we will ask you first.</p>
+
+        <h2 id="cookies">6. Cookies and local storage</h2>
+        <p>We keep this minimal:</p>
+        <ul>
+          <li><strong>We set no advertising or analytics cookies.</strong> There is no third-party tracking cookie on this website.</li>
+          <li><strong>Browser local storage</strong> holds small interface preferences — for example remembering that you dismissed the offer banner or already saw the enquiry pop-up, so we do not show it again. This stays in your browser and is never sent to us.</li>
+          <li><strong>Administrator sign-in</strong> to our internal dashboard uses a session token held in that administrator's own browser. This applies to Evision Infoserve staff, not to site visitors.</li>
+        </ul>
+        <p>You can clear local storage and cookies at any time through your browser settings. Doing so will not stop you using the website; you may just see a banner or pop-up again.</p>
+        <p>Because we run no advertising trackers, there is no consent banner to accept or reject. If we ever introduce analytics or marketing tags, we will update this policy and ask for your consent before those tags load.</p>
+
+        <h2 id="sharing">7. Who we share your data with</h2>
+        <p><strong>We do not sell, rent or trade your personal data.</strong> We share it only with service providers who help us operate, and only to the extent each one needs:</p>
+        <div class="lg-tw">
+          <table class="lg-table">
+            <thead><tr><th style="width:34%">Provider type</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>Hosting &amp; infrastructure</td><td>Running the website and the database that stores enquiries.</td></tr>
+              <tr><td>Email delivery (SMTP)</td><td>Sending you replies, requested resources and newsletters, and alerting our team to a new enquiry.</td></tr>
+              <tr><td>Internal notification services</td><td>Where enabled, messaging or call-alert services that tell our team a new lead has arrived so we can respond quickly.</td></tr>
+              <tr><td>Voice assistant provider</td><td>Where you choose to speak to our automated assistant, it processes the call to capture your details and booking request.</td></tr>
+              <tr><td>Calendar &amp; meeting tools</td><td>Creating your meeting invitation and video-call link when you book a slot.</td></tr>
+              <tr><td>Content delivery network</td><td>Serving icon and font assets used by the page you are reading.</td></tr>
+              <tr><td>Accounting &amp; payment providers</td><td>Invoicing and collecting payment from clients.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Each provider is bound to use the data only for the service it provides to us. We may also disclose data where we are legally required to — for example in response to a valid order from a court, regulator or law-enforcement authority — or where necessary to establish or defend a legal claim. If our business is ever restructured or transferred, data may pass to the successor entity under the same commitments set out in this policy.</p>
+
+        <h2 id="client-data">8. Client project data</h2>
+        <p>Delivering our services often means we are given access to systems that belong to you — your website admin or CMS, hosting panel, Google Search Console, Google Analytics, Google Business Profile, advertising accounts or social profiles. When we work inside those systems:</p>
+        <ul>
+          <li>we act on your instructions, as a <strong>Data Processor</strong>, and use the access only for the agreed work;</li>
+          <li>we treat any personal data belonging to <em>your</em> customers as confidential and do not copy it out for our own purposes;</li>
+          <li>we ask for the lowest level of access that does the job, and prefer named user accounts over shared passwords;</li>
+          <li>you should <strong>revoke our access when the engagement ends</strong> — we will also remove ourselves on request.</li>
+        </ul>
+        <p>Where our work involves personal data of your users, you remain the Data Fiduciary for it and are responsible for having a lawful basis to collect it.</p>
+
+        <h2 id="retention">9. How long we keep your data</h2>
+        <ul>
+          <li><strong>Enquiries that do not convert</strong> — up to 24 months, so we can pick up the conversation if you return, then deleted or anonymised.</li>
+          <li><strong>Newsletter and marketing contacts</strong> — until you unsubscribe or ask us to remove you.</li>
+          <li><strong>Client records, contracts and project files</strong> — for the duration of the engagement, then as long as needed for support, warranty and legal claims.</li>
+          <li><strong>Invoices and accounting records</strong> — for the period required under Indian tax and company law, currently at least eight years.</li>
+          <li><strong>Spam and abuse logs</strong> — kept briefly, then purged.</li>
+        </ul>
+        <p>When a retention period ends we delete the data or strip it of anything that identifies you.</p>
+
+        <h2 id="security">10. How we protect your data</h2>
+        <ul>
+          <li>The website is served over <strong>HTTPS/TLS</strong>, so what you type into a form is encrypted in transit.</li>
+          <li>Our internal dashboard is <strong>password-protected</strong>, with passwords stored only as salted PBKDF2 hashes — never in readable form.</li>
+          <li>Access to enquiry and client data is limited to the Evision Infoserve team members who need it.</li>
+          <li>Forms are rate-limited and spam-scored to reduce abuse.</li>
+        </ul>
+        <p>No system is perfectly secure and we cannot guarantee absolute security. If a personal data breach occurs that affects you, we will notify you and the Data Protection Board of India as the DPDP Act requires.</p>
+
+        <h2 id="rights">11. Your rights</h2>
+        <p>As a Data Principal under the DPDP Act, you have the right to:</p>
+        <ul>
+          <li><strong>Access</strong> — ask what personal data of yours we hold and how we have used and shared it.</li>
+          <li><strong>Correction and completion</strong> — have inaccurate or incomplete data corrected or updated.</li>
+          <li><strong>Erasure</strong> — ask us to delete your data, where we are not required to keep it by law.</li>
+          <li><strong>Withdraw consent</strong> — at any time, as easily as you gave it. Marketing emails carry a one-click unsubscribe link.</li>
+          <li><strong>Grievance redressal</strong> — raise a complaint with our Grievance Officer and receive a response (see <a href="#grievance">section 16</a>).</li>
+          <li><strong>Nominate</strong> — name another person to exercise these rights on your behalf in the event of your death or incapacity.</li>
+        </ul>
+        <p>To exercise any of these, email <a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a> from the address you contacted us with, or call <a href="tel:+919311221517">+91 93112 21517</a>. We respond within <strong>30 days</strong> and will not charge you for a reasonable request. We may ask you to confirm your identity first, so that nobody else can access your data.</p>
+        <p>If you are not satisfied with our response, you may complain to the <strong>Data Protection Board of India</strong>.</p>
+
+        <h2 id="children">12. Children's data</h2>
+        <p>Our website and services are meant for businesses and are not directed at children. We do not knowingly collect personal data of anyone under 18 without verifiable parental or guardian consent, and we do not carry out tracking, behavioural monitoring or targeted advertising aimed at children. If you believe a child has given us personal data, contact us and we will delete it.</p>
+        <p>Where we build student or educational projects, we deal with the student's institution or guardian as the point of contact.</p>
+
+        <h2 id="transfers">13. Transfers outside India</h2>
+        <p>Our website and enquiry database are hosted in India. Some of the service providers listed in <a href="#sharing">section 7</a> — for example email, calendar or voice-assistant tools — may process data on servers outside India. Where that happens we use providers offering appropriate contractual and technical safeguards, and we transfer only what the service requires. We do not transfer personal data to any country restricted by the Government of India for this purpose.</p>
+
+        <h2 id="third-party">14. Third-party links</h2>
+        <p>Our website, blog articles and portfolio link to sites we do not control — client websites, tools we recommend, social profiles and reference material. Following such a link takes you outside this privacy policy. We are not responsible for the content or the privacy practices of those websites; please read their own policies.</p>
+
+        <h2 id="changes">15. Changes to this policy</h2>
+        <p>We may update this policy as our services, tools or the law change. The "Last updated" date at the top of this page always reflects the current version. If a change materially affects how we use your personal data we will make it prominent on the website and, where we hold your email address and the change requires it, notify you directly. Continuing to use the website after an update means you accept the current version.</p>
+
+        <h2 id="grievance">16. Grievance Officer &amp; contact</h2>
+        <p>If you have a question, a request about your data, or a complaint about how we have handled it, contact our Grievance Officer. We acknowledge every grievance and aim to resolve it within 30 days.</p>
+        <div class="lg-contact">
+          <p><strong>Grievance Officer — Evision Infoserve</strong></p>
+          <p><i data-lucide="mail" style="width:15px;height:15px;vertical-align:-2px"></i> <a href="mailto:info@evisioninfoserve.com">info@evisioninfoserve.com</a></p>
+          <p><i data-lucide="phone" style="width:15px;height:15px;vertical-align:-2px"></i> <a href="tel:+919311221517">+91 93112 21517</a></p>
+          <p><i data-lucide="map-pin" style="width:15px;height:15px;vertical-align:-2px"></i> Gaur City Mall, Greater Noida West, Greater Noida, Uttar Pradesh 201009, India</p>
+          <p style="margin-top:12px;color:var(--fg-muted-light);font-size:14px">Please write "Privacy request" in your subject line so we route it correctly.</p>
+        </div>
+        <p style="margin-top:22px">Related: <a href="/terms.html">Terms and Conditions</a> · <a href="/refund-policy.html">Refund Policy</a></p>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -46,8 +333,8 @@
   </div>
 </section>
 
-<script src="/assets/site.js?v=6"></script>
-<script src="/assets/chrome.js?v=6"></script>
+<script src="/assets/site.js?v=7"></script>
+<script src="/assets/chrome.js?v=7"></script>
 <script src="/assets/pricing.js?v=5"></script>
 </body>
 </html>

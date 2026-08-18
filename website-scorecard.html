@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
+<title>Free Website Health Score — Rate Your Site in 60 Seconds | Evision Infoserve</title>
+<meta name="description" content="Take the free 60-second Website Health Score quiz. Rate your website on speed, SEO, mobile, AI visibility &amp; lead capture — and get a tailored action plan from Evision Infoserve.">
+<link rel="stylesheet" href="/assets/tokens.css?v=5">
+<link rel="stylesheet" href="/assets/site.css?v=6">
+<link rel="stylesheet" href="/assets/chrome.css?v=5">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .sc-wrap { background:
+    radial-gradient(820px 480px at 82% -10%, rgba(109,94,251,.28), transparent 60%),
+    radial-gradient(640px 460px at 4% 110%, rgba(245,182,43,.14), transparent 60%),
+    var(--color-navy-900); color:#fff; min-height:78vh; position:relative; overflow:hidden; }
+  .sc-wrap::before { content:""; position:absolute; inset:0; pointer-events:none;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size:30px 30px;
+    mask-image: radial-gradient(760px 560px at 78% 0%, #000, transparent 74%); }
+  .sc-inner { position:relative; z-index:1; max-width:720px; margin:0 auto; padding:56px 22px 70px; }
+  .sc-card { background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius: var(--radius-xl); padding:38px 36px; box-shadow: var(--shadow-lg); }
+  @media (max-width:560px){ .sc-card { padding:28px 20px; } }
+
+  .sc-eyebrow { display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#0A0E1C; background: var(--color-gold-400); padding:6px 13px; border-radius:999px; }
+  .sc-h1 { font-family:var(--font-headline); font-weight:700; font-size:clamp(30px,5vw,46px); letter-spacing:-.03em; line-height:1.05; margin:18px 0 14px; }
+  .sc-h1 em { font-style:normal; color: var(--color-gold-400); }
+  .sc-lead { font-size:17px; color: var(--fg-muted-dark); line-height:1.6; max-width:52ch; }
+  .sc-trust { display:flex; gap:22px; flex-wrap:wrap; margin-top:24px; font-size:13.5px; color: var(--fg-muted-dark); }
+  .sc-trust span { display:inline-flex; align-items:center; gap:7px; }
+  .sc-trust .ic { width:16px; height:16px; color: var(--color-gold-400); }
+  .sc-start { margin-top:30px; }
+
+  /* progress */
+  .sc-prog { height:8px; border-radius:999px; background: rgba(255,255,255,.1); overflow:hidden; margin-bottom:8px; }
+  .sc-prog i { display:block; height:100%; width:0; background: linear-gradient(90deg, var(--color-blue-500), var(--color-gold-500)); transition: width .35s ease; }
+  .sc-step { font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; color: var(--color-blue-300); text-transform:uppercase; }
+
+  .sc-q { font-family:var(--font-headline); font-weight:700; font-size:clamp(23px,3.4vw,30px); letter-spacing:-.02em; line-height:1.2; margin:16px 0 22px; }
+  .sc-opts { display:flex; flex-direction:column; gap:12px; }
+  .sc-opt { display:flex; align-items:center; gap:14px; text-align:left; width:100%; padding:17px 18px; border:1.5px solid rgba(255,255,255,.16); border-radius: var(--radius-lg); background: rgba(255,255,255,.03); color:#fff; font-size:16px; font-weight:500; cursor:pointer; transition: all .14s; font-family:var(--font-body); }
+  .sc-opt:hover { border-color: var(--color-blue-500); background: rgba(109,94,251,.12); transform: translateY(-2px); }
+  .sc-opt .dot { width:22px; height:22px; border-radius:50%; border:2px solid rgba(255,255,255,.3); flex:none; }
+  .sc-opt:hover .dot { border-color: var(--color-blue-400); }
+
+  /* gate form */
+  .sc-gateform { display:flex; flex-direction:column; gap:11px; margin-top:22px; }
+  .sc-gateform input { width:100%; padding:14px 15px; border:1.5px solid rgba(255,255,255,.16); border-radius: var(--radius-md); font-size:15px; background: rgba(255,255,255,.06); color:#fff; font-family:var(--font-body); }
+  .sc-gateform input::placeholder { color: rgba(255,255,255,.5); }
+  .sc-gateform input:focus { outline:none; border-color: var(--color-blue-500); box-shadow:0 0 0 3px rgba(109,94,251,.2); }
+  .sc-gateform input.bad { border-color:#ff6b6b; }
+  .sc-msg { font-size:12.5px; color:#ff9b9b; min-height:2px; }
+  .sc-consent { display:flex; gap:10px; align-items:flex-start; font-size:12px; line-height:1.5;
+    color:rgba(255,255,255,.62); cursor:pointer; text-align:left; margin-top:2px; }
+  .sc-consent input { width:17px; height:17px; margin:1px 0 0; flex:none; accent-color: var(--color-blue-500); cursor:pointer; }
+  .sc-consent b { color:rgba(255,255,255,.85); font-weight:600; }
+  .sc-consent a { color: var(--color-blue-300); text-decoration:underline; }
+  .sc-consent.bad { color:#ff9b9b; }
+  .sc-consent.bad input { outline:2px solid #ff6b6b; outline-offset:2px; }
+  .sc-fine { font-size:12px; color: var(--fg-muted-dark); text-align:center; margin-top:4px; }
+
+  .sc-teaser { text-align:center; margin-bottom:6px; }
+  .sc-teaser .n { font-family:var(--font-headline); font-weight:700; font-size:64px; color:#fff; letter-spacing:-.02em; filter: blur(9px); opacity:.7; }
+  .sc-teaser .lbl { font-size:13px; color: var(--color-blue-300); letter-spacing:.08em; text-transform:uppercase; font-family:var(--font-mono); }
+
+  /* result */
+  .sc-score { text-align:center; }
+  .sc-scoren { font-family:var(--font-headline); font-weight:700; font-size:84px; line-height:1; letter-spacing:-.03em; }
+  .sc-scoren small { font-size:28px; color: var(--fg-muted-dark); }
+  .sc-band { display:inline-block; font-family:var(--font-headline); font-weight:700; font-size:15px; padding:6px 16px; border-radius:999px; margin-top:10px; }
+  .sc-bar { height:12px; border-radius:999px; background: rgba(255,255,255,.1); overflow:hidden; margin:22px 0 8px; }
+  .sc-bar i { display:block; height:100%; width:0; border-radius:999px; transition: width 1s ease; }
+  .sc-tips { list-style:none; padding:0; margin:22px 0 0; display:flex; flex-direction:column; gap:12px; text-align:left; }
+  .sc-tips li { display:flex; gap:12px; font-size:15px; color:#E7EAF3; line-height:1.5; }
+  .sc-tips .ic { width:20px; height:20px; color: var(--color-gold-400); flex:none; margin-top:1px; }
+  .sc-cta { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body data-page="">
+
+<section class="sc-wrap">
+  <div class="sc-inner">
+    <div class="sc-card">
+
+      <!-- ░ INTRO ░ -->
+      <div id="scIntro">
+        <span class="sc-eyebrow"><i data-lucide="activity" style="width:14px;height:14px"></i> Free 60-second check</span>
+        <h1 class="sc-h1">Is your website <em>winning or losing</em> you customers?</h1>
+        <p class="sc-lead">Answer 6 quick questions and get your <strong>Website Health Score</strong> out of 100 — plus a tailored action plan to turn more visitors into leads.</p>
+        <div class="sc-trust">
+          <span><i data-lucide="clock" class="ic"></i>Takes 60 seconds</span>
+          <span><i data-lucide="gift" class="ic"></i>100% free</span>
+          <span><i data-lucide="bar-chart-3" class="ic"></i>320+ sites analysed</span>
+        </div>
+        <div class="sc-start">
+          <button class="btn btn-primary btn-lg" id="scStart">Start the free check <i data-lucide="arrow-right" class="ic"></i></button>
+        </div>
+      </div>
+
+      <!-- ░ QUIZ ░ -->
+      <div id="scQuiz" class="hidden">
+        <div class="sc-prog"><i id="scProgBar"></i></div>
+        <div class="sc-step" id="scStep">Question 1 of 6</div>
+        <div class="sc-q" id="scQ">…</div>
+        <div class="sc-opts" id="scOpts"></div>
+      </div>
+
+      <!-- ░ GATE ░ -->
+      <div id="scGate" class="hidden">
+        <div class="sc-teaser"><div class="n" id="scBlur">72</div><div class="lbl">Your score is ready</div></div>
+        <h2 class="sc-h1" style="font-size:clamp(24px,4vw,34px)">Where should we send your <em>score + action plan?</em></h2>
+        <p class="sc-lead">Get your Website Health Score and a personalised 3-step plan to fix what's costing you leads.</p>
+        <form class="sc-gateform" id="scForm" novalidate>
+          <input type="text" name="name" placeholder="Full name *" autocomplete="name">
+          <input type="email" name="email" placeholder="Email *" autocomplete="email">
+          <input type="tel" name="phone" placeholder="Phone / WhatsApp *" autocomplete="tel">
+          <label class="sc-consent"><input type="checkbox" id="scConsent">
+            <span>I authorize <b>Evision Infoserve</b> to send me my score, action plan and related notifications via <b>SMS, RCS, Call, Email &amp; WhatsApp</b> — including on a number registered with DND/NCPR — and I accept the <a href="/terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+          <div class="sc-msg" id="scMsg"></div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg">Reveal my score <i data-lucide="sparkles" class="ic"></i></button>
+          <p class="sc-fine">Free &amp; no obligation. We'll never spam you.</p>
+        </form>
+      </div>
+
+      <!-- ░ RESULT ░ -->
+      <div id="scResult" class="hidden">
+        <div class="sc-score">
+          <div class="sc-scoren" id="scNum">0<small>/100</small></div>
+          <span class="sc-band" id="scBand">—</span>
+          <div class="sc-bar"><i id="scBarFill"></i></div>
+        </div>
+        <h3 class="sc-h1" style="font-size:24px;margin-top:24px" id="scVerdict">Here's your plan</h3>
+        <ul class="sc-tips" id="scTips"></ul>
+        <div class="sc-cta">
+          <a href="/contact.html" data-audit-open class="btn btn-primary btn-lg">Get my free detailed audit <i data-lucide="arrow-right" class="ic"></i></a>
+          <a href="https://wa.me/919311221517?text=Hi%20Evision!%20I%20took%20the%20Website%20Health%20Score%20quiz." class="btn btn-outline-white btn-lg" target="_blank" rel="noopener"><i data-lucide="message-circle" class="ic"></i>Chat on WhatsApp</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var QUESTIONS = [
+    { q: "How fast does your website load on mobile?",
+      a: [["Under 2 seconds — snappy", 20], ["2–4 seconds", 10], ["Slower, or I'm not sure", 0]] },
+    { q: "Do you rank on page 1 of Google for your main service?",
+      a: [["Yes, for several terms", 20], ["Sometimes / for my brand name", 10], ["No, or I don't know", 0]] },
+    { q: "Is your site flawless on phones and tablets?",
+      a: [["Yes, fully responsive", 15], ["Mostly, a few issues", 8], ["No / not sure", 0]] },
+    { q: "Does your site actively capture leads (forms, WhatsApp, CTAs)?",
+      a: [["Yes, and they convert", 15], ["A basic contact form", 8], ["Not really", 0]] },
+    { q: "Do you publish helpful content / blogs regularly?",
+      a: [["Yes, consistently", 10], ["Occasionally", 5], ["No", 0]] },
+    { q: "Can AI tools (ChatGPT, Gemini) find and cite your business?",
+      a: [["Yes — we optimise for it", 20], ["Not sure", 5], ["No", 0]] }
+  ];
+  var idx = 0, score = 0, answers = [];
+  var $ = function (id) { return document.getElementById(id); };
+  function icons(){ if (window.lucide) lucide.createIcons(); }
+
+  $("scStart").addEventListener("click", function () {
+    $("scIntro").classList.add("hidden");
+    $("scQuiz").classList.remove("hidden");
+    render();
+  });
+
+  function render() {
+    var Q = QUESTIONS[idx];
+    $("scStep").textContent = "Question " + (idx + 1) + " of " + QUESTIONS.length;
+    $("scProgBar").style.width = (idx / QUESTIONS.length * 100) + "%";
+    $("scQ").textContent = Q.q;
+    var wrap = $("scOpts"); wrap.innerHTML = "";
+    Q.a.forEach(function (opt) {
+      var b = document.createElement("button");
+      b.className = "sc-opt";
+      b.innerHTML = '<span class="dot"></span>' + opt[0];
+      b.addEventListener("click", function () {
+        score += opt[1]; answers.push(Q.q + " → " + opt[0]);
+        idx++;
+        if (idx < QUESTIONS.length) { render(); }
+        else { $("scProgBar").style.width = "100%"; showGate(); }
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  function showGate() {
+    $("scQuiz").classList.add("hidden");
+    $("scGate").classList.remove("hidden");
+    $("scBlur").textContent = score;   // blurred teaser = the real score
+    icons();
+  }
+
+  // Gate form → capture lead, then reveal
+  var form = $("scForm");
+  form.querySelectorAll("input").forEach(function (i) {
+    i.addEventListener("input", function () { i.classList.remove("bad"); $("scMsg").textContent = ""; });
+    i.addEventListener("change", function () {
+      var l = i.closest(".sc-consent"); if (l) l.classList.remove("bad");
+      $("scMsg").textContent = "";
+    });
+  });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = form.querySelector("[name=name]"), email = form.querySelector("[name=email]"), phone = form.querySelector("[name=phone]");
+    var ok = true; function bad(el){ el.classList.add("bad"); ok = false; }
+    if (!name.value.trim()) bad(name);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) bad(email);
+    if (phone.value.replace(/\D/g, "").length < 8) bad(phone);
+    if (!ok) { $("scMsg").textContent = "Please enter your name, a valid email and phone."; return; }
+    var consent = $("scConsent");
+    if (consent && !consent.checked) {
+      consent.closest(".sc-consent").classList.add("bad");
+      $("scMsg").textContent = "Please authorize us to send you your score.";
+      return;
+    }
+    var band = scoreBand(score);
+    var payload = {
+      name: name.value.trim(), email: email.value.trim(), phone: phone.value.trim(),
+      service: "Website Health Scorecard", type: "scorecard", source: "website-health-check",
+      message: "Website Health Score: " + score + "/100 (" + band.label + ")\n" + answers.join("\n"),
+      consent: consent && consent.checked ? 1 : 0,
+      marketing: consent && consent.checked ? 1 : 0
+    };
+    var btn = form.querySelector("button[type=submit]"); btn.disabled = true; btn.textContent = "Revealing…";
+    function done(){ reveal(); }
+    fetch("/api/enquiry", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) }).then(done).catch(done);
+  });
+
+  function scoreBand(s) {
+    if (s >= 80) return { label: "Strong", color: "#16b364", bg: "rgba(22,179,100,.18)",
+      verdict: "Your website is in great shape 💪",
+      tips: ["You're ahead of most — let's protect that lead.",
+             "Next frontier: AI search (AEO/GEO/LLMO) so ChatGPT &amp; Gemini cite you.",
+             "A conversion-rate audit could squeeze out even more leads."] };
+    if (s >= 50) return { label: "Room to grow", color: "#F5B62B", bg: "rgba(245,182,43,.18)",
+      verdict: "Solid foundation — a few fixes unlock big gains 🚀",
+      tips: ["Speed + technical SEO are usually the fastest wins.",
+             "Tighten your calls-to-action to capture more of your existing traffic.",
+             "Add answer-first content so you rank on Google and AI."] };
+    return { label: "At risk", color: "#ff6b6b", bg: "rgba(255,107,107,.18)",
+      verdict: "Your website is likely losing you leads ⚠️",
+      tips: ["A fast, modern rebuild would pay for itself quickly — from ₹9,999.",
+             "You're probably invisible on Google for the searches that matter.",
+             "Let's add lead capture so visitors actually become enquiries."] };
+  }
+
+  function reveal() {
+    $("scGate").classList.add("hidden");
+    $("scResult").classList.remove("hidden");
+    var band = scoreBand(score);
+    $("scBand").textContent = band.label;
+    $("scBand").style.color = band.color; $("scBand").style.background = band.bg;
+    $("scVerdict").textContent = band.verdict;
+    $("scBarFill").style.background = band.color;
+    var tips = $("scTips"); tips.innerHTML = "";
+    band.tips.forEach(function (t) {
+      var li = document.createElement("li");
+      li.innerHTML = '<i data-lucide="check-circle-2" class="ic"></i><span>' + t + '</span>';
+      tips.appendChild(li);
+    });
+    icons();
+    // animate the number + bar
+    var n = 0, target = score, el = $("scNum");
+    var t0 = null;
+    function step(t){ if(!t0)t0=t; var p=Math.min((t-t0)/1100,1); var v=Math.round(target*(1-Math.pow(1-p,3)));
+      el.innerHTML = v + '<small>/100</small>'; if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+    setTimeout(function(){ $("scBarFill").style.width = target + "%"; }, 120);
+    if (history.replaceState) history.replaceState(null, "", "#result");
+  }
+
+  icons();
+})();
+</script>
+
+<script src="/assets/site.js?v=7"></script>
+<script src="/assets/chrome.js?v=7"></script>
+</body>
+</html>

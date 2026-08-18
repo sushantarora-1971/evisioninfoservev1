@@ -95,6 +95,8 @@
   $("#overlay").addEventListener("click", closeDrawer);
 
   // ───────────────── Data loading ─────────────────
+  let LAST_NEW = null;   // previous unread count, for the new-lead chime
+
   async function loadStats() {
     try {
       const s = await Admin.api("/api/admin/stats");
@@ -102,13 +104,23 @@
       $("#sNew").textContent = s.new;
       $("#sCli").textContent = s.clients;
       $("#sAct").textContent = s.active;
+      $("#sSpam").textContent = s.spam ?? 0;
       $("#navNew").textContent = s.new ? s.new : "";
       $("#navNew").style.display = s.new ? "" : "none";
+      // Never fires on the first load — LAST_NEW is null until then.
+      if (LAST_NEW !== null && s.new > LAST_NEW) Ring.announce(s.new - LAST_NEW);
+      LAST_NEW = s.new;
     } catch (e) { /* handled by api() */ }
   }
 
+  let ENQ_SIG = "";
   async function loadEnquiries() {
     ENQUIRIES = await Admin.api("/api/admin/enquiries");
+    // The 30s poll calls this repeatedly; only repaint when something actually
+    // changed, so the table doesn't blink under whoever is reading it.
+    const sig = ENQUIRIES.map(e => e.id + ":" + e.status).join(",");
+    if (sig === ENQ_SIG) return;
+    ENQ_SIG = sig;
     renderEnquiries();
     renderRecent();
   }
@@ -118,12 +130,84 @@
     renderClients();
   }
 
+  // ───────────────── New-lead ring (while the panel is open) ─────────────────
+  // The server pushes to your phone (Telegram / ntfy / call). This is the
+  // desk-side twin: the panel polls every 30s and chimes so a lead sitting on
+  // the site doesn't wait for someone to notice an email.
+  const Ring = (function () {
+    const KEY = "evision_ring";
+    const btn = $("#ringToggle");
+    let on = localStorage.getItem(KEY) !== "0";
+    let ctx = null, baseTitle = document.title;
+
+    function paint() { if (btn) btn.textContent = on ? "🔔 Alerts on" : "🔕 Alerts off"; }
+    // Browsers keep audio suspended until the user interacts with the page.
+    function unlock() {
+      try {
+        ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === "suspended") ctx.resume();
+      } catch (e) { /* no audio available — the toast still shows */ }
+    }
+    function chime() {
+      unlock();
+      if (!ctx) return;
+      // Three rising beeps — recognisable across a room, over in half a second.
+      [0, 0.18, 0.36].forEach((at, i) => {
+        const osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = [880, 1108, 1318][i];
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime + at);
+        gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + at + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + at + 0.16);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + at);
+        osc.stop(ctx.currentTime + at + 0.18);
+      });
+    }
+    function desktopNote(count, lead) {
+      if (!window.Notification || Notification.permission !== "granted") return;
+      const n = new Notification(count > 1 ? `${count} new leads` : "New lead — " + (lead?.name || ""),
+        { body: lead ? [lead.phone, lead.service].filter(Boolean).join(" · ") : "Open the admin panel",
+          tag: "evision-lead" });
+      n.onclick = () => { window.focus(); n.close(); };
+    }
+
+    if (btn) btn.addEventListener("click", () => {
+      on = !on;
+      localStorage.setItem(KEY, on ? "1" : "0");
+      paint();
+      if (on) {
+        chime();                                    // confirm it's audible
+        if (window.Notification && Notification.permission === "default") {
+          Notification.requestPermission();         // needs this user gesture
+        }
+        toast("You'll be alerted when a new lead arrives");
+      } else { toast("Alerts muted"); }
+    });
+    // First click anywhere is enough to let audio play later.
+    document.addEventListener("click", unlock, { once: true });
+    window.addEventListener("focus", () => { document.title = baseTitle; });
+    paint();
+
+    return {
+      announce(count) {
+        // ENQUIRIES is id-descending and refreshed just before this runs.
+        const lead = ENQUIRIES.find(e => e.status === "new");
+        toast(count > 1 ? `${count} new enquiries` : "New enquiry just came in");
+        document.title = `(${count}) New lead — ${baseTitle}`;
+        if (!on) return;
+        chime();
+        desktopNote(count, lead);
+      },
+    };
+  })();
+
   // ───────────────── Status pills ─────────────────
   const statusClass = (s) => "pill pill-" + (s || "new");
 
   // ───────────────── Dashboard recent ─────────────────
   function renderRecent() {
-    const rows = ENQUIRIES.slice(0, 6);
+    const rows = ENQUIRIES.filter(e => e.status !== "spam").slice(0, 6);
     if (!rows.length) { $("#recentWrap").innerHTML = empty("No enquiries yet."); return; }
     $("#recentWrap").innerHTML = table(
       ["Name", "Service", "Type", "Status", "Received"],
@@ -143,6 +227,8 @@
     const type = $("#enqType").value;
     const status = $("#enqStatus").value;
     return ENQUIRIES.filter(e => {
+      // Quarantined spam only shows when it's explicitly asked for.
+      if (status !== "spam" && e.status === "spam") return false;
       if (type && (e.type || "quote") !== type) return false;
       if (status && e.status !== status) return false;
       if (q) {
@@ -155,11 +241,17 @@
 
   function renderEnquiries() {
     const rows = filteredEnquiries();
-    if (!rows.length) { $("#enqWrap").innerHTML = empty("No enquiries match."); return; }
+    const spamView = $("#enqStatus").value === "spam";
+    $("#purgeSpamBtn").classList.toggle("hidden", !spamView);
+    if (!rows.length) {
+      $("#enqWrap").innerHTML = empty(spamView ? "No spam in quarantine. 🎉" : "No enquiries match.");
+      return;
+    }
     $("#enqWrap").innerHTML = table(
       ["Name", "Contact", "Service", "Budget", "Type", "Status", "Received", ""],
       rows.map(e => `<tr data-enq="${e.id}" class="clickable">
-        <td><b>${esc(e.name)}</b>${e.company ? `<div class="muted">${esc(e.company)}</div>` : ""}</td>
+        <td><b>${esc(e.name)}</b>${e.company ? `<div class="muted">${esc(e.company)}</div>` : ""}${
+          e.status === "spam" && e.spam_reason ? `<div class="muted">🚫 ${esc(e.spam_reason)}</div>` : ""}</td>
         <td>${esc(e.email)}<div class="muted">${esc(e.phone) || ""}</div></td>
         <td>${esc(e.service) || "—"}</td>
         <td>${esc(e.budget) || "—"}</td>
@@ -202,16 +294,18 @@
         <dt>Service</dt><dd>${esc(e.service) || "—"}</dd>
         <dt>Budget</dt><dd>${esc(e.budget) || "—"}</dd>
         <dt>Source</dt><dd>${esc(e.source) || "—"}</dd>
-        <dt>Consent (T&amp;C)</dt><dd>${e.consent ? "✅ Accepted" : "—"}</dd>
+        <dt>Contact consent</dt><dd>${e.consent ? "✅ SMS/RCS/Call/Email/WhatsApp + T&amp;C" : "— not given"}</dd>
         <dt>Marketing</dt><dd>${e.marketing ? "✅ Opted in" : "Not opted in"}</dd>
         <dt>Received</dt><dd>${fmtDate(e.created_at)}</dd>
+        <dt>IP</dt><dd>${esc(e.ip) || "—"}</dd>
+        <dt>Spam score</dt><dd>${e.spam_score || 0}${e.spam_reason ? ` — ${esc(e.spam_reason)}` : ""}</dd>
       </dl>
       <h3 class="drawer-h3">Message</h3>
       <p class="msg-box">${esc(e.message) || "<span class='muted'>No message provided.</span>"}</p>
 
       <h3 class="drawer-h3">Status</h3>
       <select id="dStatus" class="full">
-        ${["new", "contacted", "converted", "closed"].map(s => `<option value="${s}" ${e.status === s ? "selected" : ""}>${s}</option>`).join("")}
+        ${["new", "contacted", "converted", "closed", "spam"].map(s => `<option value="${s}" ${e.status === s ? "selected" : ""}>${s}</option>`).join("")}
       </select>
 
       <h3 class="drawer-h3">Internal notes</h3>
@@ -219,9 +313,23 @@
 
       <div class="drawer-actions">
         <button class="btn-primary" id="dSave">Save changes</button>
-        ${e.status !== "converted" ? `<button class="btn-ghost" id="dConvert">Convert to client →</button>` : ""}
+        ${e.status === "spam"
+          ? `<button class="btn-ghost" id="dNotSpam">Not spam — restore</button>`
+          : `<button class="btn-ghost" id="dSpam">Mark as spam</button>`}
+        ${e.status !== "converted" && e.status !== "spam" ? `<button class="btn-ghost" id="dConvert">Convert to client →</button>` : ""}
       </div>
     `);
+    // One-click spam / not-spam, so triaging a junk lead is a single action.
+    async function setStatus(status, note) {
+      await Admin.api("/api/admin/enquiries/" + id, {
+        method: "PATCH", body: JSON.stringify({ status }),
+      });
+      toast(note);
+      closeDrawer(); await loadEnquiries(); await loadStats();
+    }
+    const spamBtn = $("#dSpam"), notSpamBtn = $("#dNotSpam");
+    if (spamBtn) spamBtn.addEventListener("click", () => setStatus("spam", "Marked as spam"));
+    if (notSpamBtn) notSpamBtn.addEventListener("click", () => setStatus("new", "Restored to new enquiries"));
     $("#dSave").addEventListener("click", async () => {
       await Admin.api("/api/admin/enquiries/" + id, {
         method: "PATCH",
@@ -243,6 +351,14 @@
   $("#enqSearch").addEventListener("input", renderEnquiries);
   $("#enqType").addEventListener("change", renderEnquiries);
   $("#enqStatus").addEventListener("change", renderEnquiries);
+
+  $("#purgeSpamBtn").addEventListener("click", async () => {
+    const n = ENQUIRIES.filter(e => e.status === "spam").length;
+    if (!n || !confirm(`Permanently delete ${n} spam enquir${n === 1 ? "y" : "ies"}?`)) return;
+    const r = await Admin.api("/api/admin/enquiries/spam", { method: "DELETE" });
+    toast(`Deleted ${r.deleted} spam enquiries`);
+    await loadEnquiries(); await loadStats();
+  });
 
   // ───────────────── Clients view ─────────────────
   function filteredClients() {
@@ -499,5 +615,10 @@
     if (!IS_ADMIN) return;
     await Promise.all([loadStats(), loadEnquiries(), loadClients()]);
     loadAccounts().catch(() => {});
+    // Watch for new leads: enquiries first, so the chime can name the lead.
+    setInterval(async () => {
+      await loadEnquiries().catch(() => {});
+      await loadStats();
+    }, 30000);
   })();
 })();
