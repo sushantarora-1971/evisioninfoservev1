@@ -90,12 +90,7 @@
     });
   }
 
-  var MARK = '<svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">' +
-    '<rect width="36" height="36" rx="9" fill="#0A0E1C"/>' +
-    '<rect x="9" y="20" width="4.6" height="7" rx="1.4" fill="#B7ADFF"/>' +
-    '<rect x="15.7" y="15" width="4.6" height="12" rx="1.4" fill="#6D5EFB"/>' +
-    '<rect x="22.4" y="9" width="4.6" height="18" rx="1.4" fill="#F5B62B"/>' +
-    '</svg>';
+  var MARK = '<img class="brand-mark" src="' + P + 'assets/logo-mark.png" alt="Evision Infoserve logo" width="34" height="33" decoding="async">';
 
   var BRAND = '<a href="' + P + 'index.html" class="brand" aria-label="Evision Infoserve home">' + MARK +
     '<div><div class="brand-name">Evision<span>Infoserve</span></div>' +

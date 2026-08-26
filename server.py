@@ -1470,7 +1470,9 @@ def render_post_page(post):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png?v=3">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=3">
 <title>{e(meta_title)}</title>
 <meta name="description" content="{e(meta_desc)}">
 <link rel="canonical" href="{e(url)}">
@@ -1732,7 +1734,7 @@ def _seo_head(clean, title, desc):
     org = {
         "@type": "Organization", "@id": SITE_URL + "/#organization",
         "name": BRAND_NAME, "url": SITE_URL + "/",
-        "logo": {"@type": "ImageObject", "url": SITE_URL + "/assets/favicon.svg"},
+        "logo": {"@type": "ImageObject", "url": SITE_URL + "/assets/logo.png", "width": 1200, "height": 743},
         "image": og_img, "email": BRAND_EMAIL, "telephone": BRAND_PHONE,
         "sameAs": BRAND_SAMEAS,
         "contactPoint": {"@type": "ContactPoint", "telephone": BRAND_TEL,
