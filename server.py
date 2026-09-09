@@ -222,6 +222,11 @@ def init_db():
             active INTEGER DEFAULT 1,
             created_at TEXT NOT NULL
         );
+        -- Small key/value table for one-shot migration markers.
+        CREATE TABLE IF NOT EXISTS meta (
+            key TEXT PRIMARY KEY,
+            value TEXT DEFAULT ''
+        );
         CREATE TABLE IF NOT EXISTS portfolio (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
@@ -334,15 +339,6 @@ def init_db():
                 (name, role, quote, photo, rating, i, now_iso()),
             )
         conn.commit()
-    # Seed portfolio on first run (only if the table is empty).
-    if c.execute("SELECT COUNT(*) AS n FROM portfolio").fetchone()["n"] == 0:
-        for i, (title, client, cat, image, summary, metric, url) in enumerate(PORTFOLIO_SEED):
-            c.execute(
-                """INSERT INTO portfolio (title,client,category,image,summary,metric,url,sort,active,created_at)
-                   VALUES (?,?,?,?,?,?,?,?,1,?)""",
-                (title, client, cat, image, summary, metric, url, i, now_iso()),
-            )
-        conn.commit()
     # Seed the first blog post on first run (only if the table is empty).
     if c.execute("SELECT COUNT(*) AS n FROM posts").fetchone()["n"] == 0:
         p = POST_SEED
@@ -381,16 +377,25 @@ def init_db():
     c.execute("UPDATE posts SET body = REPLACE(body, ?, ?) WHERE instr(body, ?) > 0",
               (LM_CONSENT_OLD, LM_CONSENT, LM_CONSENT_OLD))
     conn.commit()
-    # Seed extra portfolio items (web design/dev + student projects) idempotently
-    # — only inserts an item if no row with the same title exists, so it's safe
-    # to run repeatedly and won't duplicate or clobber admin-managed items.
-    for i, (title, client, cat, image, summary, metric, url) in enumerate(PORTFOLIO_EXTRA):
+    # Portfolio: drop the generic placeholder items, then seed the real client
+    # projects (one category per sheet of "Evisioninfoserve Projects.xlsx").
+    # Purge runs before the insert so an item that was re-titled or moved to a
+    # new category gets rebuilt; the insert only adds titles that are missing,
+    # so admin edits and admin-added items survive every restart.
+    c.executemany("DELETE FROM portfolio WHERE title=?", [(t,) for t in PORTFOLIO_RETIRED])
+    seeded = c.execute("SELECT value FROM meta WHERE key='portfolio_seed'").fetchone()
+    if not seeded or seeded["value"] != PORTFOLIO_SEED_VERSION:
+        # First run on this seed version: rebuild the seeded rows from source.
+        c.executemany("DELETE FROM portfolio WHERE title=?", [(t,) for t, *_ in PORTFOLIO_SEED])
+        c.execute("INSERT OR REPLACE INTO meta (key,value) VALUES ('portfolio_seed',?)",
+                  (PORTFOLIO_SEED_VERSION,))
+    for i, (title, client, cat, image, summary, metric, url) in enumerate(PORTFOLIO_SEED):
         exists = c.execute("SELECT 1 FROM portfolio WHERE title=? LIMIT 1", (title,)).fetchone()
         if not exists:
             c.execute(
                 """INSERT INTO portfolio (title,client,category,image,summary,metric,url,sort,active,created_at)
                    VALUES (?,?,?,?,?,?,?,?,1,?)""",
-                (title, client, cat, image, summary, metric, url, -100 + i, now_iso()),
+                (title, client, cat, image, summary, metric, url, i, now_iso()),
             )
     conn.commit()
     conn.close()
@@ -719,54 +724,88 @@ TESTIMONIALS_SEED = [
 
 # Portfolio / case studies seeded on first run. Manage from the admin panel
 # (Portfolio tab). (title, client, category, image, summary, metric, url)
+#
+# Source of truth: "Evisioninfoserve Projects.xlsx" — one sheet per industry,
+# and each sheet name becomes the portfolio category (and therefore a filter
+# tab on /portfolio). Only real, delivered projects live here; the old generic
+# placeholder entries were removed (see PORTFOLIO_RETIRED below).
+# image='' → the portfolio page renders a styled browser-mockup card.
 PORTFOLIO_SEED = [
-    ("SaaS organic growth engine", "B2B SaaS", "SEO", "/assets/portfolio/saas.jpg",
-     "Technical fixes plus topic clusters doubled non-brand organic traffic in seven months.", "+212% organic", ""),
-    ("Ecommerce category SEO", "D2C Ecommerce", "Ecommerce SEO", "/assets/portfolio/ecommerce.jpg",
-     "Category-page optimisation grew revenue from organic search 64% year on year.", "+64% revenue", ""),
-    ("Local services map-pack #1", "Multi-location services", "Local SEO", "/assets/portfolio/local.jpg",
-     "From page two to the top of the local pack across nine service areas.", "#1 map pack", ""),
-    ("Cited by AI engines", "B2B technology", "AI SEO / GEO", "/assets/portfolio/ai.jpg",
-     "Became a cited source in ChatGPT and Perplexity for core category queries.", "AI-cited", ""),
-    ("D2C digital PR campaign", "Consumer brand", "Digital PR", "/assets/portfolio/pr.jpg",
-     "A data-led study earned 40+ pieces of coverage and high-authority links.", "40+ links", ""),
-    ("Lead-gen paid restructure", "Lead generation", "PPC & Paid Ads", "/assets/portfolio/ppc.jpg",
-     "Restructured paid campaigns to cut cost-per-lead while scaling volume.", "−38% CPL", ""),
-]
-
-# Web design / development + student-project work. Seeded idempotently (by
-# title) so the portfolio leads with build work, not just SEO case studies.
-# image='' → the portfolio page renders a styled browser-mockup placeholder.
-PORTFOLIO_EXTRA = [
-    # ── Live client websites (real screenshots in /assets/portfolio) ──
-    ("Astro Annie — Astrology & Tarot", "Astro Annie · Astrologer", "Web Design · Astrology",
+    # ── Astrology ──
+    ("Astro Annie — Astrology & Tarot", "Astro Annie · Astrologer", "Astrology",
      "/assets/portfolio/astro-annie.jpg",
      "A design-led astrology & tarot website with an animated three-card reading experience and online booking.",
      "Animated UI", "https://astroanjilina.com/"),
-    ("Aurum & Co. — Real Estate", "Aurum & Co. · Noida", "Web Development · Real Estate",
+
+    # ── Real Estate ──
+    ("Aurum & Co. — Property Consultants", "Aurum & Co. · Noida", "Real Estate",
      "/assets/portfolio/aurum-co.jpg",
      "A premium real-estate consulting site with verified property listings, live activity stats and consultation booking.",
      "Listings portal", "https://ivory-llama-587747.hostingersite.com/"),
-    ("Sri Siddhivinayak Enterprises", "Sri Siddhivinayak · Dhanbad", "Web Development · IT Services",
+
+    # ── Pandit Ji ──
+    ("Pandit Seva — Book a Pandit online", "Pandit Pyarelal Ji · Noida", "Pandit Ji",
+     "/assets/portfolio/pandit-seva.jpg",
+     "A booking website for Vedic puja and rituals — puja catalogue, muhurat guidance and one-tap enquiry on WhatsApp.",
+     "Online booking", "https://ev01.demo.evisioninfoserve.com/index.html"),
+
+    # ── Tuition Center ──
+    ("Gyanoday Classes — Tuition Center", "Gyanoday Classes · Noida", "Tuition Center",
+     "/assets/portfolio/gyanoday-classes.jpg",
+     "A tuition-centre website for Classes 1–12 — batches, subjects, faculty and an admission enquiry form.",
+     "Class 1–12", "https://tution-center-1.vercel.app/"),
+
+    # ── Makeup Studio ──
+    ("Aanya Rao Makeup Studio", "Aanya Rao · Bridal makeup artist", "Makeup Studio",
+     "/assets/portfolio/aanya-rao.jpg",
+     "A bridal makeup artist portfolio with looks gallery, packages and date-wise booking enquiries.",
+     "Bridal portfolio", "https://web-orpin-mu-61.vercel.app/"),
+    ("Aura & Bloom Sanctuary", "Aura & Bloom · Home beauty studio", "Makeup Studio",
+     "/assets/portfolio/aura-bloom.jpg",
+     "A private home beauty & bridal studio site — services, pricing and appointment requests.",
+     "Studio site", "https://aura-bloom-sanctuary.vercel.app/"),
+
+    # ── Interior Designer ──
+    ("Evision Interior Design Studio", "Interior design studio", "Interior Designer",
+     "/assets/portfolio/evision-interior.jpg",
+     "An interior-design studio website with project showcase, service packages and a consultation funnel.",
+     "Studio site", "https://ev02.demo.evisioninfoserve.com/"),
+    ("Studio Aangan — Living into Legacy", "Studio Aangan", "Interior Designer",
+     "/assets/portfolio/studio-aangan.jpg",
+     "A luxury interiors brand site built around a story-led project gallery and enquiry capture.",
+     "Luxury interiors", "https://studio-aangan.vercel.app/"),
+    ("Northstone — Design & Build", "Northstone Interiors", "Interior Designer",
+     "/assets/portfolio/northstone.jpg",
+     "Interior design and build for Indian homes — packages, process timeline and a costing enquiry form.",
+     "Design & build", "https://northstone-gamma.vercel.app/"),
+
+    # ── IT Services ──
+    ("Sri Siddhivinayak Enterprises", "Sri Siddhivinayak · Dhanbad", "IT Services",
      "/assets/portfolio/sri-siddhivinayak.jpg",
      "A conversion-focused website for an IT, CCTV & AMC company — services, products and a live service dashboard.",
      "Live dashboard", "https://papayawhip-echidna-100598.hostingersite.com/"),
-    ("Modern D2C brand website", "D2C skincare", "Web Design", "",
-     "A premium, conversion-focused storefront designed and built from scratch — fast, mobile-first and SEO-ready.", "98/100 speed", ""),
-    ("Real-estate listing platform", "Property developer", "Web Development", "",
-     "A custom property portal with search, filters, map view and enquiry capture, built to scale.", "3.2s → 0.9s", ""),
-    ("Restaurant online ordering", "Multi-outlet F&B", "E-commerce", "",
-     "Online ordering with menu management and WhatsApp checkout across multiple outlets.", "+140% orders", ""),
-    ("Corporate website revamp", "B2B services", "Web Design", "",
-     "A dated corporate site redesigned for speed, mobile and lead generation — without losing rankings.", "+68% leads", ""),
-    ("SaaS marketing site + CMS", "B2B SaaS", "Web Development", "",
-     "A headless marketing site with a self-serve CMS so the team ships pages without a developer.", "Next.js", ""),
-    ("College fest event portal", "Final-year student", "Student Project", "",
-     "An event registration and pass-generation system built with the student, documented and deployed live for the viva.", "Live demo", ""),
-    ("Job & internship portal", "Final-year student", "Student Project", "",
-     "A full-stack MERN job portal with resume upload and an admin dashboard — report and viva ready.", "MERN stack", ""),
-    ("Doctor appointment system", "Final-year student", "Student Project", "",
-     "A Django appointment-booking project with role-based access, reports and clean documentation.", "Django", ""),
+]
+
+# Generic placeholder items that used to ship with the site. They are deleted
+# on startup so the portfolio only ever shows real client work. Removing a
+# title from this list stops it being purged (admin-added items are untouched).
+# Rows that already exist in the DB but whose seed data has changed (a new live
+# URL, a re-title, a new category). Listed here they are dropped and rebuilt
+# from PORTFOLIO_SEED on the next start. Clear entries once they've shipped.
+# Bump this whenever PORTFOLIO_SEED changes in a way that must overwrite rows
+# already in the database (new live URL, screenshot, category or title). On the
+# next start every seeded title is rebuilt exactly once, then the marker is
+# stored so later restarts leave admin edits alone.
+PORTFOLIO_SEED_VERSION = "2026-09-09-xlsx-2"
+
+PORTFOLIO_RETIRED = [
+    "SaaS organic growth engine", "Ecommerce category SEO", "Local services map-pack #1",
+    "Cited by AI engines", "D2C digital PR campaign", "Lead-gen paid restructure",
+    "Modern D2C brand website", "Real-estate listing platform", "Restaurant online ordering",
+    "Corporate website revamp", "SaaS marketing site + CMS", "College fest event portal",
+    "Job & internship portal", "Doctor appointment system",
+    "Astro Annie — Astrology & Tarot", "Aurum & Co. — Real Estate",
+    "Sri Siddhivinayak Enterprises",
 ]
 
 # First blog post — seeded once so the Blog is never empty. Fully editable in admin.

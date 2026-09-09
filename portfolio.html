@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png?v=3">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=3">
 <title>Portfolio — Websites, Web Apps &amp; SEO Case Studies | Evision Infoserve</title>
-<meta name="description" content="Our portfolio — website design &amp; development, e-commerce, web apps, student projects and SEO case studies. Real work by Evision Infoserve, Greater Noida.">
+<meta name="description" content="Our portfolio — live websites we designed and built for astrologers, real estate, interior designers, makeup studios, tuition centres, pandit ji booking and IT services. Real work by Evision Infoserve, Greater Noida.">
 <link rel="stylesheet" href="/assets/tokens.css?v=5">
 <link rel="stylesheet" href="/assets/site.css?v=6">
 <link rel="stylesheet" href="/assets/chrome.css?v=5">
@@ -94,7 +94,7 @@
     <nav class="crumb"><a href="/index.html">Home</a><span class="sep">/</span><span style="color:var(--color-blue-300)">Portfolio</span></nav>
     <span class="pillar-chip design" style="margin-top:18px"><span class="dot"></span>Our work</span>
     <h1>Websites, web apps &amp; search results we're proud of</h1>
-    <p class="lead">A selection of design &amp; development builds, e-commerce stores, student projects and SEO case studies — real work, real outcomes.</p>
+    <p class="lead">Live websites we designed and built — browse by industry and open any project to see the real, running site.</p>
     <div class="pf-stats">
       <div class="pf-stat"><b>320+</b><span>Websites shipped</span></div>
       <div class="pf-stat"><b>12+ yrs</b><span>In business</span></div>
@@ -151,26 +151,20 @@
   if (!wrap) return;
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
 
-  // Map a free-text category to a filter group + a mockup accent class.
-  function group(cat) {
-    var c = (cat || "").toLowerCase();
-    if (c.indexOf("student") > -1) return "student";
-    if (c.indexOf("web design") > -1 || c === "design") return "design";
-    if (c.indexOf("web development") > -1 || c.indexOf("web app") > -1) return "dev";
-    if (c.indexOf("commerce") > -1) return "ecom";
-    return "seo";
-  }
-  var GROUP_LABEL = { all: "All work", design: "Web Design", dev: "Web Development", ecom: "E-commerce", student: "Student Projects", seo: "SEO & Growth" };
-  var GROUP_ORDER = ["all", "design", "dev", "ecom", "student", "seo"];
-  var MOCK_CLASS = { student: "student", seo: "seo", ecom: "", design: "", dev: "" };
+  // Categories come straight from the portfolio data (one per industry sheet
+  // in "Evisioninfoserve Projects.xlsx"), so the filter tabs build themselves.
+  function slug(cat) { return String(cat || "Other").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "other"; }
+  // Rotate the mockup accents so cards without a screenshot don't look identical.
+  var MOCKS = ["", "seo", "student"];
+  var mockOf = {};
 
   function card(w) {
-    var g = group(w.category);
+    var g = slug(w.category);
     var shot;
     if (w.image) {
       shot = '<img src="' + esc(w.image) + '" alt="' + esc(w.title) + '" loading="lazy">';
     } else {
-      shot = '<div class="pf-mock ' + (MOCK_CLASS[g] || "") + '">' +
+      shot = '<div class="pf-mock ' + (mockOf[g] || "") + '">' +
         '<div class="pf-mock-bar"><i style="background:#FF6A57"></i><i style="background:#FFC53D"></i><i style="background:#2ECC71"></i><span class="pf-mock-url"></span></div>' +
         '<div class="pf-mock-body">' +
           (w.category ? '<span class="pf-tagchip">' + esc(w.category) + '</span>' : "") +
@@ -194,13 +188,16 @@
   }
 
   function buildFilters(list) {
-    var counts = { all: list.length };
-    list.forEach(function (w) { var g = group(w.category); counts[g] = (counts[g] || 0) + 1; });
-    var html = GROUP_ORDER.filter(function (g) { return g === "all" || counts[g]; }).map(function (g) {
-      return '<button class="pf-tab' + (g === "all" ? " active" : "") + '" data-filter="' + g + '">' +
-        GROUP_LABEL[g] + ' <span class="n">' + (counts[g] || 0) + '</span></button>';
-    }).join("");
-    filters.innerHTML = html;
+    var order = [], counts = {}, label = {};
+    list.forEach(function (w) {
+      var g = slug(w.category);
+      if (!(g in counts)) { counts[g] = 0; order.push(g); label[g] = w.category || "Other"; mockOf[g] = MOCKS[order.length % MOCKS.length]; }
+      counts[g]++;
+    });
+    filters.innerHTML = ['<button class="pf-tab active" data-filter="all">All work <span class="n">' + list.length + '</span></button>']
+      .concat(order.map(function (g) {
+        return '<button class="pf-tab" data-filter="' + g + '">' + esc(label[g]) + ' <span class="n">' + counts[g] + '</span></button>';
+      })).join("");
     filters.querySelectorAll(".pf-tab").forEach(function (tab) {
       tab.addEventListener("click", function () {
         filters.querySelectorAll(".pf-tab").forEach(function (t) { t.classList.remove("active"); });
